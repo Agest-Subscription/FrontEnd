@@ -1,6 +1,7 @@
-import { Typography, Flex, Button } from "antd";
 import React from "react";
 import { CheckCircleTwoTone } from "@ant-design/icons";
+import { Button, Flex, Typography } from "antd";
+
 import { PricingPlanLandingPageType } from "@/interfaces/PricingPlan";
 import { capitalize } from "@/utils/string";
 

@@ -10,7 +10,7 @@ import {
 import FormField, { FormFieldProps } from "./FormField";
 
 import { FieldsData } from "@/interfaces/form";
-import { useAppDispatch, useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { generateUid } from "@/utils/random";
 
 interface FormWrapperProps<T extends FieldValues = any, V = any> {

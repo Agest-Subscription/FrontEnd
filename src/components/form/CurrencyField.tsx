@@ -71,16 +71,6 @@ let CurrencyField: React.FC<CurrencyFieldProps> = ({
 };
 
 CurrencyField = styled(CurrencyField)`
-  &.mobile {
-    .form-item-label {
-      color: #7f8eac;
-    }
-
-    .form-textfield {
-      color: #06417c;
-    }
-  }
-
   .ant-input-number-input-wrap,
   .ant-input-number-input {
     height: 100%;

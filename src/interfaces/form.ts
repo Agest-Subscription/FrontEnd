@@ -4,8 +4,6 @@ import { CheckboxOptionType } from "antd";
 
 import { CurrencyFieldProps } from "@/components/form/CurrencyField";
 import { DatePickerProps } from "@/components/form/DatePicker";
-import { FilePickerProps } from "@/components/form/FilePicker";
-import { FilePickerV2Props } from "@/components/form/FilePickerV2";
 import {
   MultipleCheckboxProps,
   MultipleCheckboxValueType,
@@ -13,11 +11,9 @@ import {
 import { PhoneNumberProps } from "@/components/form/PhoneNumber";
 import { SelectProps } from "@/components/form/Select";
 import { SingleCheckboxProps } from "@/components/form/SingleCheckbox";
-import { SwitchProps } from "@/components/form/Switch";
 import { TextAreaProps } from "@/components/form/Textarea";
 import { TextFieldProps } from "@/components/form/TextField";
 import { TimePickerProps } from "@/components/form/TimePicker";
-import { TreeSelectProps } from "@/components/form/TreeSelect";
 import { ISelectOptions, SelectValueType } from "@/constants/select";
 
 interface RenderColumn {
@@ -69,10 +65,6 @@ export type FieldData<
       >;
     }
   | {
-      type: "switch";
-      componentProps?: Omit<SwitchProps, "name" | "label">;
-    }
-  | {
       type: "singleCheckbox";
       componentProps?: Omit<SingleCheckboxProps, "name" | "label">;
     }
@@ -97,20 +89,8 @@ export type FieldData<
       componentProps?: Omit<TimePickerProps, "name" | "label">;
     }
   | {
-      type: "filepicker";
-      componentProps?: Omit<FilePickerProps, "name" | "label">;
-    }
-  | {
       type: "phoneNumber";
       componentProps?: Omit<PhoneNumberProps, "name" | "label">;
-    }
-  | {
-      type: "filepickerv2";
-      componentProps?: Omit<FilePickerV2Props, "name" | "label">;
-    }
-  | {
-      type: "treeselect";
-      componentProps?: Omit<TreeSelectProps, "name" | "label">;
     }
   | {
       type: "currency";
@@ -136,50 +116,50 @@ export type PathInto<
   [K in keyof T as T extends Value[] | undefined | null
     ? ArrayItem
     : T extends (infer Item)[] | undefined | null
-    ?
-        | (Deep extends true ? never : ArrayItem)
-        | (Item extends Record<string, any>
-            ? A["length"] extends D
-              ? never
-              : `${ArrayItem}.${PathInto<Item, Deep, D, [0, ...A]>}`
-            : never)
-    : T[K] extends Value
-    ? K & string
-    : T[K] extends Value[] | undefined | null
-    ?
-        | (Deep extends true ? never : `${K & string}`)
-        | `${K & string}.${ArrayItem}`
-        | (K & string)
-    : T[K] extends (infer Item)[] | undefined | null
-    ?
-        | (Deep extends true ? never : `${K & string}`)
-        | (Item extends Record<string, any>
-            ? A["length"] extends D
-              ? never
-              : A["length"] extends D
-              ? never
-              : `${K & string}.${ArrayItem}.${PathInto<
-                  Item,
-                  Deep,
-                  D,
-                  [0, ...A]
-                >}`
-            : never)
-        | (K & string)
-    : T[K] extends Record<string, any> | undefined | null
-    ?
-        | (Deep extends true ? never : `${K & string}`)
-        | (A["length"] extends D
-            ? never
-            : `${K & string}.${PathInto<
-                Extract<T[K], Record<string, any>>,
-                Deep,
-                D,
-                [0, ...A]
-              > &
-                string}`)
-        | (K & string)
-    : never]: any;
+      ?
+          | (Deep extends true ? never : ArrayItem)
+          | (Item extends Record<string, any>
+              ? A["length"] extends D
+                ? never
+                : `${ArrayItem}.${PathInto<Item, Deep, D, [0, ...A]>}`
+              : never)
+      : T[K] extends Value
+        ? K & string
+        : T[K] extends Value[] | undefined | null
+          ?
+              | (Deep extends true ? never : `${K & string}`)
+              | `${K & string}.${ArrayItem}`
+              | (K & string)
+          : T[K] extends (infer Item)[] | undefined | null
+            ?
+                | (Deep extends true ? never : `${K & string}`)
+                | (Item extends Record<string, any>
+                    ? A["length"] extends D
+                      ? never
+                      : A["length"] extends D
+                        ? never
+                        : `${K & string}.${ArrayItem}.${PathInto<
+                            Item,
+                            Deep,
+                            D,
+                            [0, ...A]
+                          >}`
+                    : never)
+                | (K & string)
+            : T[K] extends Record<string, any> | undefined | null
+              ?
+                  | (Deep extends true ? never : `${K & string}`)
+                  | (A["length"] extends D
+                      ? never
+                      : `${K & string}.${PathInto<
+                          Extract<T[K], Record<string, any>>,
+                          Deep,
+                          D,
+                          [0, ...A]
+                        > &
+                          string}`)
+                  | (K & string)
+              : never]: any;
 } &
   string;
 
@@ -201,30 +181,30 @@ export type DeepKeyOf<
   [K in keyof T as T extends Value[]
     ? "never"
     : T extends (infer Item)[] | undefined | null
-    ? A["length"] extends D
-      ? never
-      : Item extends Record<string, any>
-      ? DeepKeyOf<Item, D, [0, ...A]>
-      : never
-    : T[K] extends Value
-    ? K
-    : T[K] extends Value[] | undefined | null
-    ? K
-    : T[K] extends (infer Item)[] | undefined | null
-    ?
-        | K
-        | (A["length"] extends D
-            ? never
-            : Item extends Record<string, any>
-            ? DeepKeyOf<Item, D, [0, ...A]>
-            : never)
-    : T[K] extends infer Item | undefined | null
-    ?
-        | K
-        | (A["length"] extends D
-            ? never
-            : Item extends Record<string, any>
-            ? DeepKeyOf<Item, D, [0, ...A]>
-            : never)
-    : "never"]: any;
+      ? A["length"] extends D
+        ? never
+        : Item extends Record<string, any>
+          ? DeepKeyOf<Item, D, [0, ...A]>
+          : never
+      : T[K] extends Value
+        ? K
+        : T[K] extends Value[] | undefined | null
+          ? K
+          : T[K] extends (infer Item)[] | undefined | null
+            ?
+                | K
+                | (A["length"] extends D
+                    ? never
+                    : Item extends Record<string, any>
+                      ? DeepKeyOf<Item, D, [0, ...A]>
+                      : never)
+            : T[K] extends infer Item | undefined | null
+              ?
+                  | K
+                  | (A["length"] extends D
+                      ? never
+                      : Item extends Record<string, any>
+                        ? DeepKeyOf<Item, D, [0, ...A]>
+                        : never)
+              : "never"]: any;
 };

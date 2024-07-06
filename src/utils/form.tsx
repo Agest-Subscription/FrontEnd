@@ -1,16 +1,12 @@
 import { CurrencyField } from "@/components/form/CurrencyField";
 import { DatePicker } from "@/components/form/DatePicker";
-import { FilePicker } from "@/components/form/FilePicker";
-import FilePickerV2 from "@/components/form/FilePickerV2";
 import { MultipleCheckbox } from "@/components/form/MultipleCheckbox";
 import { PhoneNumberField } from "@/components/form/PhoneNumber";
 import { Select } from "@/components/form/Select";
 import { SingleCheckbox } from "@/components/form/SingleCheckbox";
-import { Switch } from "@/components/form/Switch";
 import { TextArea } from "@/components/form/Textarea";
 import { TextField } from "@/components/form/TextField";
 import { TimePicker } from "@/components/form/TimePicker";
-import { TreeSelect } from "@/components/form/TreeSelect";
 import { FieldData } from "@/interfaces/form";
 
 export const generateFormField = (
@@ -33,10 +29,6 @@ export const generateFormField = (
           {...componentProps}
         />
       );
-    }
-    case "switch": {
-      const { label, name, type: _, componentProps } = field;
-      return <Switch name={name} label={label} {...componentProps} />;
     }
 
     case "singleCheckbox": {
@@ -71,18 +63,9 @@ export const generateFormField = (
       return <TimePicker name={name} label={label} {...componentProps} />;
     }
 
-    
-
     case "phoneNumber": {
       const { label, name, type: _, componentProps } = field;
       return <PhoneNumberField name={name} label={label} {...componentProps} />;
-    }
-
-  
-
-    case "treeselect": {
-      const { label, name, type: _, componentProps } = field;
-      return <TreeSelect name={name} label={label} {...componentProps} />;
     }
 
     case "currency": {
@@ -108,8 +91,6 @@ export const getObjectValueWithPath = (
 
   return getObjectValueWithPath(obj?.[firstPath], pathArray.join("."));
 };
-
-
 
 export const includeIndexToName = (name: string, index: number[]): string => {
   let result = name;

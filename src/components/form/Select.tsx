@@ -1,6 +1,7 @@
 import { ReactNode, useMemo, useRef, useState } from "react";
 import { Select as SelectAntd, SelectProps as SelectAntdProps } from "antd";
 
+import DropdownHeader from "../DropdownHeader";
 import DropdownRow from "../DropdownRow";
 import ButtonFormControl from "./ButtonFormControl";
 import { CommonFormItemProps, FormItem } from "./FormItem";
@@ -171,7 +172,14 @@ export function Select<T extends SelectValueType = SelectValueType, V = any>({
                         {dropdownLoading ? (
                           <OptionLoading />
                         ) : (
-                          ""
+                          <DropdownHeader
+                            config={dropdownColumns().map((i) => ({
+                              label: i.label,
+                              span: i.span,
+                            }))}
+                          >
+                            {menu}
+                          </DropdownHeader>
                         )}
                       </div>
                     );
