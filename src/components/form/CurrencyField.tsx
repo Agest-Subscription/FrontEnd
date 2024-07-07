@@ -1,13 +1,12 @@
 import React from "react";
-import { InputNumberProps } from "antd";
+import { InputNumber, InputNumberProps } from "antd";
 import { debounce } from "lodash";
 import styled from "styled-components";
 
 import { CommonFormItemProps, FormItem } from "./FormItem";
 import { StyledInputNumber } from "./StyleComponents";
 
-export type CurrencyFieldProps = CommonFormItemProps & InputNumberProps<number>;
-
+export type CurrencyFieldProps = InputNumberProps<number> & CommonFormItemProps;
 let CurrencyField: React.FC<CurrencyFieldProps> = ({
   name,
   label,
@@ -46,7 +45,7 @@ let CurrencyField: React.FC<CurrencyFieldProps> = ({
       styleLabel={styleLabel}
       render={({ onChange, onBlur, ...field }) => {
         return (
-          <StyledInputNumber<number>
+          <InputNumber
             onChange={(value) => {
               debounceOnchange(value, onChange);
             }}
