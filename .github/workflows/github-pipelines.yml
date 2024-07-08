@@ -2,31 +2,34 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [develop, uat, 'staging/*']
-    tags: ['*.*.*']
+    branches: 
+      - "**"
+    tags: 
+      - '*.*.*'
   pull_request:
-    branches: ['**']
-
+    branches: 
+      - '**'
 
 jobs:
-  lint-and-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js 18
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - run: |
-          yarn lint:fix
-          yarn format:fix
-
-
   build:
     runs-on: ubuntu-latest
-    needs: lint-and-check  # Ensure lint passes before building
     steps:
       - uses: actions/checkout@v3
       - name: Build the project
         run: |
-          yarn build  # Replace with your build command
+          yarn build
+
+  lint-and-check:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 22
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+      - run: |
+          yarn lint:fix
+          yarn format:fix
+
+  
