@@ -12,9 +12,9 @@ const PricingPlansPage = (props: Props) => {
   <button onClick={() => setOpenModal(true)}>Open Modal</button>    
     <PopUp popupProps={{
         popup_id: "successPopup",
-        popup_text: "Success",
-        popup_type: "Success"
-      }} isOpen={openModal} onClose={() => setOpenModal(false)} />
+        popup_text: "Hi",
+        popup_type: "Confirm"
+      }} isOpen={openModal} onClose={() => setOpenModal(false)} onConfirm={() => setOpenModal(false)}/>
   </div>
   )
 };
