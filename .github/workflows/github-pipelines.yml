@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches: 
-      - "**"
+      - '**'
     tags: 
       - '*.*.*'
   pull_request:
@@ -15,21 +15,39 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Use Node.js 22
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install dependencies
+        run: yarn install
       - name: Build the project
-        run: |
-          yarn build
+        run: yarn build  # Replace with your build command
 
   lint-and-check:
     runs-on: ubuntu-latest
-    needs: build
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js 22
         uses: actions/setup-node@v3
         with:
           node-version: 22
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install dependencies
+        run: yarn install
       - run: |
           yarn lint:fix
           yarn format:fix
-
-  
