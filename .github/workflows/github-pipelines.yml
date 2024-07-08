@@ -32,6 +32,7 @@ jobs:
         run: yarn build  # Replace with your build command
 
   lint-and-check:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
