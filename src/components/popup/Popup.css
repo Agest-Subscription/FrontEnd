@@ -51,15 +51,26 @@
   font-size: 1.25rem;
 }
 
-.btn-close {
-  border: none;
-  font-size: 1rem;
-  padding: 0.25rem;
-  cursor: pointer;
-  font-weight: bold;
-  color: rgba(0, 0, 0, 0.5);
-  background: transparent;
-}
+.close {
+    opacity: 0.3;
+  }
+  .close:hover {
+    opacity: 1;
+  }
+  .close:before, .close:after {
+    position: absolute;
+    content: ' ';
+    top: 10px;
+    height: 20px;
+    width: 2px;
+    background-color: #333;
+  }
+  .close:before {
+    transform: rotate(45deg);
+  }
+  .close:after {
+    transform: rotate(-45deg);
+  }
 
 .react-modal-footer {
   display: flex;
