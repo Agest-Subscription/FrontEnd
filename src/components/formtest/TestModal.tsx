@@ -31,7 +31,7 @@ const fields = [
 const TestModal = (props: Props) => {
   const methods = useForm<testType>({
     mode: "onBlur",
-    resolver: yupResolver(testschema),
+    // resolver: yupResolver(testschema),
   });
   function onSubmit(data: any) {
     console.log(data);
@@ -42,9 +42,9 @@ const TestModal = (props: Props) => {
     <div>
       <FormWrapperV2 methods={methods}>
         <Form onFinish={methods.handleSubmit(onSubmit)}>
-          <DynamicInput name="name" type="text" label="name"/>
-          <DynamicInput name="age" type="number" label="age" />
-          <DynamicInput name="isStudent" type="checkbox" label="isStudent" />
+          <DynamicInput name="name.lastName" type="text" label="name" />
+          {/* <DynamicInput name="age" type="number" label="age" />
+          <DynamicInput name="isStudent" type="checkbox" label="isStudent" /> */}
           <Button htmlType="submit">Save</Button>
         </Form>
       </FormWrapperV2>
