@@ -1,8 +1,5 @@
 # Makefile for Next.js project
 
-# Variables
-YARN := yarn
-
 # Phony targets
 .PHONY: help lint format build
 
@@ -15,17 +12,17 @@ help:
 # Lint commands
 lint:
 	@echo "Running ESLint and fixing issues..."
-	@$(YARN) lint:fix
+	yarn lint:fix
 
 # Format commands
 format:
 	@echo "Fixing formatting issues with Prettier..."
-	@$(YARN) format:fix
+	yarn format:fix
 
 # Build commands
 build:
 	@echo "Build product"
-	@$(YARN) build
+	yarn build
 
 # Build, Lint and Format commands
 fix:
