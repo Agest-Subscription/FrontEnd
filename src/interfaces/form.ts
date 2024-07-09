@@ -1,19 +1,12 @@
 import { ReactNode } from "react";
 import { FieldValues } from "react-hook-form";
-import { CheckboxOptionType } from "antd";
 
-import { CurrencyFieldProps } from "@/components/form/CurrencyField";
-import { DatePickerProps } from "@/components/form/DatePicker";
-import {
-  MultipleCheckboxProps,
-  MultipleCheckboxValueType,
-} from "@/components/form/MultipleCheckbox";
-import { PhoneNumberProps } from "@/components/form/PhoneNumber";
-import { SelectProps } from "@/components/form/Select";
-import { SingleCheckboxProps } from "@/components/form/SingleCheckbox";
-import { TextAreaProps } from "@/components/form/Textarea";
-import { TextFieldProps } from "@/components/form/TextField";
-import { TimePickerProps } from "@/components/form/TimePicker";
+import { DatePickerProps } from "@/components/formtest/DatePicker";
+import { SelectProps } from "@/components/formtest/Select";
+import { SingleCheckboxProps } from "@/components/formtest/SingleCheckbox";
+import { TextAreaProps } from "@/components/formtest/Textarea";
+import { TextFieldProps } from "@/components/formtest/TextField";
+import { TimePickerProps } from "@/components/formtest/TimePicker";
 import { ISelectOptions, SelectValueType } from "@/constants/select";
 
 interface RenderColumn {
@@ -68,14 +61,14 @@ export type FieldData<
       type: "singleCheckbox";
       componentProps?: Omit<SingleCheckboxProps, "name" | "label">;
     }
-  | {
-      type: "multipleCheckbox";
-      options: CheckboxOptionType<MultipleCheckboxValueType>[];
-      componentProps?: Omit<
-        MultipleCheckboxProps,
-        "name" | "label" | "options"
-      >;
-    }
+  // | {
+  //     type: "multipleCheckbox";
+  //     options: CheckboxOptionType<MultipleCheckboxValueType>[];
+  //     componentProps?: Omit<
+  //       MultipleCheckboxProps,
+  //       "name" | "label" | "options"
+  //     >;
+  //   }
   | {
       type: "textarea";
       componentProps?: Omit<TextAreaProps, "name" | "label">;
@@ -87,14 +80,6 @@ export type FieldData<
   | {
       type: "timepicker";
       componentProps?: Omit<TimePickerProps, "name" | "label">;
-    }
-  | {
-      type: "phoneNumber";
-      componentProps?: Omit<PhoneNumberProps, "name" | "label">;
-    }
-  | {
-      type: "currency";
-      componentProps?: Omit<CurrencyFieldProps, "name" | "label">;
     }
 );
 

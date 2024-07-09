@@ -1,12 +1,9 @@
-import { CurrencyField } from "@/components/form/CurrencyField";
-import { DatePicker } from "@/components/form/DatePicker";
-import { MultipleCheckbox } from "@/components/form/MultipleCheckbox";
-import { PhoneNumberField } from "@/components/form/PhoneNumber";
-import { Select } from "@/components/form/Select";
-import { SingleCheckbox } from "@/components/form/SingleCheckbox";
-import { TextArea } from "@/components/form/Textarea";
-import { TextField } from "@/components/form/TextField";
-import { TimePicker } from "@/components/form/TimePicker";
+import { DatePicker } from "@/components/formtest/DatePicker";
+import { Select } from "@/components/formtest/Select";
+import { SingleCheckbox } from "@/components/formtest/SingleCheckbox";
+import { TextArea } from "@/components/formtest/Textarea";
+import { TextField } from "@/components/formtest/TextField";
+import { TimePicker } from "@/components/formtest/TimePicker";
 import { FieldData } from "@/interfaces/form";
 
 export const generateFormField = (
@@ -36,17 +33,17 @@ export const generateFormField = (
       return <SingleCheckbox name={name} label={label} {...componentProps} />;
     }
 
-    case "multipleCheckbox": {
-      const { label, name, options, type: _, componentProps } = field;
-      return (
-        <MultipleCheckbox
-          name={name}
-          label={label}
-          options={options}
-          {...componentProps}
-        />
-      );
-    }
+    // case "multipleCheckbox": {
+    //   const { label, name, options, type: _, componentProps } = field;
+    //   return (
+    //     <MultipleCheckbox
+    //       name={name}
+    //       label={label}
+    //       options={options}
+    //       {...componentProps}
+    //     />
+    //   );
+    // }
 
     case "textarea": {
       const { label, name, type: _, componentProps } = field;
@@ -61,16 +58,6 @@ export const generateFormField = (
     case "timepicker": {
       const { label, name, type: _, componentProps } = field;
       return <TimePicker name={name} label={label} {...componentProps} />;
-    }
-
-    case "phoneNumber": {
-      const { label, name, type: _, componentProps } = field;
-      return <PhoneNumberField name={name} label={label} {...componentProps} />;
-    }
-
-    case "currency": {
-      const { label, name, type: _, componentProps } = field;
-      return <CurrencyField name={name} label={label} {...componentProps} />;
     }
 
     default:
