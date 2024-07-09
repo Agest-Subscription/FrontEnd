@@ -73,12 +73,16 @@ const items = [
 ];
 const MenuCustom = styled(Menu)`
   &.ant-menu {
+    font-weight: 700;
+    background: #b9e5ff;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    .ant-menu-item {
+      flex: 1;
+    }
     .ant-menu-item-selected {
       background: #fff;
-      color: red !important;
-      display: flex;
-      height: inherit;
-      align-items: center;
     }
     .ant-menu-item-selected:after {
       border-bottom-color: white;
@@ -101,8 +105,8 @@ const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
   } = theme.useToken();
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
-      <Flex vertical>
+    <Layout style={{ minHeight: "100vh", padding: "24px" }}>
+      <Flex vertical gap={24}>
         <Typography
           style={{
             color: "#2F80ED",
@@ -112,37 +116,13 @@ const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
         >
           Subscription
         </Typography>
-        <Content style={{ padding: "0 48px" }}>
-          <div
-            style={{
-              height: "49px",
-            }}
-          >
-            <Header
-              style={{
-                display: "flex",
-                alignItems: "center",
-                background: "#2F80ED",
-                height: "100%",
-              }}
-            >
-              <Menu
-                theme="dark"
-                mode="horizontal"
-                selectedKeys={[current]}
-                items={items}
-                onClick={onClick}
-                style={{
-                  flex: 1,
-                  minWidth: 0,
-                  backgroundColor: "#2F80ED",
-                  fontWeight: 700,
-                  height: "inherit",
-                  alignItems: "center",
-                }}
-              />
-            </Header>
-          </div>
+        <Content>
+          <MenuCustom
+            mode="horizontal"
+            selectedKeys={[current]}
+            items={items}
+            onClick={onClick}
+          />
           <div
             style={{
               background: colorBgContainer,
