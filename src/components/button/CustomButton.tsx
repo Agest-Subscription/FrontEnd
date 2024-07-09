@@ -32,7 +32,7 @@ const baseButtonStyle: CSSProperties = {
   alignItems: "center",
   display: "flex",
   justifyContent: "center",
-  borderRadius: 8,
+  borderRadius: 4,
 };
 
 const getButtonStyle = (

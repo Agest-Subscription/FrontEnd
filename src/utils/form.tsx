@@ -1,9 +1,9 @@
-import { DatePicker } from "@/components/formtest/DatePicker";
-import { Select } from "@/components/formtest/Select";
-import { SingleCheckbox } from "@/components/formtest/SingleCheckbox";
-import { TextArea } from "@/components/formtest/Textarea";
-import { TextField } from "@/components/formtest/TextField";
-import { TimePicker } from "@/components/formtest/TimePicker";
+import { DatePicker } from "@/components/formV2/DatePicker";
+import { Select } from "@/components/formV2/Select";
+import { SingleCheckbox } from "@/components/formV2/SingleCheckbox";
+import { TextArea } from "@/components/formV2/Textarea";
+import { TextField } from "@/components/formV2/TextField";
+import { TimePicker } from "@/components/formV2/TimePicker";
 import { FieldData } from "@/interfaces/form";
 
 export const generateFormField = (

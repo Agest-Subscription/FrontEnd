@@ -1,12 +1,12 @@
 import { ReactNode } from "react";
 import { FieldValues } from "react-hook-form";
 
-import { DatePickerProps } from "@/components/formtest/DatePicker";
-import { SelectProps } from "@/components/formtest/Select";
-import { SingleCheckboxProps } from "@/components/formtest/SingleCheckbox";
-import { TextAreaProps } from "@/components/formtest/Textarea";
-import { TextFieldProps } from "@/components/formtest/TextField";
-import { TimePickerProps } from "@/components/formtest/TimePicker";
+import { DatePickerProps } from "@/components/formV2/DatePicker";
+import { SelectProps } from "@/components/formV2/Select";
+import { SingleCheckboxProps } from "@/components/formV2/SingleCheckbox";
+import { TextAreaProps } from "@/components/formV2/Textarea";
+import { TextFieldProps } from "@/components/formV2/TextField";
+import { TimePickerProps } from "@/components/formV2/TimePicker";
 import { ISelectOptions, SelectValueType } from "@/constants/select";
 
 interface RenderColumn {
