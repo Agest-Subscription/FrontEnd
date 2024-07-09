@@ -49,7 +49,7 @@ const TableV1 = <T extends Record<string, any>>({
       </Flex>
       {showSearchBar && (
         <Flex justify="end">
-          <Search placeholder="Search" enterButton style={{ width: "20%" }} />
+          <Search placeholder="Search" enterButton style={{ width: "25%" }} />
         </Flex>
       )}
       <StyledTable

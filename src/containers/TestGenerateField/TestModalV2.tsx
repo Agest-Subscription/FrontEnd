@@ -4,7 +4,7 @@ import { Button, Form } from "antd";
 import AddTestForm from "./TestForm";
 import useGenerateFields, { TestField } from "./useGenerateField";
 
-import FormWrapperV2 from "@/components/formtest/FormWrapperV2";
+import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
 
 const TestModalV2 = () => {
   const methods = useForm<TestField>({
