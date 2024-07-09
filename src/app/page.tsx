@@ -1,8 +1,8 @@
 "use client";
 
-import TestModal from "@/components/formtest/TestModal";
+import TestModalV2 from "@/containers/TestGenerateField/TestModalV2";
 import DashboardLayout from "./dashboard/layout";
 
 export default function Home() {
-  return <TestModal />;
+  return <TestModalV2 />;
 }

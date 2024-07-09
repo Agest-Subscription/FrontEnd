@@ -1,6 +1,7 @@
 import React, { CSSProperties, FC } from "react";
 import { Button } from "antd";
 import styled from "styled-components";
+
 import { capitalize } from "../../utils/string";
 
 type ButtonProps = {
@@ -37,7 +38,7 @@ const baseButtonStyle: CSSProperties = {
 const getButtonStyle = (
   size: string,
   type: string,
-  customDisabled: boolean
+  customDisabled: boolean,
 ): CSSProperties => {
   const buttonStyle: CSSProperties = { ...baseButtonStyle };
 
@@ -75,7 +76,7 @@ const getButtonStyle = (
       buttonStyle.lineHeight = "22.4px";
       break;
   }
-  buttonStyle.padding = `${buttonStyle.fontSize * 1.25}px ${ buttonStyle.fontSize * 1.5}px`;
+  buttonStyle.padding = `${buttonStyle.fontSize * 1.25}px ${buttonStyle.fontSize * 1.5}px`;
   return buttonStyle;
 };
 
@@ -103,7 +104,6 @@ const CustomButton: FC<ButtonProps> = ({
   );
 };
 
-
 const StyledButton = styled(CustomButton)<ButtonProps>`
   &:hover {
     background-color: ${(props) =>
@@ -119,7 +119,7 @@ const StyledButton = styled(CustomButton)<ButtonProps>`
   }
 `;
 
-   const ButtonV1: FC<ButtonProps> = (props) => (
+const ButtonV1: FC<ButtonProps> = (props) => (
   <StyledButton {...props}>{props.children}</StyledButton>
 );
 
