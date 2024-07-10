@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect } from "react";
-import { Modal, Button } from 'antd';
+import { Modal, Button, Flex } from 'antd';
 import { CheckCircleOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { popup } from "@/interfaces/popup";
 
@@ -13,6 +13,7 @@ type Props = {
 
 //3 popup types "Success", "Fail", "Confirm"
 const PopUp = ({ popupProps, isOpen = false, onClose, onConfirm }: Props) => {
+    const formatText = popupProps.popup_text.split("/n")
 
     const handleEscape = (e: KeyboardEvent) => {
         if (e.keyCode === 27) {
@@ -26,13 +27,14 @@ const PopUp = ({ popupProps, isOpen = false, onClose, onConfirm }: Props) => {
 
     return (
         <>
+          
             <Modal
                 open={isOpen}
                 onOk={onConfirm}
                 onCancel={onClose}
                 title={
                 popupProps.popup_type === "Success"? [
-                    <center><CheckCircleOutlined style={{fontSize:'30px', color:'yellow'}}/></center>
+                    <center><CheckCircleOutlined style={{fontSize:'30px', color:'#90EE90'}}/></center>
                 ] 
                 : popupProps.popup_type === "Fail"? [
                     <center><ExclamationCircleOutlined style={{fontSize:'30px', color:'red'}}/></center>
@@ -45,8 +47,14 @@ const PopUp = ({ popupProps, isOpen = false, onClose, onConfirm }: Props) => {
                     ]
                 }
             >
-                <center><p>{popupProps.popup_text}</p></center>
+                <Flex vertical gap={12} style={{paddingBottom: '30px'}}>
+                    <center>{formatText.map(line => (<p>{line}</p>))}</center>
+                </Flex>
+              
+
+               
             </Modal>
+        
         </>
     )
 }
