@@ -1,6 +1,5 @@
 import { TablePaginationConfig } from "antd/es/table";
 import { FilterValue, SorterResult } from "antd/es/table/interface";
-import { Path } from "react-hook-form";
 
 export type TimeTracking = {
   updated_at: string | null;

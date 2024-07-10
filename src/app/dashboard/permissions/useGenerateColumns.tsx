@@ -3,8 +3,8 @@ import Link from "next/link";
 import { EditOutlined } from "@ant-design/icons";
 import { ColumnType } from "antd/es/table";
 
-import { PermissionTableData } from "@/interfaces/model/permission/permission.type";
 import { PERMISSIONS } from "@/constants/routes";
+import { PermissionTableData } from "@/interfaces/model/permission.type";
 
 const useGenerateColumns = () => {
   return useMemo<ColumnType<PermissionTableData>[]>(

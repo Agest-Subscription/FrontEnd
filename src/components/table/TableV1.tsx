@@ -1,16 +1,11 @@
-import {
-  Flex,
-  Typography,
-  Button,
-  Input,
-  Table as AntDTable,
-  TableColumnsType,
-} from "antd";
 import React from "react";
-import { capitalize } from "@/utils/string";
-import Table, { ColumnsType, TableProps } from "antd/es/table";
-import ButtonV1 from "../button/CustomButton";
+import { Flex, Input, TableColumnsType, Typography } from "antd";
+import Table, { TableProps } from "antd/es/table";
 import styled from "styled-components";
+
+import ButtonV1 from "../button/CustomButton";
+
+import { capitalize } from "@/utils/string";
 
 interface CustomTableProps<T> extends TableProps<T> {
   tableTitle?: string;
@@ -18,6 +13,7 @@ interface CustomTableProps<T> extends TableProps<T> {
   dataSource: T[];
   addItem?: () => void;
   onSearch?: (value: string) => void;
+  searchValue?: string;
   showSearchBar?: boolean;
 }
 const { Search } = Input;
@@ -35,6 +31,8 @@ const TableV1 = <T extends Record<string, any>>({
   addItem,
   tableTitle,
   showSearchBar = false,
+  onSearch,
+  searchValue = "",
   ...rest
 }: CustomTableProps<T>) => {
   return (
@@ -49,7 +47,13 @@ const TableV1 = <T extends Record<string, any>>({
       </Flex>
       {showSearchBar && (
         <Flex justify="end">
-          <Search placeholder="Search" enterButton style={{ width: "25%" }} />
+          <Search
+            placeholder="Search"
+            enterButton
+            style={{ width: "25%" }}
+            onSearch={onSearch}
+            defaultValue={searchValue}
+          />
         </Flex>
       )}
       <StyledTable

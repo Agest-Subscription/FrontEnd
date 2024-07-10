@@ -8,7 +8,7 @@ import {
   updatePermissionApi,
 } from "@/api/permission";
 import { PERMISSION, PERMISSIONS } from "@/constants/query";
-import { PermissionFilterParams } from "@/interfaces/model/permission/permission.type";
+import { PermissionFilterParams } from "@/interfaces/model/permission.type";
 
 export const useGetListPermission = (params: PermissionFilterParams) => {
   return useQuery({

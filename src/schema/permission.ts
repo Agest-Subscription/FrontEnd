@@ -1,5 +1,6 @@
-import { PermissionFormValues } from "@/interfaces/model/permission/permission.type";
 import { boolean, object, ObjectSchema, string } from "yup";
+
+import { PermissionFormValues } from "@/interfaces/model/permission.type";
 
 const permissionFormValuesSchema: ObjectSchema<PermissionFormValues> = object({
   name: string().required("Name is required"),

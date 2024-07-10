@@ -1,22 +1,19 @@
-import ButtonV1 from "@/components/button/CustomButton";
-import FormWrapperV2, {
-  useFormWrapperCtx,
-} from "@/components/formV2/FormWrapperV2";
-import useGenerateFields from "@/containers/TestGenerateField/useGenerateField";
-import { PermissionFormValues } from "@/interfaces/model/permission.type";
-import { Flex, Form, Spin } from "antd";
-import { useRouter } from "next/navigation";
 import React from "react";
-import { FieldValues, UseFormReturn } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { Flex } from "antd";
 
-interface DetailsProp<T extends FieldValues = any, V = any> {
+import ButtonV1 from "@/components/button/CustomButton";
+import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
+import { PermissionFormValues } from "@/interfaces/model/permission.type";
+
+interface DetailsProp {
   edit?: boolean;
   disableSaveBtn?: boolean;
   onDelete?: any;
   onSave: any;
 }
 
-const PermissionDetails: React.FC<DetailsProp<PermissionFormValues>> = ({
+const PermissionDetails: React.FC<DetailsProp> = ({
   edit = false,
   disableSaveBtn = false,
   onDelete,

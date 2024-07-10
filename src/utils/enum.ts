@@ -1,5 +1,3 @@
-import { CheckboxOptionType } from "antd/es/checkbox/Group";
-
 // import { MultipleCheckboxValueType } from "@/components/formtest/MultipleCheckbox";
 import { ISelectOptions, SelectValueType } from "@/constants/select";
 import { EnumStruct, EnumValue } from "@/interfaces/enum";

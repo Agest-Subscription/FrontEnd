@@ -5,7 +5,7 @@ import {
   PermissionFilterParams,
   PermissionResponseItem,
   UpdatePermissionPayload,
-} from "@/interfaces/model/permission/permission.type";
+} from "@/interfaces/model/permission.type";
 
 export const getListPermissionApi = (params: PermissionFilterParams) => {
   return axiosClient.get<GetListResponse<PermissionResponseItem>>(

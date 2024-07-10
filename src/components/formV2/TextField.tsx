@@ -1,12 +1,8 @@
 import React from "react";
-import { Input, InputProps, Tooltip } from "antd";
-import { isNil } from "lodash";
+import { Input, InputProps } from "antd";
 import styled from "styled-components";
 
 import { CommonFormItemProps, FormItem } from "./FormItem";
-import { StyledInput } from "./StyleComponents";
-
-import isTextTruncated from "@/utils/textTruncated";
 
 // TODO: will replace the function renderValue to renderReadOnlyValue
 

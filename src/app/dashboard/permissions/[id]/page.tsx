@@ -15,31 +15,20 @@ import {
   useUpdatePermission,
 } from "@/hooks/permission";
 import useGetId from "@/hooks/useGetId";
-import {
-  PermissionFormValues,
-  UpdatePermissionPayload,
-} from "@/interfaces/model/permission.type";
+import { PermissionFormValues } from "@/interfaces/model/permission.type";
 import { popUpPropType } from "@/interfaces/popup";
 import permissionFormValuesSchema from "@/schema/permission";
 import { capitalize } from "@/utils/string";
 
 type Props = {};
 
-const Page = (props: Props) => {
+const Page: React.FC<Props> = () => {
   const { mutate: updatePermission, isLoading: isUpdating } =
     useUpdatePermission();
   const { mutate: deletePermission, isLoading: isDeleting } =
     useDeletePermission();
   const permission_id = useGetId();
   const [openModal, setOpenModal] = useState(false);
-  const fields = useGenerateFields();
-  const methods = useForm<PermissionFormValues>({
-    mode: "onBlur",
-    resolver: yupResolver(permissionFormValuesSchema),
-  });
-
-  const { data: Permission } = useGetPermissionById(permission_id);
-
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "",
     popup_text: "",
@@ -47,71 +36,14 @@ const Page = (props: Props) => {
     onConfirm: () => {},
   });
 
-  function showModal(modalProp: popUpPropType) {
-    setModalProp(modalProp);
-    setOpenModal(true);
-  }
+  const methods = useForm<PermissionFormValues>({
+    mode: "onBlur",
+    resolver: yupResolver(permissionFormValuesSchema),
+  });
 
-  const updateModalProp: popUpPropType = {
-    popup_id: "update",
-    popup_text: "Are you sure you want to update this permission?",
-    popup_type: "Confirm",
-    onConfirm: methods.handleSubmit(onSubmit),
-  };
+  const { data: Permission } = useGetPermissionById(permission_id);
 
-  const deleteModalProp: popUpPropType = {
-    popup_id: "delete",
-    popup_text: "Are you sure you want to delete this permission?",
-    popup_type: "Confirm",
-    onConfirm: handleDelete,
-  };
-
-  function onSubmit(data: PermissionFormValues) {
-    updatePermission(
-      { permission_id: permission_id, ...data },
-      {
-        onSuccess: () => {
-          showModal({
-            popup_id: "successpopup",
-            popup_text: `${capitalize("Permission updated successfully!")}`,
-            popup_type: "Success",
-            onConfirm: () => {},
-          });
-        },
-        onError: () => {
-          showModal({
-            popup_id: "fail",
-            popup_text: `${capitalize("Permission update failed!")}`,
-            popup_type: "Fail",
-            onConfirm: () => {},
-          });
-        },
-      },
-    );
-  }
-
-  function handleDelete() {
-    deletePermission(permission_id, {
-      onSuccess: () => {
-        showModal({
-          popup_id: "successpopup",
-          popup_text: `${capitalize("Permission deleted successfully!")}`,
-          popup_type: "Success",
-          onConfirm: () => {},
-        });
-      },
-      onError: () => {
-        showModal({
-          popup_id: "fail",
-          popup_text: `${capitalize("Permission delete failed!")}`,
-          popup_type: "Fail",
-          onConfirm: () => {},
-        });
-      },
-    });
-  }
-
-  
+  const fields = useGenerateFields();
 
   useEffect(() => {
     if (Permission) {
@@ -122,7 +54,12 @@ const Page = (props: Props) => {
     }
   }, [Permission, methods]);
 
-  function handleModalClose() {
+  const showModal = (prop: popUpPropType) => {
+    setModalProp(prop);
+    setOpenModal(true);
+  };
+
+  const handleModalClose = () => {
     setOpenModal(false);
     setModalProp({
       popup_id: "",
@@ -130,7 +67,60 @@ const Page = (props: Props) => {
       popup_type: "Confirm",
       onConfirm: () => {},
     });
-  }
+  };
+
+  const handleSubmit = (data: PermissionFormValues) => {
+    updatePermission(
+      { permission_id, ...data },
+      {
+        onSuccess: () =>
+          showModal({
+            popup_id: "successpopup",
+            popup_text: capitalize("Permission updated successfully!"),
+            popup_type: "Success",
+            onConfirm: handleModalClose,
+          }),
+        onError: () =>
+          showModal({
+            popup_id: "fail",
+            popup_text: capitalize("Permission update failed!"),
+            popup_type: "Fail",
+            onConfirm: () => {},
+          }),
+      },
+    );
+  };
+
+  const handleDelete = () => {
+    deletePermission(permission_id, {
+      onSuccess: () =>
+        showModal({
+          popup_id: "successpopup",
+          popup_text: capitalize("Permission deleted successfully!"),
+          popup_type: "Success",
+          onConfirm: handleModalClose,
+        }),
+      onError: () =>
+        showModal({
+          popup_id: "fail",
+          popup_text: capitalize("Permission delete failed!"),
+          popup_type: "Fail",
+          onConfirm: handleModalClose,
+        }),
+    });
+  };
+
+  const handleSave = async () => {
+    const isValid = await methods.trigger();
+    if (isValid) {
+      showModal({
+        popup_id: "update",
+        popup_text: `${capitalize("Are you sure you want to update this permission?")}`,
+        popup_type: "Confirm",
+        onConfirm: methods.handleSubmit(handleSubmit),
+      });
+    }
+  };
 
   return (
     <Flex vertical gap={24}>
@@ -140,22 +130,21 @@ const Page = (props: Props) => {
       <Spin spinning={isUpdating || isDeleting}>
         <FormWrapperV2 methods={methods} fields={fields}>
           <Form
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "20px",
-            }}
+            style={{ display: "flex", flexDirection: "column", gap: "20px" }}
             layout="vertical"
-            onFinish={methods.handleSubmit(onSubmit)}
+            onFinish={methods.handleSubmit(handleSubmit)}
           >
             <PermissionDetails
               edit
-              onDelete={() => showModal(deleteModalProp)}
-              onSave={() =>
-                methods.formState.isValid
-                  ? showModal(updateModalProp)
-                  : methods.handleSubmit(onSubmit)()
+              onDelete={() =>
+                showModal({
+                  popup_id: "delete",
+                  popup_text: `${capitalize("Are you sure you want to delete this permission?")}`,
+                  popup_type: "Confirm",
+                  onConfirm: handleDelete,
+                })
               }
+              onSave={handleSave}
             />
             <PopUp
               popupProps={modalProp}

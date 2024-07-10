@@ -1,9 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import useGenerateColumns from "./useGenerateColumns";
 
 import TableV1 from "@/components/table/TableV1";
+import { PERMISSIONS } from "@/constants/routes";
 import { useGetListPermission } from "@/hooks/permission";
+import useSearchSync from "@/hooks/useSearchSync";
 import {
   DataSourceItem,
   TableChangeParams,
@@ -13,12 +16,12 @@ import {
   PermissionFilterParams,
   PermissionTableData,
 } from "@/interfaces/model/permission.type";
-import { useRouter } from "next/navigation";
-import { PERMISSIONS } from "@/constants/routes";
-import { Spin } from "antd";
+
 type Props = {};
-const PermissionList: React.FC<Props> = (props: Props) => {
+
+const PermissionList: React.FC<Props> = () => {
   const router = useRouter();
+  const { searchQuery, handleSearch } = useSearchSync();
   const [tableParams, setTableParams] = useState<
     TableParams<PermissionTableData>
   >({
@@ -28,13 +31,16 @@ const PermissionList: React.FC<Props> = (props: Props) => {
       showSizeChanger: false,
     },
   });
+
   const params = useMemo<PermissionFilterParams>(
     () => ({
       page: tableParams.pagination.current,
       page_size: tableParams.pagination?.pageSize,
+      search: searchQuery,
     }),
-    [tableParams.pagination],
+    [searchQuery, tableParams.pagination],
   );
+
   const { data: PermissionTableData, isFetching } =
     useGetListPermission(params);
   const columns = useGenerateColumns();
@@ -81,7 +87,7 @@ const PermissionList: React.FC<Props> = (props: Props) => {
     );
   }, [PermissionTableData]);
 
-  //dummy
+  // Dummy data
   const dummyPermissions = [
     {
       permission_id: "1",
@@ -169,6 +175,8 @@ const PermissionList: React.FC<Props> = (props: Props) => {
         }
         pagination={tableParams.pagination}
         addItem={() => router.push(`${PERMISSIONS}/add`)}
+        onSearch={handleSearch}
+        searchValue={searchQuery}
       />
     </div>
   );

@@ -1,22 +1,22 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Flex, Form, Typography, Spin } from "antd";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Flex, Form, Spin, Typography } from "antd";
 
 import PermissionDetails from "../PermissionDetails";
 import { useGenerateFields } from "../useGenerateFields";
 
 import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
-import { capitalize } from "@/utils/string";
-import { yupResolver } from "@hookform/resolvers/yup";
-import permissionFormValuesSchema from "@/schema/permission";
-import { PermissionFormValues } from "@/interfaces/model/permission.type";
-import { useAddPermission } from "@/hooks/permission";
 import PopUp from "@/components/popup/Popup";
+import { useAddPermission } from "@/hooks/permission";
+import { PermissionFormValues } from "@/interfaces/model/permission.type";
 import { popUpPropType } from "@/interfaces/popup";
+import permissionFormValuesSchema from "@/schema/permission";
+import { capitalize } from "@/utils/string";
 
 type Props = {};
-const Page = (props: Props) => {
+const Page: React.FC<Props> = () => {
   const { mutate: addPermission, isLoading: isAdding } = useAddPermission();
   const methods = useForm({
     mode: "onBlur",
@@ -24,15 +24,17 @@ const Page = (props: Props) => {
   });
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "successpopup",
-    popup_text: "Are you sure to create a  permission?",
+    popup_text: "Are you sure to create a permission?",
     popup_type: "Confirm",
     onConfirm: methods.handleSubmit(onSubmit),
   });
   const [openModal, setOpenModal] = useState(false);
+
   function showModal(modalProp: popUpPropType) {
     setModalProp(modalProp);
     setOpenModal(true);
   }
+
   function onSubmit(data: PermissionFormValues) {
     addPermission(data, {
       onSuccess: () => {
@@ -40,7 +42,7 @@ const Page = (props: Props) => {
           popup_id: "successpopup",
           popup_text: "Permission created successfully!",
           popup_type: "Success",
-          onConfirm: () => {},
+          onConfirm: () => setOpenModal(false),
         });
       },
       onError: () => {
@@ -48,12 +50,25 @@ const Page = (props: Props) => {
           popup_id: "fail",
           popup_text: "Permission creation failed!",
           popup_type: "Fail",
-          onConfirm: () => {},
+          onConfirm: () => setOpenModal(false),
         });
       },
     });
   }
+
   const fields = useGenerateFields();
+
+  const handleSave = async () => {
+    const isValid = await methods.trigger();
+    if (isValid) {
+      showModal({
+        popup_id: "confirm",
+        popup_text: "Are you sure to create a permission?",
+        popup_type: "Confirm",
+        onConfirm: methods.handleSubmit(onSubmit),
+      });
+    }
+  };
 
   return (
     <Flex vertical gap={24}>
@@ -71,13 +86,7 @@ const Page = (props: Props) => {
             layout="vertical"
             onFinish={methods.handleSubmit(onSubmit)}
           >
-            <PermissionDetails
-              onSave={
-                !methods.formState.isValid
-                  ? methods.handleSubmit(onSubmit)
-                  : ()=>showModal(modalProp)
-              }
-            />
+            <PermissionDetails onSave={handleSave} />
             <PopUp
               popupProps={modalProp}
               isOpen={openModal}
