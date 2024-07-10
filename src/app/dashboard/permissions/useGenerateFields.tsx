@@ -22,6 +22,9 @@ export const useGenerateFields = () => {
       description: {
         label: "Description",
         type: "textarea",
+        componentProps: {
+          style: { width: "100%" },
+        },
       },
       is_valid: {
         label: "Is Valid",

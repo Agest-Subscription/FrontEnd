@@ -97,7 +97,6 @@ const TextInputField = <
         : name
     ) as TName;
   }, [index, name]);
-  console.log("finalName: ", finalName);
 
   return (
     <div style={style}>

@@ -30,10 +30,8 @@ const PermissionList: React.FC<Props> = (props: Props) => {
   });
   const params = useMemo<PermissionFilterParams>(
     () => ({
-      page: tableParams.pagination.current,
-      page_size: tableParams.pagination?.pageSize,
-      order: "desc",
-      order_by: "name",
+      // page: tableParams.pagination.current,
+      // page_size: tableParams.pagination?.pageSize,
     }),
     [tableParams.pagination],
   );
@@ -82,6 +80,8 @@ const PermissionList: React.FC<Props> = (props: Props) => {
       })) ?? []
     );
   }, [PermissionTableData]);
+
+  //dummy
   const dummyPermissions = [
     {
       permission_id: "1",
@@ -160,11 +160,10 @@ const PermissionList: React.FC<Props> = (props: Props) => {
   return (
     <div>
       <TableV1
-        loading={isFetching}
         tableTitle="permission"
         showSearchBar={true}
         columns={columns}
-        dataSource={dummyPermissions}
+        dataSource={dataSource}
         onChange={(pagination, filters) =>
           handleTableChange({ pagination, filters })
         }

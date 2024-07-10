@@ -38,7 +38,6 @@ const FormWrapperV2 = <T extends FieldValues, V>({
     }),
     [fields],
   );
-  console.log("value fields: ", value);
 
   const error = methods.formState.errors["form_error"]?.message as string;
 

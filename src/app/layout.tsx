@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={inter.className} style={{ height: "100%" }}>
         <Config>{children}</Config>
       </body>
     </html>
