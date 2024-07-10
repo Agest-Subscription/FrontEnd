@@ -1,4 +1,4 @@
-import { FilterBase } from "../../base";
+import { FilterBase } from "../base";
 
 export type Permission = {
   permission_id: string;

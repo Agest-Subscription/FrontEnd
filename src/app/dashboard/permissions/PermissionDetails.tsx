@@ -3,7 +3,7 @@ import FormWrapperV2, {
   useFormWrapperCtx,
 } from "@/components/formV2/FormWrapperV2";
 import useGenerateFields from "@/containers/TestGenerateField/useGenerateField";
-import { PermissionFormValues } from "@/interfaces/model/permission/permission.type";
+import { PermissionFormValues } from "@/interfaces/model/permission.type";
 import { Flex, Form, Spin } from "antd";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -11,12 +11,16 @@ import { FieldValues, UseFormReturn } from "react-hook-form";
 
 interface DetailsProp<T extends FieldValues = any, V = any> {
   edit?: boolean;
-  onDelete?: () => void;
+  disableSaveBtn?: boolean;
+  onDelete?: any;
+  onSave: any;
 }
 
 const PermissionDetails: React.FC<DetailsProp<PermissionFormValues>> = ({
   edit = false,
+  disableSaveBtn = false,
   onDelete,
+  onSave,
 }) => {
   const router = useRouter();
   const { FormField } = useFormWrapperCtx<PermissionFormValues>();
@@ -49,7 +53,11 @@ const PermissionDetails: React.FC<DetailsProp<PermissionFormValues>> = ({
             customType="cancel"
             onClick={() => router.back()}
           />
-          <ButtonV1 title="Save" htmlType="submit" />
+          <ButtonV1
+            title="Save"
+            onClick={onSave}
+            customDisabled={disableSaveBtn}
+          />
         </Flex>
       </Flex>
     </>

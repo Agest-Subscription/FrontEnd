@@ -12,7 +12,7 @@ import {
 import {
   PermissionFilterParams,
   PermissionTableData,
-} from "@/interfaces/model/permission/permission.type";
+} from "@/interfaces/model/permission.type";
 import { useRouter } from "next/navigation";
 import { PERMISSIONS } from "@/constants/routes";
 import { Spin } from "antd";
@@ -30,8 +30,8 @@ const PermissionList: React.FC<Props> = (props: Props) => {
   });
   const params = useMemo<PermissionFilterParams>(
     () => ({
-      // page: tableParams.pagination.current,
-      // page_size: tableParams.pagination?.pageSize,
+      page: tableParams.pagination.current,
+      page_size: tableParams.pagination?.pageSize,
     }),
     [tableParams.pagination],
   );
@@ -163,7 +163,7 @@ const PermissionList: React.FC<Props> = (props: Props) => {
         tableTitle="permission"
         showSearchBar={true}
         columns={columns}
-        dataSource={dataSource}
+        dataSource={dummyPermissions}
         onChange={(pagination, filters) =>
           handleTableChange({ pagination, filters })
         }

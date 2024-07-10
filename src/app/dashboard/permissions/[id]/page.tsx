@@ -1,62 +1,118 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
 
 import PermissionDetails from "../PermissionDetails";
 import { useGenerateFields } from "../useGenerateFields";
 
 import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
-import { capitalize } from "@/utils/string";
-import { yupResolver } from "@hookform/resolvers/yup";
-import permissionFormValuesSchema from "@/schema/permission";
-import {
-  PermissionFormValues,
-  UpdatePermissionPayload,
-} from "@/interfaces/model/permission/permission.type";
+import PopUp from "@/components/popup/Popup";
 import {
   useDeletePermission,
   useGetPermissionById,
   useUpdatePermission,
 } from "@/hooks/permission";
 import useGetId from "@/hooks/useGetId";
+import {
+  PermissionFormValues,
+  UpdatePermissionPayload,
+} from "@/interfaces/model/permission.type";
+import { popUpPropType } from "@/interfaces/popup";
+import permissionFormValuesSchema from "@/schema/permission";
+import { capitalize } from "@/utils/string";
 
 type Props = {};
+
 const Page = (props: Props) => {
   const { mutate: updatePermission, isLoading: isUpdating } =
     useUpdatePermission();
   const { mutate: deletePermission, isLoading: isDeleting } =
     useDeletePermission();
   const permission_id = useGetId();
-  const { data: Permission } = useGetPermissionById(permission_id);
-  function onSubmit(data: PermissionFormValues) {
-    updatePermission(
-      { permission_id: permission_id, ...data },
-      {
-        onSuccess: () => {
-          // show modal here
-        },
-        onError: () => {
-          //  show error here
-        },
-      },
-    );
-  }
-  function handleDelete() {
-    deletePermission(permission_id, {
-      onSuccess: () => {
-        // show modal here
-      },
-      onError: () => {
-        //  show error here
-      },
-    });
-  }
+  const [openModal, setOpenModal] = useState(false);
   const fields = useGenerateFields();
   const methods = useForm<PermissionFormValues>({
     mode: "onBlur",
     resolver: yupResolver(permissionFormValuesSchema),
   });
+
+  const { data: Permission } = useGetPermissionById(permission_id);
+
+  const [modalProp, setModalProp] = useState<popUpPropType>({
+    popup_id: "",
+    popup_text: "",
+    popup_type: "Confirm",
+    onConfirm: () => {},
+  });
+
+  function showModal(modalProp: popUpPropType) {
+    setModalProp(modalProp);
+    setOpenModal(true);
+  }
+
+  const updateModalProp: popUpPropType = {
+    popup_id: "update",
+    popup_text: "Are you sure you want to update this permission?",
+    popup_type: "Confirm",
+    onConfirm: methods.handleSubmit(onSubmit),
+  };
+
+  const deleteModalProp: popUpPropType = {
+    popup_id: "delete",
+    popup_text: "Are you sure you want to delete this permission?",
+    popup_type: "Confirm",
+    onConfirm: handleDelete,
+  };
+
+  function onSubmit(data: PermissionFormValues) {
+    updatePermission(
+      { permission_id: permission_id, ...data },
+      {
+        onSuccess: () => {
+          showModal({
+            popup_id: "successpopup",
+            popup_text: `${capitalize("Permission updated successfully!")}`,
+            popup_type: "Success",
+            onConfirm: () => {},
+          });
+        },
+        onError: () => {
+          showModal({
+            popup_id: "fail",
+            popup_text: `${capitalize("Permission update failed!")}`,
+            popup_type: "Fail",
+            onConfirm: () => {},
+          });
+        },
+      },
+    );
+  }
+
+  function handleDelete() {
+    deletePermission(permission_id, {
+      onSuccess: () => {
+        showModal({
+          popup_id: "successpopup",
+          popup_text: `${capitalize("Permission deleted successfully!")}`,
+          popup_type: "Success",
+          onConfirm: () => {},
+        });
+      },
+      onError: () => {
+        showModal({
+          popup_id: "fail",
+          popup_text: `${capitalize("Permission delete failed!")}`,
+          popup_type: "Fail",
+          onConfirm: () => {},
+        });
+      },
+    });
+  }
+
+  
+
   useEffect(() => {
     if (Permission) {
       methods.setValue("description", Permission.description);
@@ -65,6 +121,17 @@ const Page = (props: Props) => {
       methods.setValue("is_valid", Permission.is_valid);
     }
   }, [Permission, methods]);
+
+  function handleModalClose() {
+    setOpenModal(false);
+    setModalProp({
+      popup_id: "",
+      popup_text: "",
+      popup_type: "Confirm",
+      onConfirm: () => {},
+    });
+  }
+
   return (
     <Flex vertical gap={24}>
       <Typography style={{ fontSize: 24, fontWeight: 600, color: "#2F80ED" }}>
@@ -81,7 +148,20 @@ const Page = (props: Props) => {
             layout="vertical"
             onFinish={methods.handleSubmit(onSubmit)}
           >
-            <PermissionDetails edit onDelete={handleDelete} />
+            <PermissionDetails
+              edit
+              onDelete={() => showModal(deleteModalProp)}
+              onSave={() =>
+                methods.formState.isValid
+                  ? showModal(updateModalProp)
+                  : methods.handleSubmit(onSubmit)()
+              }
+            />
+            <PopUp
+              popupProps={modalProp}
+              isOpen={openModal}
+              onClose={handleModalClose}
+            />
           </Form>
         </FormWrapperV2>
       </Spin>
