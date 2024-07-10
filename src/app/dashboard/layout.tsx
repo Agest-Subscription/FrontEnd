@@ -2,9 +2,9 @@
 import React, { FC, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Flex, Layout, Menu, MenuProps, theme, Typography } from "antd";
-import styled from "styled-components";
+import { Flex, Layout, MenuProps, theme, Typography } from "antd";
 
+import MenuStyles from "@/components/Menu/menu";
 import {
   FEATURES,
   FEE_OVERATE,
@@ -71,24 +71,7 @@ const items = [
     key: USERS,
   },
 ];
-const MenuCustom = styled(Menu)`
-  &.ant-menu {
-    font-weight: 700;
-    background: #b9e5ff;
-    display: flex;
-    justify-content: space-between;
-    text-align: center;
-    .ant-menu-item {
-      flex: 1;
-    }
-    .ant-menu-item-selected {
-      background: #fff;
-    }
-    .ant-menu-item-selected:after {
-      border-bottom-color: white;
-    }
-  }
-`;
+
 const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
   const urlParams = usePathname();
   // console.log("urlParams: ", urlParams);
@@ -117,12 +100,7 @@ const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
           Subscription
         </Typography>
         <Content>
-          <MenuCustom
-            mode="horizontal"
-            selectedKeys={[current]}
-            items={items}
-            onClick={onClick}
-          />
+          <MenuStyles />
           <div
             style={{
               background: colorBgContainer,
