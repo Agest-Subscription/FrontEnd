@@ -56,13 +56,13 @@ const TableV1 = <T extends Record<string, any>>({
           />
         </Flex>
       )}
-      <StyledTable
+      <Table
         bordered
         columns={columns}
         dataSource={dataSource}
         {...rest}
         rowClassName="editable-row"
-      ></StyledTable>
+      ></Table>
     </Flex>
   );
 };

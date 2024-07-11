@@ -1,7 +1,7 @@
 import { Permission } from "./permission.type";
 
 export type feature = {
-  feature_id: string;
+  id: string;
   name: string;
   description: string;
   permissions: Permission[];

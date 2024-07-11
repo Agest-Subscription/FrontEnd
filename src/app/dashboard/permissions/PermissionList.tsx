@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import useGenerateColumns from "./useGenerateColumns";
@@ -82,7 +82,7 @@ const PermissionList: React.FC<Props> = () => {
     return (
       PermissionTableData?.data.map((permission) => ({
         ...permission,
-        key: permission.permission_id,
+        key: permission.id,
       })) ?? []
     );
   }, [PermissionTableData]);
@@ -166,10 +166,11 @@ const PermissionList: React.FC<Props> = () => {
   return (
     <div>
       <TableV1
+        loading={isFetching}
         tableTitle="permission"
         showSearchBar={true}
         columns={columns}
-        dataSource={dummyPermissions}
+        dataSource={dataSource}
         onChange={(pagination, filters) =>
           handleTableChange({ pagination, filters })
         }

@@ -1,7 +1,7 @@
 import { FeatureType } from "../Feature";
 
 export type PricingPlanType = {
-  pricing_id: string;
+  id: string;
   pricing_name: string;
   pricing_start_date: string;
   pricing_end_date: string;

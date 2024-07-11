@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
@@ -14,11 +14,14 @@ import { PermissionFormValues } from "@/interfaces/model/permission.type";
 import { popUpPropType } from "@/interfaces/popup";
 import permissionFormValuesSchema from "@/schema/permission";
 import { capitalize } from "@/utils/string";
+import { useGoToDashboardTab } from "@/utils/navigate";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
+  const goToPermission = useGoToDashboardTab("permissions");
+  const [openModal, setOpenModal] = useState(false);
   const { mutate: addPermission, isLoading: isAdding } = useAddPermission();
-  const methods = useForm({
+  const methods = useForm<PermissionFormValues>({
     mode: "onBlur",
     resolver: yupResolver(permissionFormValuesSchema),
   });
@@ -27,14 +30,13 @@ const Page: React.FC<Props> = () => {
     popup_text: "Are you sure to create a permission?",
     popup_type: "Confirm",
     onConfirm: methods.handleSubmit(onSubmit),
+    onClose: () => setOpenModal(false),
   });
-  const [openModal, setOpenModal] = useState(false);
 
   function showModal(modalProp: popUpPropType) {
     setModalProp(modalProp);
     setOpenModal(true);
   }
-
   function onSubmit(data: PermissionFormValues) {
     addPermission(data, {
       onSuccess: () => {
@@ -42,7 +44,8 @@ const Page: React.FC<Props> = () => {
           popup_id: "successpopup",
           popup_text: "Permission created successfully!",
           popup_type: "Success",
-          onConfirm: () => setOpenModal(false),
+          onConfirm: () => {},
+          onClose: () => goToPermission(),
         });
       },
       onError: () => {
@@ -50,7 +53,8 @@ const Page: React.FC<Props> = () => {
           popup_id: "fail",
           popup_text: "Permission creation failed!",
           popup_type: "Fail",
-          onConfirm: () => setOpenModal(false),
+          onConfirm: () => {},
+          onClose: () => setOpenModal(false),
         });
       },
     });
@@ -66,6 +70,7 @@ const Page: React.FC<Props> = () => {
         popup_text: "Are you sure to create a permission?",
         popup_type: "Confirm",
         onConfirm: methods.handleSubmit(onSubmit),
+        onClose: () => setOpenModal(false),
       });
     }
   };
@@ -87,11 +92,7 @@ const Page: React.FC<Props> = () => {
             onFinish={methods.handleSubmit(onSubmit)}
           >
             <PermissionDetails onSave={handleSave} />
-            <PopUp
-              popupProps={modalProp}
-              isOpen={openModal}
-              onClose={() => setOpenModal(false)}
-            />
+            <PopUp popupProps={modalProp} isOpen={openModal} />
           </Form>
         </FormWrapperV2>
       </Spin>

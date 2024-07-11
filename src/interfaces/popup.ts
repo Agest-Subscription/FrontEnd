@@ -3,4 +3,5 @@ export type popUpPropType = {
   popup_text: string;
   popup_type: "Success" | "Fail" | "Confirm" | "";
   onConfirm: () => void;
+  onClose: any;
 };

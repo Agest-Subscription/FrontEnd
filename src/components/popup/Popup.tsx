@@ -12,29 +12,27 @@ import { popUpPropType } from "@/interfaces/popup";
 type Props = {
   popupProps: popUpPropType;
   isOpen: boolean;
-  onClose: any;
 };
 
 //3 popup types "Success", "Fail", "Confirm"
-const PopUp = ({ popupProps, isOpen = false, onClose }: Props) => {
+const PopUp = ({ popupProps, isOpen = false }: Props) => {
   const formatText = popupProps.popup_text.split("/n");
 
-  const handleEscape = (e: KeyboardEvent) => {
-    if (e.key === "Escape") {
-      onClose();
-    }
-  };
-
   useEffect(() => {
+    const handleEscape: any = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        popupProps.onClose();
+      }
+    };
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [handleEscape]);
+  }, [popupProps.onClose]);
 
   return (
     <Modal
       open={isOpen}
       onOk={popupProps.onConfirm}
-      onCancel={onClose}
+      onCancel={popupProps.onClose}
       centered
       title={
         popupProps.popup_type === "Success"
@@ -61,7 +59,7 @@ const PopUp = ({ popupProps, isOpen = false, onClose }: Props) => {
             <ButtonV1
               customType="cancel"
               key="cancel"
-              onClick={onClose}
+              onClick={popupProps.onClose}
               customSize="small"
             >
               No
@@ -71,7 +69,7 @@ const PopUp = ({ popupProps, isOpen = false, onClose }: Props) => {
               type="primary"
               onClick={() => {
                 popupProps.onConfirm();
-                onClose();
+                popupProps.onClose();
               }}
               customSize="small"
             >
@@ -85,7 +83,7 @@ const PopUp = ({ popupProps, isOpen = false, onClose }: Props) => {
         vertical
         gap={12}
         style={{
-          padding: "30px 0px",
+          paddingBottom: "30px",
           fontSize: "18px",
           fontWeight: "400",
           color: "#171A1F",
