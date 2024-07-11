@@ -117,7 +117,7 @@ const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
           Subscription
         </Typography>
         <Content>
-          <MenuCustom
+          <Menu
             mode="horizontal"
             selectedKeys={[current]}
             items={items}

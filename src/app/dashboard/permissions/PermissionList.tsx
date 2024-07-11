@@ -160,7 +160,7 @@ const PermissionList: React.FC<Props> = (props: Props) => {
   return (
     <div>
       <TableV1
-        loading={isFetching}
+        loading={false}
         tableTitle="permission"
         showSearchBar={true}
         columns={columns}

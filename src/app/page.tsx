@@ -8,6 +8,6 @@ export default function Home() {
   return <PopUp popupProps={{
     popup_id: "successpopup",
     popup_text: "Are you sure to edit this pricing plan?/n This action may cause changes to other linked items.",
-    popup_type: "Success"
+    popup_type: ""
   }} isOpen={true} onClose={undefined} onConfirm={undefined}  />;
 }
