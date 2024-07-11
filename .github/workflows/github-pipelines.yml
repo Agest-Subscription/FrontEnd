@@ -66,4 +66,4 @@ jobs:
           push: true
           tags: |
             quocc/sub:frontend-latest
-            quocc/sub:frontend-${{ github.sha::8 }}
+            quocc/sub:frontend-${{ github.sha }}
