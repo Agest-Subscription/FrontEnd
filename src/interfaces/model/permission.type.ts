@@ -8,15 +8,15 @@ export type Permission = {
   is_valid: boolean;
 };
 
-export type PermissionTableData = Omit<Permission, "is_valid">;
+export type PermissionTableData = Omit<Permission, "is_valid"> & {
+  no: number;
+};
 
 export type PermissionResponseItem = Permission;
 
 export type PermissionFilterParams = FilterBase<PermissionResponseItem>;
 
-export type PermissionFormValues = Omit<Permission, "id"> & {
-  is_valid: boolean;
-};
+export type PermissionFormValues = Omit<Permission, "id">;
 
 export type AddPermissionPayload = PermissionFormValues;
 

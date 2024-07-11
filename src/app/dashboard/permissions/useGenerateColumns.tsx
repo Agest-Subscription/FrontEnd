@@ -11,8 +11,8 @@ const useGenerateColumns = () => {
     () => [
       {
         title: "No",
-        dataIndex: "id",
-        key: "id",
+        dataIndex: "no",
+        key: "no",
       },
       {
         title: "Name",

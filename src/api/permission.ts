@@ -25,8 +25,8 @@ export const addPermissionApi = (data: AddPermissionPayload) => {
 };
 
 export const updatePermissionApi = (data: UpdatePermissionPayload) => {
-  const { permission_id, ...rest } = data;
-  return axiosClient.put(`permissions/${permission_id}`, rest);
+  const { id, ...rest } = data;
+  return axiosClient.put(`permissions/${id}`, rest);
 };
 
 export const deletePermissionApi = (id: string) => {

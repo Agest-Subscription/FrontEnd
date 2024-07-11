@@ -18,8 +18,8 @@ import useGetId from "@/hooks/useGetId";
 import { PermissionFormValues } from "@/interfaces/model/permission.type";
 import { popUpPropType } from "@/interfaces/popup";
 import permissionFormValuesSchema from "@/schema/permission";
-import { capitalize } from "@/utils/string";
 import { useGoToDashboardTab } from "@/utils/navigate";
+import { capitalize } from "@/utils/string";
 
 type Props = {};
 
@@ -91,7 +91,7 @@ const Page: React.FC<Props> = () => {
       onSuccess: () =>
         showModal({
           popup_id: "successpopup",
-          popup_text: capitalize("Permission deleted successfully!"),
+          popup_text: capitalize("This Permission is successfully deleted!"),
           popup_type: "Success",
           onConfirm: () => {},
           onClose: goToPermission(),
@@ -99,7 +99,7 @@ const Page: React.FC<Props> = () => {
       onError: () =>
         showModal({
           popup_id: "fail",
-          popup_text: capitalize("Permission delete failed!"),
+          popup_text: capitalize("this Permission delete failed!"),
           popup_type: "Fail",
           onConfirm: () => {},
           onClose: () => setOpenModal(false),

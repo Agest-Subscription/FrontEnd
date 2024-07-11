@@ -44,6 +44,7 @@ export const useUpdatePermission = () => {
   return useMutation(updatePermissionApi, {
     onSuccess: () => {
       queryClient.invalidateQueries([PERMISSIONS]);
+      queryClient.invalidateQueries([PERMISSION]);
     },
   });
 };
