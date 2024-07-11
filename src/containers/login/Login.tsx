@@ -1,5 +1,5 @@
-import { Flex, Typography } from "antd";
 import React from "react";
+import { Flex, Typography } from "antd";
 
 type Props = {};
 

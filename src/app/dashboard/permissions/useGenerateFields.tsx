@@ -1,6 +1,7 @@
-import { FieldsData } from "@/interfaces/form";
-import { PermissionFormValues } from "@/interfaces/model/permission/permission.type";
 import { useMemo } from "react";
+
+import { FieldsData } from "@/interfaces/form";
+import { PermissionFormValues } from "@/interfaces/model/permission.type";
 
 export const useGenerateFields = () => {
   const fields = useMemo<FieldsData<PermissionFormValues>>(() => {
@@ -22,6 +23,9 @@ export const useGenerateFields = () => {
       description: {
         label: "Description",
         type: "textarea",
+        componentProps: {
+          style: { width: "100%" },
+        },
       },
       is_valid: {
         label: "Is Valid",

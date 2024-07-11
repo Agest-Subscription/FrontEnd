@@ -3,16 +3,16 @@ import Link from "next/link";
 import { EditOutlined } from "@ant-design/icons";
 import { ColumnType } from "antd/es/table";
 
-import { PermissionTableData } from "@/interfaces/model/permission/permission.type";
 import { PERMISSIONS } from "@/constants/routes";
+import { PermissionTableData } from "@/interfaces/model/permission.type";
 
 const useGenerateColumns = () => {
   return useMemo<ColumnType<PermissionTableData>[]>(
     () => [
       {
         title: "No",
-        dataIndex: "permission_id",
-        key: "permission_id",
+        dataIndex: "id",
+        key: "id",
       },
       {
         title: "Name",
@@ -36,7 +36,7 @@ const useGenerateColumns = () => {
         width: 150,
         render: (_, record) => {
           return (
-            <Link href={`${PERMISSIONS}/${record.permission_id}`}>
+            <Link href={`${PERMISSIONS}/${record.id}`}>
               <EditOutlined size={100} />
             </Link>
           );

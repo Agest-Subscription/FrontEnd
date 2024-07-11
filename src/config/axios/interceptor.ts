@@ -1,8 +1,9 @@
 import { AxiosInstance } from "axios";
+
 import { axiosClient } from "./client";
 
 export type GetAccessToken = () => Promise<string> | string;
-  
+
 export const addInterceptor = (
   clientInstance: AxiosInstance,
   getAccessToken: GetAccessToken,
