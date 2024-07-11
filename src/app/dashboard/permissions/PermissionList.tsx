@@ -80,88 +80,13 @@ const PermissionList: React.FC<Props> = () => {
 
   const dataSource = useMemo<DataSourceItem<PermissionTableData>[]>(() => {
     return (
-      PermissionTableData?.data.map((permission) => ({
+      PermissionTableData?.data.map((permission, index) => ({
         ...permission,
         key: permission.id,
+        no: index + 1 + ((params.page ?? 1) - 1) * (params?.page_size ?? 5),
       })) ?? []
     );
-  }, [PermissionTableData]);
-
-  // Dummy data
-  const dummyPermissions = [
-    {
-      permission_id: "1",
-      name: "read_user",
-      display_name: "Read User",
-      description: "Allows reading user information.",
-    },
-    {
-      permission_id: "2",
-      name: "write_user",
-      display_name: "Write User",
-      description: "Allows modifying user information.",
-    },
-    {
-      permission_id: "3",
-      name: "delete_user",
-      display_name: "Delete User",
-      description: "Allows deleting a user.",
-    },
-    {
-      permission_id: "4",
-      name: "read_permission",
-      display_name: "Read Permission",
-      description: "Allows reading permission information.",
-    },
-    {
-      permission_id: "5",
-      name: "write_permission",
-      display_name: "Write Permission",
-      description: "Allows modifying permission information.",
-    },
-    {
-      permission_id: "6",
-      name: "delete_permission",
-      display_name: "Delete Permission",
-      description: "Allows deleting a permission.",
-    },
-    {
-      permission_id: "7",
-      name: "read_role",
-      display_name: "Read Role",
-      description: "Allows reading role information.",
-    },
-    {
-      permission_id: "8",
-      name: "write_role",
-      display_name: "Write Role",
-      description: "Allows modifying role information.",
-    },
-    {
-      permission_id: "9",
-      name: "delete_role",
-      display_name: "Delete Role",
-      description: "Allows deleting a role.",
-    },
-    {
-      permission_id: "10",
-      name: "read_settings",
-      display_name: "Read Settings",
-      description: "Allows reading system settings.",
-    },
-    {
-      permission_id: "11",
-      name: "write_settings",
-      display_name: "Write Settings",
-      description: "Allows modifying system settings.",
-    },
-    {
-      permission_id: "12",
-      name: "delete_settings",
-      display_name: "Delete Settings",
-      description: "Allows deleting system settings.",
-    },
-  ];
+  }, [PermissionTableData?.data, params.page, params?.page_size]);
 
   return (
     <div>

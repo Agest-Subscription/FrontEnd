@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
@@ -13,8 +13,8 @@ import { useAddPermission } from "@/hooks/permission";
 import { PermissionFormValues } from "@/interfaces/model/permission.type";
 import { popUpPropType } from "@/interfaces/popup";
 import permissionFormValuesSchema from "@/schema/permission";
-import { capitalize } from "@/utils/string";
 import { useGoToDashboardTab } from "@/utils/navigate";
+import { capitalize } from "@/utils/string";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
@@ -27,7 +27,7 @@ const Page: React.FC<Props> = () => {
   });
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "successpopup",
-    popup_text: "Are you sure to create a permission?",
+    popup_text: `${capitalize("Are you sure to create a new permission?")}`,
     popup_type: "Confirm",
     onConfirm: methods.handleSubmit(onSubmit),
     onClose: () => setOpenModal(false),
@@ -42,7 +42,7 @@ const Page: React.FC<Props> = () => {
       onSuccess: () => {
         showModal({
           popup_id: "successpopup",
-          popup_text: "Permission created successfully!",
+          popup_text: `${capitalize("This Permission is successfully created!")}`,
           popup_type: "Success",
           onConfirm: () => {},
           onClose: () => goToPermission(),
@@ -51,7 +51,7 @@ const Page: React.FC<Props> = () => {
       onError: () => {
         showModal({
           popup_id: "fail",
-          popup_text: "Permission creation failed!",
+          popup_text: `${capitalize("Permission creation failed!")}`,
           popup_type: "Fail",
           onConfirm: () => {},
           onClose: () => setOpenModal(false),
@@ -67,7 +67,7 @@ const Page: React.FC<Props> = () => {
     if (isValid) {
       showModal({
         popup_id: "confirm",
-        popup_text: "Are you sure to create a permission?",
+        popup_text: `${capitalize("Are you sure to create a new permission?")}`,
         popup_type: "Confirm",
         onConfirm: methods.handleSubmit(onSubmit),
         onClose: () => setOpenModal(false),
