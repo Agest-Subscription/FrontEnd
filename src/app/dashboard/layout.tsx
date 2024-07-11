@@ -72,20 +72,30 @@ const items = [
   },
 ];
 const MenuCustom = styled(Menu)`
-  &.ant-menu {
-    font-weight: 700;
-    background: #b9e5ff;
-    display: flex;
-    justify-content: space-between;
-    text-align: center;
-    .ant-menu-item {
-      flex: 1;
-    }
-    .ant-menu-item-selected {
-      background: #fff;
-    }
-    .ant-menu-item-selected:after {
-      border-bottom-color: white;
+  font-weight: 700;
+  background: #b9e5ff;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+
+  &:before {
+    content: "";
+    display: none;
+  }
+  &:after {
+    content: "";
+    display: none;
+  }
+
+  .ant-menu-item {
+    width: 161px;
+  }
+
+  .ant-menu-item-selected {
+    background: #fff !important;
+
+    &:after {
+      border-bottom-color: white !important;
     }
   }
 `;
@@ -117,7 +127,7 @@ const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
           Subscription
         </Typography>
         <Content>
-          <Menu
+          <MenuCustom
             mode="horizontal"
             selectedKeys={[current]}
             items={items}
