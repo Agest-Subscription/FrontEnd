@@ -16,8 +16,6 @@ export type FeatureTableData = Omit<Feature, "created_at" | "updated_at"> & {
   no: number;
 };
 
-
-
 export type FeatureResponseItem = Feature;
 
 export type FeatureFilterParams = FilterBase<FeatureResponseItem>;

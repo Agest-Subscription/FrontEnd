@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 
 import { FieldsData } from "@/interfaces/form";
-import { FeatureFormValues } from "@/interfaces/model/feature.type";
 import { PermissionFormValues } from "@/interfaces/model/permission.type";
 
 export const useGenerateFields = () => {
