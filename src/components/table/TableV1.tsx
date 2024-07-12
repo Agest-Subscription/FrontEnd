@@ -1,7 +1,6 @@
 import React from "react";
 import { Flex, Input, TableColumnsType, Typography } from "antd";
 import Table, { TableProps } from "antd/es/table";
-import styled from "styled-components";
 
 import ButtonV1 from "../button/CustomButton";
 
@@ -17,14 +16,7 @@ interface CustomTableProps<T> extends TableProps<T> {
   showSearchBar?: boolean;
 }
 const { Search } = Input;
-const StyledTable = styled(Table)`
-  .ant-table-thead > tr > th {
-    text-align: center;
-  }
-  .ant-table-tbody > tr > td {
-    text-align: center;
-  }
-`;
+
 const TableV1 = <T extends Record<string, any>>({
   columns,
   dataSource,

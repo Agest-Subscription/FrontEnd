@@ -15,7 +15,7 @@ import {
   USERS,
 } from "@/constants/routes";
 
-const { Header, Content } = Layout;
+const { Content } = Layout;
 
 const items = [
   {
@@ -101,7 +101,6 @@ const MenuCustom = styled(Menu)`
 `;
 const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
   const urlParams = usePathname();
-  // console.log("urlParams: ", urlParams);
 
   const [current, setCurrent] = useState<string>(`${urlParams}`);
 

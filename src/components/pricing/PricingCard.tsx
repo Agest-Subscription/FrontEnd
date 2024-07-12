@@ -75,7 +75,7 @@ const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
         ${PricingPlan.fee}
         <sup style={{ fontSize: 14, fontWeight: 400 }}>/month</sup>
       </Typography>
-      {PricingPlan.features.map((feature, index) => (
+      {PricingPlan.features.map((feature) => (
         <Flex gap={8} key={feature.feature_id}>
           <CheckCircleTwoTone twoToneColor="#52c41a" />
           <Typography style={{ fontSize: 16, fontWeight: 400 }}>
