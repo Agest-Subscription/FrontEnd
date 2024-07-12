@@ -5,14 +5,15 @@ import { ColumnType } from "antd/es/table";
 
 import { FEATURES } from "@/constants/routes";
 import { FeatureTableData } from "@/interfaces/model/feature.type";
+import { Checkbox } from "antd";
 
 const useGenerateColumns = () => {
   return useMemo<ColumnType<FeatureTableData>[]>(
     () => [
       {
         title: "No",
-        dataIndex: "id",
-        key: "id",
+        dataIndex: "no",
+        key: "no",
       },
       {
         title: "Name",
@@ -20,9 +21,9 @@ const useGenerateColumns = () => {
         key: "name",
       },
       {
-        title: "Display Name",
-        dataIndex: "display_name",
-        key: "display_name",
+        title: "Permission",
+        dataIndex: "permission",
+        key: "permission",
       },
       {
         title: "Description",
@@ -30,10 +31,27 @@ const useGenerateColumns = () => {
         key: "description",
       },
       {
+        title: "Valid",
+        dataIndex: "valid",
+        key: "valid",
+        align: 'center' as const,
+        render: (_, record) => {
+          return (
+            <Checkbox checked={record.is_valid}></Checkbox>
+          );
+        },
+      },
+      {
+        title: "Fee type",
+        dataIndex: "fee_type",
+        key: "fee_type",
+      },
+      {
         title: "Action",
         dataIndex: "action",
         key: "action",
         width: 150,
+        align: 'center' as const,
         render: (_, record) => {
           return (
             <Link href={`${FEATURES}/${record.id}`}>
