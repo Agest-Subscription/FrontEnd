@@ -1,0 +1,69 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: 
+      - 'main'
+      - 'dev'
+      - 'uat'
+    tags: 
+      - '*.*.*'
+  pull_request:
+    branches: 
+      - 'main'
+      - 'dev'
+      - 'uat'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 20.15.1
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.15.1
+      
+      - name: Cache Node.js modules
+        uses: actions/cache@v4
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
+      - name: Install dependencies
+        run: yarn install
+      
+      - name: Build the project
+        run: yarn build
+      
+      - name: Lint the project
+        run: |
+          yarn lint:fix
+          yarn format:fix
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            quocc/sub:frontend-latest
+            quocc/sub:frontend-${{ github.sha }}
