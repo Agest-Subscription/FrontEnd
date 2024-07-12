@@ -1,9 +1,7 @@
-import { Flex, Typography } from "antd";
 import React from "react";
+import { Flex, Typography } from "antd";
 
-type Props = {};
-
-const Login = (props: Props) => {
+const Login = () => {
   return (
     <Flex
       vertical

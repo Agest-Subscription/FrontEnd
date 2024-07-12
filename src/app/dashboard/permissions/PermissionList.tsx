@@ -1,9 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import useGenerateColumns from "./useGenerateColumns";
 
 import TableV1 from "@/components/table/TableV1";
+import { PERMISSIONS } from "@/constants/routes";
 import { useGetListPermission } from "@/hooks/permission";
+import useSearchSync from "@/hooks/useSearchSync";
 import {
   DataSourceItem,
   TableChangeParams,
@@ -12,13 +15,13 @@ import {
 import {
   PermissionFilterParams,
   PermissionTableData,
-} from "@/interfaces/model/permission/permission.type";
-import { useRouter } from "next/navigation";
-import { PERMISSIONS } from "@/constants/routes";
-import { Spin } from "antd";
+} from "@/interfaces/model/permission.type";
+
 type Props = {};
-const PermissionList: React.FC<Props> = (props: Props) => {
+
+const PermissionList: React.FC<Props> = () => {
   const router = useRouter();
+  const { searchQuery, handleSearch } = useSearchSync();
   const [tableParams, setTableParams] = useState<
     TableParams<PermissionTableData>
   >({
@@ -28,15 +31,16 @@ const PermissionList: React.FC<Props> = (props: Props) => {
       showSizeChanger: false,
     },
   });
+
   const params = useMemo<PermissionFilterParams>(
     () => ({
       page: tableParams.pagination.current,
       page_size: tableParams.pagination?.pageSize,
-      order: "desc",
-      order_by: "name",
+      search: searchQuery,
     }),
-    [tableParams.pagination],
+    [searchQuery, tableParams.pagination],
   );
+
   const { data: PermissionTableData, isFetching } =
     useGetListPermission(params);
   const columns = useGenerateColumns();
@@ -76,86 +80,13 @@ const PermissionList: React.FC<Props> = (props: Props) => {
 
   const dataSource = useMemo<DataSourceItem<PermissionTableData>[]>(() => {
     return (
-      PermissionTableData?.data.map((permission) => ({
+      PermissionTableData?.data.map((permission, index) => ({
         ...permission,
-        key: permission.permission_id,
+        key: permission.id,
+        no: index + 1 + ((params.page ?? 1) - 1) * (params?.page_size ?? 5),
       })) ?? []
     );
-  }, [PermissionTableData]);
-  const dummyPermissions = [
-    {
-      permission_id: "1",
-      name: "read_user",
-      display_name: "Read User",
-      description: "Allows reading user information.",
-    },
-    {
-      permission_id: "2",
-      name: "write_user",
-      display_name: "Write User",
-      description: "Allows modifying user information.",
-    },
-    {
-      permission_id: "3",
-      name: "delete_user",
-      display_name: "Delete User",
-      description: "Allows deleting a user.",
-    },
-    {
-      permission_id: "4",
-      name: "read_permission",
-      display_name: "Read Permission",
-      description: "Allows reading permission information.",
-    },
-    {
-      permission_id: "5",
-      name: "write_permission",
-      display_name: "Write Permission",
-      description: "Allows modifying permission information.",
-    },
-    {
-      permission_id: "6",
-      name: "delete_permission",
-      display_name: "Delete Permission",
-      description: "Allows deleting a permission.",
-    },
-    {
-      permission_id: "7",
-      name: "read_role",
-      display_name: "Read Role",
-      description: "Allows reading role information.",
-    },
-    {
-      permission_id: "8",
-      name: "write_role",
-      display_name: "Write Role",
-      description: "Allows modifying role information.",
-    },
-    {
-      permission_id: "9",
-      name: "delete_role",
-      display_name: "Delete Role",
-      description: "Allows deleting a role.",
-    },
-    {
-      permission_id: "10",
-      name: "read_settings",
-      display_name: "Read Settings",
-      description: "Allows reading system settings.",
-    },
-    {
-      permission_id: "11",
-      name: "write_settings",
-      display_name: "Write Settings",
-      description: "Allows modifying system settings.",
-    },
-    {
-      permission_id: "12",
-      name: "delete_settings",
-      display_name: "Delete Settings",
-      description: "Allows deleting system settings.",
-    },
-  ];
+  }, [PermissionTableData?.data, params.page, params?.page_size]);
 
   return (
     <div>
@@ -164,12 +95,14 @@ const PermissionList: React.FC<Props> = (props: Props) => {
         tableTitle="permission"
         showSearchBar={true}
         columns={columns}
-        dataSource={dummyPermissions}
+        dataSource={dataSource}
         onChange={(pagination, filters) =>
           handleTableChange({ pagination, filters })
         }
         pagination={tableParams.pagination}
         addItem={() => router.push(`${PERMISSIONS}/add`)}
+        onSearch={handleSearch}
+        searchValue={searchQuery}
       />
     </div>
   );

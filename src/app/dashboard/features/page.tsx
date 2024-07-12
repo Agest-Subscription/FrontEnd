@@ -1,10 +1,8 @@
 "use client";
 import React from "react";
 
-type Props = {};
-
-const PricingPlansPage = (props: Props) => {
-  return <div>PricingPlansPage</div>;
+const FeaturePage = () => {
+  return <div>FeaturePage</div>;
 };
 
-export default PricingPlansPage;
+export default FeaturePage;

@@ -1,6 +1,5 @@
 import { TablePaginationConfig } from "antd/es/table";
 import { FilterValue, SorterResult } from "antd/es/table/interface";
-import { Path } from "react-hook-form";
 
 export type TimeTracking = {
   updated_at: string | null;
@@ -12,8 +11,8 @@ export type TimeTracking = {
 export interface FilterBase<T extends Record<string, any>> {
   page?: number;
   page_size?: number;
-  order: "desc" | "asc";
-  order_by: keyof T;
+  order?: "desc" | "asc";
+  order_by?: keyof T;
   text_value?: string;
 }
 
