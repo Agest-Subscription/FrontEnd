@@ -1,6 +1,8 @@
 import { FilterBase } from "../base";
+import { FilterBase } from "../base";
 import { Permission } from "./permission.type";
 
+export type Feature = {
 export type Feature = {
   id: string;
   name: string;
