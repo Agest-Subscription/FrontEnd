@@ -26,7 +26,7 @@ let TextField: React.FC<TextFieldProps> = ({
   labelPosition,
   readOnly = false,
   disabled,
-  renderValue,
+  //renderValue,
   index,
   styleLabel = {},
   className,

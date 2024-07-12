@@ -1,9 +1,7 @@
 "use client";
 import React from "react";
 
-type Props = {};
-
-const PricingPlansPage = (props: Props) => {
+const PricingPlansPage = () => {
   return <div>PricingPlansPage</div>;
 };
 
