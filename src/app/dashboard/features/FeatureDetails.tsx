@@ -4,7 +4,7 @@ import { Flex } from "antd";
 
 import ButtonV1 from "@/components/button/CustomButton";
 import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
-import { PermissionFormValues } from "@/interfaces/model/permission.type";
+import { FeatureFormValues } from "@/interfaces/model/feature.type";
 
 interface DetailsProp {
   edit?: boolean;
@@ -20,7 +20,7 @@ const FeatureDetails: React.FC<DetailsProp> = ({
   onSave,
 }) => {
   const router = useRouter();
-  const { FormField } = useFormWrapperCtx<PermissionFormValues>();
+  const { FormField } = useFormWrapperCtx<FeatureFormValues>();
   return (
     <>
       <Flex
@@ -30,7 +30,8 @@ const FeatureDetails: React.FC<DetailsProp> = ({
       >
         <Flex gap={24}>
           <FormField name="name" />
-          <FormField name="display_name" />
+          <FormField name="fee_type" />
+          <FormField name="permissions" />
         </Flex>
         <Flex>
           <FormField name="description" />
