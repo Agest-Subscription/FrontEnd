@@ -12,7 +12,10 @@ export type Feature = {
   updated_at: string;
 };
 
-export type FeatureTableData = Omit<Feature, "created_at" | "updated_at">
+export type FeatureTableData = Omit<Feature, "created_at" | "updated_at"> & {
+  no: number;
+};
+
 
 
 export type FeatureResponseItem = Feature;
