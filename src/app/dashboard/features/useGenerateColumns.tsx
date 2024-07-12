@@ -1,11 +1,12 @@
 import React, { useMemo } from "react";
 import Link from "next/link";
 import { EditOutlined } from "@ant-design/icons";
+import { Checkbox } from "antd";
 import { ColumnType } from "antd/es/table";
 
+import TableTag from "@/components/tag/tableTag";
 import { FEATURES } from "@/constants/routes";
 import { FeatureTableData } from "@/interfaces/model/feature.type";
-import { Checkbox } from "antd";
 
 const useGenerateColumns = () => {
   return useMemo<ColumnType<FeatureTableData>[]>(
@@ -24,6 +25,9 @@ const useGenerateColumns = () => {
         title: "Permission",
         dataIndex: "permission",
         key: "permission",
+        render: (_, record) => {
+          return <TableTag permissions={record.permissions}></TableTag>;
+        },
       },
       {
         title: "Description",
@@ -34,11 +38,9 @@ const useGenerateColumns = () => {
         title: "Valid",
         dataIndex: "valid",
         key: "valid",
-        align: 'center' as const,
+        align: "center" as const,
         render: (_, record) => {
-          return (
-            <Checkbox checked={record.is_valid}></Checkbox>
-          );
+          return <Checkbox checked={record.is_valid}></Checkbox>;
         },
       },
       {
@@ -51,7 +53,7 @@ const useGenerateColumns = () => {
         dataIndex: "action",
         key: "action",
         width: 150,
-        align: 'center' as const,
+        align: "center" as const,
         render: (_, record) => {
           return (
             <Link href={`${FEATURES}/${record.id}`}>

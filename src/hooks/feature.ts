@@ -3,8 +3,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   addFeatureApi,
   deleteFeatureApi,
-  getListFeatureApi,
   getFeatureByIdApi,
+  getListFeatureApi,
   updateFeatureApi,
 } from "@/api/feature";
 import { FEATURE, FEATURES } from "@/constants/query";

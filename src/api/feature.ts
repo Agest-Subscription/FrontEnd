@@ -8,12 +8,9 @@ import {
 } from "@/interfaces/model/feature.type";
 
 export const getListFeatureApi = (params: FeatureFilterParams) => {
-  return axiosClient.get<GetListResponse<FeatureResponseItem>>(
-    "features",
-    {
-      params,
-    },
-  );
+  return axiosClient.get<GetListResponse<FeatureResponseItem>>("features", {
+    params,
+  });
 };
 
 export const getFeatureByIdApi = (id: string) => {
