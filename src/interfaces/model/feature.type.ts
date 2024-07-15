@@ -1,8 +1,6 @@
 import { FilterBase } from "../base";
-import { FilterBase } from "../base";
 import { Permission } from "./permission.type";
 
-export type Feature = {
 export type Feature = {
   id: string;
   name: string;
@@ -28,4 +26,6 @@ export type FeatureFormValues = Omit<Feature, "id" | "created_at" | "updated_at"
 };
 export type AddFeaturePayload = FeatureFormValues;
 
-export type UpdateFeaturePayload = Feature;
+export type UpdateFeaturePayload = FeatureFormValues & {
+  id: string;
+};

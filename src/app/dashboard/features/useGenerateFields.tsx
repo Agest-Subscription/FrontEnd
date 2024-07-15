@@ -32,6 +32,7 @@ const fields = useMemo<FieldsData<FeatureFormValues>>(() => {
       type: "text",
       componentProps: {
         isRequired: true,
+        style: { width: "250px", height: "40px"}
       },
     },
     fee_type: {
@@ -44,6 +45,7 @@ const fields = useMemo<FieldsData<FeatureFormValues>>(() => {
       ],
         componentProps: {
         isRequired: true,
+        style: { width: "250px", height: "40px"}
       },
     },
     permissions: {
@@ -53,13 +55,14 @@ const fields = useMemo<FieldsData<FeatureFormValues>>(() => {
       componentProps: {
         mode: "multiple",
         isRequired: true,
+        style: { width: "250px", height: "40px"}
       },
     },
     description: {
       label: "Description",
       type: "textarea",
       componentProps: {
-        style: { width: "100%" },
+        style: { width: "500px", height: "95px" },
       },
     },
     is_valid: {
