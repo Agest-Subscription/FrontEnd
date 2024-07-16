@@ -17,9 +17,7 @@ const DropdownRow: FunctionComponent<DropdownRowProps> = ({
 }) => {
   return (
     <Flex
-      style={{
-        padding: "5px 0px",
-      }}
+     
     >
       {config.map((item, index) => {
         return (

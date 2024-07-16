@@ -1,5 +1,6 @@
 import { TablePaginationConfig } from "antd/es/table";
 import { FilterValue, SorterResult } from "antd/es/table/interface";
+import { AxiosError } from "axios";
 
 export type TimeTracking = {
   updated_at: string | null;
@@ -29,6 +30,13 @@ export interface TableChangeParams<T> extends Omit<TableParams<T>, "sorter"> {
   sorter?: SorterResult<DataSourceItem<T>> | SorterResult<DataSourceItem<T>>[];
 }
 
+export interface CustomError extends AxiosError {
+  response?: AxiosError["response"] & {
+    data?: {
+      detail?: string;
+    };
+  };
+}
 export interface GetListResponse<T> {
   total: number;
   data: T[];

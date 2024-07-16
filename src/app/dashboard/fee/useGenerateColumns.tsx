@@ -1,0 +1,91 @@
+import { useMemo } from "react";
+import Link from "next/link";
+import { EditOutlined } from "@ant-design/icons";
+import { Checkbox } from "antd";
+import { ColumnType } from "antd/es/table";
+
+import { FEES } from "@/constants/routes";
+import { FeeTableData } from "@/interfaces/model/fee.type";
+
+const useGenerateColumns = () => {
+  return useMemo<ColumnType<FeeTableData>[]>(
+    () => [
+      {
+        title: "No",
+        dataIndex: "no",
+        key: "no",
+        align: "center",
+      },
+      {
+        title: "Name",
+        dataIndex: "name",
+        key: "name",
+      },
+      {
+        title: "Type",
+        dataIndex: "fee_type",
+        key: "fee_type",
+      },
+      {
+        title: "Fee",
+        dataIndex: "fee_price",
+        key: "fee_price",
+      },
+      {
+        title: "Transaction Unit",
+        dataIndex: "transaction_unit",
+        key: "transaction_unit",
+      },
+      {
+        title: "Recurrence Type",
+        dataIndex: "recurrence_type",
+        key: "recurrence_type",
+      },
+      {
+        title: "Recurrence Cycle Count",
+        dataIndex: "recurrence_cycle_count",
+        key: "recurrence_cycle_count",
+      },
+      {
+        title: "Description",
+        dataIndex: "fee_desc",
+        key: "fee_desc",
+      },
+      {
+        title: "Active",
+        dataIndex: "is_active",
+        key: "is_active",
+        align: "center",
+        render: (is_active: boolean) => {
+          return <Checkbox checked={is_active}></Checkbox>;
+        },
+      },
+      {
+        title: "Overrate Fee",
+        dataIndex: "is_overrate",
+        key: "is_overrate",
+        align: "center",
+        render: (is_overrate: boolean) => {
+          return <Checkbox checked={is_overrate}></Checkbox>;
+        },
+      },
+      {
+        title: "Action",
+        dataIndex: "action",
+        key: "action",
+        width: 150,
+        align: "center",
+        render: (_, record) => {
+          return (
+            <Link href={`${FEES}/${record.id}`}>
+              <EditOutlined size={100} />
+            </Link>
+          );
+        },
+      },
+    ],
+    [],
+  );
+};
+
+export default useGenerateColumns;

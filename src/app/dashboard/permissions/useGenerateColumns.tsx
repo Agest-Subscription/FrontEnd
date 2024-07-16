@@ -13,6 +13,7 @@ const useGenerateColumns = () => {
         title: "No",
         dataIndex: "no",
         key: "no",
+        align: "center",
       },
       {
         title: "Name",
@@ -33,6 +34,7 @@ const useGenerateColumns = () => {
         title: "Action",
         dataIndex: "action",
         key: "action",
+        align: "center",
         width: 150,
         render: (_, record) => {
           return (

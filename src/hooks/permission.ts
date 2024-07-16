@@ -9,7 +9,7 @@ import {
 } from "@/api/permission";
 import { PERMISSION, PERMISSIONS } from "@/constants/query";
 import { PermissionFilterParams } from "@/interfaces/model/permission.type";
-
+import { CustomError } from "@/interfaces/base";
 export const useGetListPermission = (params: PermissionFilterParams) => {
   return useQuery({
     queryKey: [PERMISSIONS, params],
@@ -36,6 +36,9 @@ export const useAddPermission = () => {
     onSuccess: () => {
       queryClient.invalidateQueries([PERMISSIONS]);
     },
+    onError: (error: CustomError) => {
+      return error;
+    },
   });
 };
 
@@ -46,6 +49,9 @@ export const useUpdatePermission = () => {
       queryClient.invalidateQueries([PERMISSIONS]);
       queryClient.invalidateQueries([PERMISSION]);
     },
+    onError: (error: CustomError) => {
+      return error;
+    },
   });
 };
 
@@ -54,6 +60,9 @@ export const useDeletePermission = () => {
   return useMutation(deletePermissionApi, {
     onSuccess: () => {
       queryClient.invalidateQueries([PERMISSIONS]);
+    },
+    onError: (error: CustomError) => {
+      return error;
     },
   });
 };
