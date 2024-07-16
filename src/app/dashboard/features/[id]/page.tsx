@@ -98,7 +98,7 @@ const Page: React.FC<Props> = () => {
           popup_text: capitalize("This Feature is successfully deleted!"),
           popup_type: "Success",
           onConfirm: () => {},
-          onClose: goToFeature(),
+          onClose: () => goToFeature(),
         }),
       onError: () =>
         showModal({

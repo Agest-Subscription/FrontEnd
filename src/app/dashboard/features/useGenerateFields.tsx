@@ -1,34 +1,16 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { FieldsData } from "@/interfaces/form";
 import { FeatureFormValues } from "@/interfaces/model/feature.type";
-import { Permission } from "@/interfaces/model/permission.type";
 import { useGetListPermission } from "@/hooks/permission";
 
 export const useGenerateFields = () => {
-  const dummy: Permission[] = [
-    {
-      id: "perm-1",
-      name: "read",
-      display_name: "Read",
-      description: null,
-      is_valid: false,
-    },
-    {
-      id: "perm-2",
-      name: "write",
-      display_name: "Write",
-      description: null,
-      is_valid: false,
-    },
-  ];
 
   const { data: permissions } = useGetListPermission({
     page: 1,
-    page_size: 10,
-
+    page_size: 5,
   })
 
-  const mapPermission = permissions?.data?.map(permission => ({
+  const mapAllPermission = permissions?.data?.map(permission => ({
     value: permission.id,
     label: permission.display_name
   })) ?? [];
@@ -59,11 +41,12 @@ export const useGenerateFields = () => {
       permissions: {
         label: "Permission",
         type: 'select',
-        options: mapPermission,
+        options: mapAllPermission,
         componentProps: {
           mode: "multiple",
           isRequired: true,
-          style: { width: "250px", height: "40px" }
+          style: { width: "250px", height: "40px" },
+          maxTagCount: 'responsive',
         },
       },
       description: {
@@ -78,6 +61,6 @@ export const useGenerateFields = () => {
         type: "singleCheckbox",
       },
     };
-  }, []);
+  }, [mapAllPermission]);
   return fields;
 };

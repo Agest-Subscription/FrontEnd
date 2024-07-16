@@ -94,7 +94,7 @@ const Page: React.FC<Props> = () => {
           popup_text: capitalize("This Permission is successfully deleted!"),
           popup_type: "Success",
           onConfirm: () => {},
-          onClose: goToPermission(),
+          onClose: () => goToPermission(),
         }),
       onError: () =>
         showModal({
