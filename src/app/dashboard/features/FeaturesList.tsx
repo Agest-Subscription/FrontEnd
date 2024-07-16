@@ -204,7 +204,7 @@ const FeaturesList: React.FC<Props> = () => {
         tableTitle="feature"
         showSearchBar={true}
         columns={columns}
-        dataSource={dummydata}
+        dataSource={dataSource}
         onChange={(pagination, filters) =>
           handleTableChange({ pagination, filters })
         }
