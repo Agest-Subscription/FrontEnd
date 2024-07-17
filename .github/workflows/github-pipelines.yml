@@ -8,18 +8,7 @@ on:
       - 'uat'
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Use Node.js 20.15.1
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.15.1
-      
   deploy:
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -46,4 +35,4 @@ jobs:
           tags: |
             quocc/sub:frontend-latest
             quocc/sub:frontend-${{ steps.short-sha.outputs.sha }}
-          build-args: ${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
+          build-args: ${{ vars.NEXT_PUBLIC_API_BASE_URL }}
