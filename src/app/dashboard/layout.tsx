@@ -2,9 +2,9 @@
 import React, { FC, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Flex, Layout, Menu, MenuProps, theme, Typography } from "antd";
-import styled from "styled-components";
+import { Flex, Layout, MenuProps, theme, Typography } from "antd";
 
+import MenuCustom from "@/components/Menu/MenuCustom";
 import {
   FEATURES,
   FEE_OVERATE,
@@ -17,93 +17,65 @@ import {
 
 const { Content } = Layout;
 
-const items = [
-  {
-    label: <Link href={PRICING_PlANS}>Pricing Plan</Link>,
-    key: PRICING_PlANS,
-  },
-  {
-    label: (
-      <>
-        <Link href={SUBSCRIPTIONS}>Subscriptions</Link>
-      </>
-    ),
-    key: SUBSCRIPTIONS,
-  },
-  {
-    label: (
-      <>
-        <Link href={FEES}>Fee</Link>
-      </>
-    ),
-    key: FEES,
-  },
-  {
-    label: (
-      <>
-        <Link href={FEE_OVERATE}>Fee Overate</Link>
-      </>
-    ),
-    key: FEE_OVERATE,
-  },
-  {
-    label: (
-      <>
-        <Link href={FEATURES}>Features</Link>
-      </>
-    ),
-    key: FEATURES,
-  },
-  {
-    label: (
-      <>
-        <Link href={PERMISSIONS}>Permissions</Link>
-      </>
-    ),
-    key: PERMISSIONS,
-  },
-  {
-    label: (
-      <>
-        <Link href={USERS}>Users</Link>
-      </>
-    ),
-    key: USERS,
-  },
-];
-const MenuCustom = styled(Menu)`
-  font-weight: 700;
-  background: #b9e5ff;
-  display: flex;
-  justify-content: space-between;
-  text-align: center;
-
-  &:before {
-    content: "";
-    display: none;
-  }
-  &:after {
-    content: "";
-    display: none;
-  }
-
-  .ant-menu-item {
-    width: 161px;
-  }
-
-  .ant-menu-item-selected {
-    background: #fff !important;
-
-    &:after {
-      border-bottom-color: white !important;
-    }
-  }
-`;
 const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
   const urlParams = usePathname();
 
   const [current, setCurrent] = useState<string>(`${urlParams}`);
 
+  const items = [
+    {
+      label: <Link href={PRICING_PlANS}>Pricing Plan</Link>,
+      key: PRICING_PlANS,
+    },
+    {
+      label: (
+        <>
+          <Link href={SUBSCRIPTIONS}>Subscriptions</Link>
+        </>
+      ),
+      key: SUBSCRIPTIONS,
+    },
+    {
+      label: (
+        <>
+          <Link href={FEES}>Fee</Link>
+        </>
+      ),
+      key: FEES,
+    },
+    {
+      label: (
+        <>
+          <Link href={FEE_OVERATE}>Fee Overate</Link>
+        </>
+      ),
+      key: FEE_OVERATE,
+    },
+    {
+      label: (
+        <>
+          <Link href={FEATURES}>Features</Link>
+        </>
+      ),
+      key: FEATURES,
+    },
+    {
+      label: (
+        <>
+          <Link href={PERMISSIONS}>Permissions</Link>
+        </>
+      ),
+      key: PERMISSIONS,
+    },
+    {
+      label: (
+        <>
+          <Link href={USERS}>Users</Link>
+        </>
+      ),
+      key: USERS,
+    },
+  ];
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e.key);
     setCurrent(e.key);

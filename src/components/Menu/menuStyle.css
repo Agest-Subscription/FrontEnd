@@ -1,0 +1,24 @@
+.ant-menu {
+    font-weight: 700 !important;
+    background: #b9e5ff !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    text-align: center !important;
+    &:before {
+        content: "" !important;
+        display: none !important;
+    }
+    &:after {
+        content: "" !important;
+        display: none !important;
+    }
+    .ant-menu-item {
+        width: 161px !important;
+    }
+    .ant-menu-item-selected {
+        background: #fff !important;
+        &:after {
+            border-bottom-color: white !important;
+        }
+    }
+}
