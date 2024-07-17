@@ -8,8 +8,8 @@ import {
   updatePermissionApi,
 } from "@/api/permission";
 import { PERMISSION, PERMISSIONS } from "@/constants/query";
-import { PermissionFilterParams } from "@/interfaces/model/permission.type";
 import { CustomError } from "@/interfaces/base";
+import { PermissionFilterParams } from "@/interfaces/model/permission.type";
 export const useGetListPermission = (params: PermissionFilterParams) => {
   return useQuery({
     queryKey: [PERMISSIONS, params],

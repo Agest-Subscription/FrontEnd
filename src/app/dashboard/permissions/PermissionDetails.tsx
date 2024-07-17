@@ -1,6 +1,6 @@
 import React from "react";
 import { useRouter } from "next/navigation";
-import { Flex } from "antd";
+import { Col, Flex, Row } from "antd";
 
 import ButtonV1 from "@/components/button/CustomButton";
 import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
@@ -28,14 +28,18 @@ const PermissionDetails: React.FC<DetailsProp> = ({
         gap={24}
         style={{ border: "1px solid #BDC1CA", padding: "16px" }}
       >
-        <Flex gap={24}>
-          <FormField name="name" />
-          <FormField name="display_name" />
-        </Flex>
-        <Flex>
+        <Row gutter={24}>
+          <Col span={6}>
+            <FormField name="name" />
+          </Col>
+          <Col span={6}>
+            <FormField name="display_name" />
+          </Col>
+        </Row>
+        <Col span={6}>
           <FormField name="description" />
-        </Flex>
-        <FormField name="is_valid" />
+        </Col>
+        <FormField name="is_active" />
       </Flex>
       <Flex
         style={{ width: "100%" }}

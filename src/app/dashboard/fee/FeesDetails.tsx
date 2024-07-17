@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
+import { UseFormReturn } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Col, Flex, Row } from "antd";
 
 import ButtonV1 from "@/components/button/CustomButton";
 import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
 import { FeeFormValues } from "@/interfaces/model/fee.type";
-import { UseFormReturn } from "react-hook-form";
 
 interface DetailsProp {
   edit?: boolean;
@@ -26,21 +26,10 @@ const PermissionDetails: React.FC<DetailsProp> = ({
   const { FormField } = useFormWrapperCtx<FeeFormValues>();
   const fee_type = methods.watch("fee_type");
   useEffect(() => {
-    // if (fee_type === "recurrence") {
-    //   methods.setValue("is_overrate", null);
-    //   methods.setValue("transaction_unit", null);
-    // }
-    if (fee_type === "transaction") {
-      // methods.setValue("recurrence_type", null);
-      // methods.setValue("recurrence_cycle_count", null);
+    if (fee_type === "transaction" && !edit) {
       methods.setValue("is_overrate", false);
-    // } else {
-    //   methods.setValue("recurrence_type", null);
-    //   methods.setValue("recurrence_cycle_count", null);
-    //   methods.setValue("is_overrate", null);
-    //   methods.setValue("transaction_unit", null);
     }
-  }, [fee_type, methods]);
+  }, [edit, fee_type, methods]);
   return (
     <>
       <Flex

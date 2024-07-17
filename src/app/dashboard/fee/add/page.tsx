@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
 
+import FeesDetails from "../FeesDetails";
 import { useGenerateFields } from "../useGenerateFields";
 
 import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
@@ -14,7 +15,6 @@ import { popUpPropType } from "@/interfaces/popup";
 import feeFormValuesSchema from "@/schema/fee";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
-import FeesDetails from "../FeesDetails";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
@@ -42,8 +42,8 @@ const Page: React.FC<Props> = () => {
     if (data.fee_type === "transaction") {
       return {
         ...data,
-        transaction_unit: null,
-        is_overrate: null,
+        recurrence_cycle_count: null,
+        recurrence_type: null,
       };
     }
     if (data.fee_type === "onetime") {
@@ -65,7 +65,7 @@ const Page: React.FC<Props> = () => {
     return data; // or handle other fee_type cases if necessary
   }
 
-   function onSubmit(data: FeeFormValues) {
+  function onSubmit(data: FeeFormValues) {
     const newData = formatPayload(data);
     addFee(newData, {
       onSuccess: () => {

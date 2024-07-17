@@ -16,7 +16,7 @@ type Props = {
 
 //3 popup types "Success", "Fail", "Confirm"
 const PopUp = ({ popupProps, isOpen = false }: Props) => {
-  const formatText = popupProps.popup_text.split("/n");
+  const formatText = popupProps.popup_text.split("\n");
 
   useEffect(() => {
     const handleEscape: any = (e: KeyboardEvent) => {

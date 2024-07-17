@@ -55,12 +55,12 @@ const Page: React.FC<Props> = () => {
       methods.setValue("description", Permission.description);
       methods.setValue("display_name", Permission.display_name);
       methods.setValue("name", Permission.name);
-      methods.setValue("is_valid", Permission.is_valid);
+      methods.setValue("is_active", Permission.is_active);
     }
   }, [Permission, methods]);
 
   if (isError) {
-    return <NotFound />;
+    return <NotFound previousPage="permissions" />;
   }
   const showModal = (prop: popUpPropType) => {
     setModalProp(prop);
@@ -99,7 +99,7 @@ const Page: React.FC<Props> = () => {
           popup_text: capitalize("This Permission is successfully deleted!"),
           popup_type: "Success",
           onConfirm: () => {},
-          onClose: goToPermission(),
+          onClose: () => goToPermission(),
         }),
       onError: (err: CustomError) =>
         showModal({

@@ -13,7 +13,7 @@ const permissionFormValuesSchema: ObjectSchema<PermissionFormValues> = object({
     .nullable()
     .default(null)
     .max(255, "Description cannot exceed 255 characters"),
-  is_valid: boolean().required("Validity status is required").default(false),
+  is_active: boolean().required("Validity status is required").default(false),
 });
 
 export default permissionFormValuesSchema;

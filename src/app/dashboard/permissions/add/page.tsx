@@ -53,7 +53,7 @@ const Page: React.FC<Props> = () => {
       onError: (err: CustomError) => {
         showModal({
           popup_id: "fail",
-          popup_text: `${capitalize(getErrorDetail(err) ?? "Permission Creation failed")}`,
+          popup_text: `${getErrorDetail(err) ?? "Permission Creation failed"}`,
           popup_type: "Fail",
           onConfirm: () => {},
           onClose: () => setOpenModal(false),

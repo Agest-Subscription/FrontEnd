@@ -9,6 +9,15 @@ export type TimeTracking = {
   created_by: string;
 };
 
+export type DashboardTab =
+  | "permissions"
+  | "pricing-plan"
+  | "subscriptions"
+  | "fee"
+  | "fee-overate"
+  | "features"
+  | "users";
+
 export interface FilterBase<T extends Record<string, any>> {
   page?: number;
   page_size?: number;
@@ -33,7 +42,7 @@ export interface TableChangeParams<T> extends Omit<TableParams<T>, "sorter"> {
 export interface CustomError extends AxiosError {
   response?: AxiosError["response"] & {
     data?: {
-      detail?: string;
+      detail?: string[] | string;
     };
   };
 }

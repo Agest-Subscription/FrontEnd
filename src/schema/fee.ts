@@ -18,6 +18,7 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
   fee_price: number()
     .min(0)
     .required("Fee price is a required fields")
+    .max(10000000000, "Price cannot exceed 1.000.000.0000")
     .default(null),
   is_active: boolean().required("Validity status is required").default(false),
   is_overrate: boolean()
@@ -39,14 +40,20 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
     .default(null)
     .when("fee_type", {
       is: "recurrence",
-      then: (schema) => schema.required("Recurrence cycle count is required"),
+      then: (schema) =>
+        schema
+          .required("Recurrence cycle count is required")
+          .min(1, "Recurrence cycle count cannot be smaller than 1"),
     }),
   transaction_unit: string()
     .nullable()
     .default(null)
     .when("fee_type", {
       is: "transaction",
-      then: (schema) => schema.required("Transaction unit is required"),
+      then: (schema) =>
+        schema
+          .required("Transaction unit is required")
+          .max(100, "Transaction Unit cannot be greater than 100 characters"),
     }),
 });
 

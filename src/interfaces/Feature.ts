@@ -4,7 +4,7 @@ export type FeatureType = {
   description: string;
   // add permission later
   fee_type: string;
-  is_valid: string;
+  is_active: string;
   created_at: string;
   updated_at: string;
 };

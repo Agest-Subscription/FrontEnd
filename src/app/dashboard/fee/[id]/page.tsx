@@ -4,31 +4,28 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
 
+import FeesDetails from "../FeesDetails";
 import { useGenerateFields } from "../useGenerateFields";
 
+import NotFound from "@/app/not-found";
 import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
 import PopUp from "@/components/popup/Popup";
-import {
-  useAddFee,
-  useDeleteFee,
-  useGetFeeById,
-  useUpdateFee,
-} from "@/hooks/fee";
+import { useDeleteFee, useGetFeeById, useUpdateFee } from "@/hooks/fee";
+import useGetId from "@/hooks/useGetId";
+import { CustomError } from "@/interfaces/base";
 import { FeeFormValues } from "@/interfaces/model/fee.type";
 import { popUpPropType } from "@/interfaces/popup";
 import feeFormValuesSchema from "@/schema/fee";
+import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
-import FeesDetails from "../FeesDetails";
-import useGetId from "@/hooks/useGetId";
-import { CustomError } from "@/interfaces/base";
-import { getErrorDetail } from "@/utils/error";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
+  const fields = useGenerateFields();
   const goToFee = useGoToDashboardTab("fee");
   const [openModal, setOpenModal] = useState(false);
-  const { mutate: updateFee, isLoading: isAdding } = useUpdateFee();
+  const { mutate: updateFee, isLoading: isUpdating } = useUpdateFee();
   const { mutate: deleteFee, isLoading: isDeleting } = useDeleteFee();
   const id = useGetId();
   const { data: Fee, isError } = useGetFeeById(id);
@@ -43,6 +40,7 @@ const Page: React.FC<Props> = () => {
     onConfirm: methods.handleSubmit(onSubmit),
     onClose: () => setOpenModal(false),
   });
+
   function formatPayload(data: FeeFormValues) {
     if (data.fee_type === "transaction") {
       return {
@@ -100,8 +98,6 @@ const Page: React.FC<Props> = () => {
     );
   }
 
-  const fields = useGenerateFields();
-
   const handleSave = async () => {
     const isValid = await methods.trigger();
     if (isValid) {
@@ -120,15 +116,15 @@ const Page: React.FC<Props> = () => {
       onSuccess: () =>
         showModal({
           popup_id: "successpopup",
-          popup_text: capitalize("This Permission is successfully deleted!"),
+          popup_text: capitalize("This Fee is successfully deleted!"),
           popup_type: "Success",
           onConfirm: () => {},
-          onClose: goToFee(),
+          onClose: () => goToFee(),
         }),
       onError: (err: CustomError) =>
         showModal({
           popup_id: "fail",
-          popup_text: `${capitalize(getErrorDetail(err) ?? "Permission delete failed")}`,
+          popup_text: `${getErrorDetail(err) ?? "Fee delete failed"}`,
           popup_type: "Fail",
           onConfirm: () => {},
           onClose: () => setOpenModal(false),
@@ -148,12 +144,15 @@ const Page: React.FC<Props> = () => {
       methods.setValue("is_active", Fee.is_active);
     }
   }, [Fee, methods]);
+  if (isError) {
+    return <NotFound previousPage="fee" />;
+  }
   return (
     <Flex vertical gap={24}>
       <Typography style={{ fontSize: 24, fontWeight: 600, color: "#2F80ED" }}>
         {capitalize("Fee Creation")}
       </Typography>
-      <Spin spinning={isAdding}>
+      <Spin spinning={isUpdating || isDeleting}>
         <FormWrapperV2 methods={methods} fields={fields}>
           <Form
             style={{
