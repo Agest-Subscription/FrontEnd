@@ -1,13 +1,6 @@
 name: CI/CD Pipeline
 
 on:
-  push:
-    branches: 
-      - 'main'
-      - 'dev'
-      - 'uat'
-    tags: 
-      - '*.*.*'
   pull_request:
     branches: 
       - 'main'
@@ -24,26 +17,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20.15.1
-      
-      - name: Cache Node.js modules
-        uses: actions/cache@v4
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      
-      - name: Install dependencies
-        run: yarn install
-      
-      - name: Build the project
-        run: yarn build
-      
-      - name: Lint the project
+    
+      - name: Create env file
         run: |
-          yarn lint:fix
-          yarn format:fix
-
+          echo "API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}" >> .env
+          
+      
   deploy:
     needs: build
     runs-on: ubuntu-latest

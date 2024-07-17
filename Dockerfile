@@ -10,9 +10,9 @@ RUN yarn install --frozen-lockfile
 
 COPY . .
 
-COPY ./.env.prod .env
-
 RUN yarn build
+
+RUN rm .env
 
 FROM base AS runner
 
