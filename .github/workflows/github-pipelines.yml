@@ -35,4 +35,4 @@ jobs:
           tags: |
             quocc/sub:frontend-latest
             quocc/sub:frontend-${{ steps.short-sha.outputs.sha }}
-          build-args: ${{ vars.NEXT_PUBLIC_API_BASE_URL }}
+          build-args: NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
