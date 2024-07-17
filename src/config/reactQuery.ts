@@ -4,7 +4,7 @@ const reactQueryConfig: QueryClientConfig = {
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      retry: 3,
+      retry: 0,
       staleTime: 60 * 1000, // 1 minute
     },
   },

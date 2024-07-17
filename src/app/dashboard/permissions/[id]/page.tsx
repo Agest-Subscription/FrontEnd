@@ -7,6 +7,7 @@ import { Flex, Form, Spin, Typography } from "antd";
 import PermissionDetails from "../PermissionDetails";
 import { useGenerateFields } from "../useGenerateFields";
 
+import NotFound from "@/app/not-found";
 import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
 import PopUp from "@/components/popup/Popup";
 import {
@@ -15,9 +16,11 @@ import {
   useUpdatePermission,
 } from "@/hooks/permission";
 import useGetId from "@/hooks/useGetId";
+import { CustomError } from "@/interfaces/base";
 import { PermissionFormValues } from "@/interfaces/model/permission.type";
 import { popUpPropType } from "@/interfaces/popup";
 import permissionFormValuesSchema from "@/schema/permission";
+import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
 
@@ -30,6 +33,7 @@ const Page: React.FC<Props> = () => {
     useDeletePermission();
   const goToPermission = useGoToDashboardTab("permissions");
   const id = useGetId();
+  const fields = useGenerateFields();
   const [openModal, setOpenModal] = useState(false);
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "",
@@ -44,19 +48,20 @@ const Page: React.FC<Props> = () => {
     resolver: yupResolver(permissionFormValuesSchema),
   });
 
-  const { data: Permission } = useGetPermissionById(id);
-
-  const fields = useGenerateFields();
+  const { data: Permission, isError } = useGetPermissionById(id);
 
   useEffect(() => {
     if (Permission) {
       methods.setValue("description", Permission.description);
       methods.setValue("display_name", Permission.display_name);
       methods.setValue("name", Permission.name);
-      methods.setValue("is_valid", Permission.is_valid);
+      methods.setValue("is_active", Permission.is_active);
     }
   }, [Permission, methods]);
 
+  if (isError) {
+    return <NotFound previousPage="permissions" />;
+  }
   const showModal = (prop: popUpPropType) => {
     setModalProp(prop);
     setOpenModal(true);
@@ -74,10 +79,10 @@ const Page: React.FC<Props> = () => {
             onConfirm: () => {},
             onClose: () => goToPermission(),
           }),
-        onError: () =>
+        onError: (err: CustomError) =>
           showModal({
             popup_id: "fail",
-            popup_text: capitalize("Permission update failed!"),
+            popup_text: `${capitalize(getErrorDetail(err) ?? "Permission update failed")}`,
             popup_type: "Fail",
             onConfirm: () => {},
             onClose: () => setOpenModal(false),
@@ -94,12 +99,12 @@ const Page: React.FC<Props> = () => {
           popup_text: capitalize("This Permission is successfully deleted!"),
           popup_type: "Success",
           onConfirm: () => {},
-          onClose: goToPermission(),
+          onClose: () => goToPermission(),
         }),
-      onError: () =>
+      onError: (err: CustomError) =>
         showModal({
           popup_id: "fail",
-          popup_text: capitalize("this Permission delete failed!"),
+          popup_text: `${capitalize(getErrorDetail(err) ?? "Permission delete failed")}`,
           popup_type: "Fail",
           onConfirm: () => {},
           onClose: () => setOpenModal(false),

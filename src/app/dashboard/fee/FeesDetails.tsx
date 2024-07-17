@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { UseFormReturn } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Col, Flex, Row } from "antd";
 
 import ButtonV1 from "@/components/button/CustomButton";
 import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
-import { PermissionFormValues } from "@/interfaces/model/permission.type";
+import { FeeFormValues } from "@/interfaces/model/fee.type";
 
 interface DetailsProp {
   edit?: boolean;
   disableSaveBtn?: boolean;
   onDelete?: any;
   onSave: any;
+  methods: UseFormReturn<FeeFormValues, any>;
 }
 
 const PermissionDetails: React.FC<DetailsProp> = ({
@@ -18,9 +20,16 @@ const PermissionDetails: React.FC<DetailsProp> = ({
   disableSaveBtn = false,
   onDelete,
   onSave,
+  methods,
 }) => {
   const router = useRouter();
-  const { FormField } = useFormWrapperCtx<PermissionFormValues>();
+  const { FormField } = useFormWrapperCtx<FeeFormValues>();
+  const fee_type = methods.watch("fee_type");
+  useEffect(() => {
+    if (fee_type === "transaction" && !edit) {
+      methods.setValue("is_overrate", false);
+    }
+  }, [edit, fee_type, methods]);
   return (
     <>
       <Flex
@@ -28,18 +37,40 @@ const PermissionDetails: React.FC<DetailsProp> = ({
         gap={24}
         style={{ border: "1px solid #BDC1CA", padding: "16px" }}
       >
-        <Row gutter={24}>
-          <Col span={6}>
+        <Row gutter={16}>
+          <Col span={4}>
             <FormField name="name" />
           </Col>
-          <Col span={6}>
-            <FormField name="display_name" />
+          <Col span={4}>
+            <FormField name="fee_type" />
+          </Col>
+          <Col span={4}>
+            <FormField name="fee_price" />
+          </Col>
+          {fee_type === "transaction" && (
+            <Col span={4}>
+              <FormField name="transaction_unit" />
+            </Col>
+          )}
+        </Row>
+        <Row gutter={16}>
+          <Col span={8}>
+            <FormField name="fee_desc" />
           </Col>
         </Row>
-        <Col span={6}>
-          <FormField name="description" />
-        </Col>
+        {fee_type === "recurrence" && (
+          <Row gutter={16}>
+            <Col span={4}>
+              <FormField name="recurrence_type" />
+            </Col>
+            <Col span={4}>
+              <FormField name="recurrence_cycle_count" />
+            </Col>
+          </Row>
+        )}
+
         <FormField name="is_active" />
+        {fee_type === "transaction" && <FormField name="is_overrate" />}
       </Flex>
       <Flex
         style={{ width: "100%" }}

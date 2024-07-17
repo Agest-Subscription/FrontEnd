@@ -16,11 +16,7 @@ const DropdownRow: FunctionComponent<DropdownRowProps> = ({
   baseSpan = 12,
 }) => {
   return (
-    <Flex
-      style={{
-        padding: "5px 0px",
-      }}
-    >
+    <Flex>
       {config.map((item, index) => {
         return (
           <Flex

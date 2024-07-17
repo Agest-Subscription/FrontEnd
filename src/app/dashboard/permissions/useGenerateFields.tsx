@@ -25,10 +25,11 @@ export const useGenerateFields = () => {
         type: "textarea",
         componentProps: {
           style: { width: "100%" },
+          rows: 3,
         },
       },
-      is_valid: {
-        label: "Is Valid",
+      is_active: {
+        label: "Is Active",
         type: "singleCheckbox",
       },
     };

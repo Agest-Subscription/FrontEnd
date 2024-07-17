@@ -4,32 +4,30 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
 
-import PermissionDetails from "../PermissionDetails";
+import FeesDetails from "../FeesDetails";
 import { useGenerateFields } from "../useGenerateFields";
 
 import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
 import PopUp from "@/components/popup/Popup";
-import { useAddPermission } from "@/hooks/permission";
-import { CustomError } from "@/interfaces/base";
-import { PermissionFormValues } from "@/interfaces/model/permission.type";
+import { useAddFee } from "@/hooks/fee";
+import { FeeFormValues } from "@/interfaces/model/fee.type";
 import { popUpPropType } from "@/interfaces/popup";
-import permissionFormValuesSchema from "@/schema/permission";
-import { getErrorDetail } from "@/utils/error";
+import feeFormValuesSchema from "@/schema/fee";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
-  const goToPermission = useGoToDashboardTab("permissions");
+  const goToFee = useGoToDashboardTab("fee");
   const [openModal, setOpenModal] = useState(false);
-  const { mutate: addPermission, isLoading: isAdding } = useAddPermission();
-  const methods = useForm<PermissionFormValues>({
+  const { mutate: addFee, isLoading: isAdding } = useAddFee();
+  const methods = useForm<FeeFormValues>({
     mode: "onBlur",
-    resolver: yupResolver(permissionFormValuesSchema),
+    resolver: yupResolver(feeFormValuesSchema),
   });
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "successpopup",
-    popup_text: `${capitalize("Are you sure to create a new permission?")}`,
+    popup_text: `${capitalize("Are you sure to create a new Fee?")}`,
     popup_type: "Confirm",
     onConfirm: methods.handleSubmit(onSubmit),
     onClose: () => setOpenModal(false),
@@ -39,21 +37,50 @@ const Page: React.FC<Props> = () => {
     setModalProp(modalProp);
     setOpenModal(true);
   }
-  function onSubmit(data: PermissionFormValues) {
-    addPermission(data, {
+
+  function formatPayload(data: FeeFormValues) {
+    if (data.fee_type === "transaction") {
+      return {
+        ...data,
+        recurrence_cycle_count: null,
+        recurrence_type: null,
+      };
+    }
+    if (data.fee_type === "onetime") {
+      return {
+        ...data,
+        transaction_unit: null,
+        is_overrate: null,
+        recurrence_cycle_count: null,
+        recurrence_type: null,
+      };
+    }
+    if (data.fee_type === "recurrence") {
+      return {
+        ...data,
+        transaction_unit: null,
+        is_overrate: null,
+      };
+    }
+    return data; // or handle other fee_type cases if necessary
+  }
+
+  function onSubmit(data: FeeFormValues) {
+    const newData = formatPayload(data);
+    addFee(newData, {
       onSuccess: () => {
         showModal({
           popup_id: "successpopup",
-          popup_text: `${capitalize("This Permission is successfully created!")}`,
+          popup_text: `${capitalize("This Fee is successfully created!")}`,
           popup_type: "Success",
           onConfirm: () => {},
-          onClose: () => goToPermission(),
+          onClose: () => goToFee(),
         });
       },
-      onError: (err: CustomError) => {
+      onError: () => {
         showModal({
           popup_id: "fail",
-          popup_text: `${getErrorDetail(err) ?? "Permission Creation failed"}`,
+          popup_text: `${capitalize("Fee creation failed!")}`,
           popup_type: "Fail",
           onConfirm: () => {},
           onClose: () => setOpenModal(false),
@@ -69,7 +96,7 @@ const Page: React.FC<Props> = () => {
     if (isValid) {
       showModal({
         popup_id: "confirm",
-        popup_text: `${capitalize("Are you sure to create a new permission?")}`,
+        popup_text: `${capitalize("Are you sure to create a new Fee?")}`,
         popup_type: "Confirm",
         onConfirm: methods.handleSubmit(onSubmit),
         onClose: () => setOpenModal(false),
@@ -80,7 +107,7 @@ const Page: React.FC<Props> = () => {
   return (
     <Flex vertical gap={24}>
       <Typography style={{ fontSize: 24, fontWeight: 600, color: "#2F80ED" }}>
-        {capitalize("Permission Creation")}
+        {capitalize("Fee Creation")}
       </Typography>
       <Spin spinning={isAdding}>
         <FormWrapperV2 methods={methods} fields={fields}>
@@ -93,7 +120,7 @@ const Page: React.FC<Props> = () => {
             layout="vertical"
             onFinish={methods.handleSubmit(onSubmit)}
           >
-            <PermissionDetails onSave={handleSave} />
+            <FeesDetails onSave={handleSave} methods={methods} />
             <PopUp popupProps={modalProp} isOpen={openModal} />
           </Form>
         </FormWrapperV2>
