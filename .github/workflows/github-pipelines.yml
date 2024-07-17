@@ -17,11 +17,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20.15.1
-    
-      - name: Create env file
-        run: |
-          echo "API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}" >> .env
-          
       
   deploy:
     needs: build
@@ -51,3 +46,4 @@ jobs:
           tags: |
             quocc/sub:frontend-latest
             quocc/sub:frontend-${{ steps.short-sha.outputs.sha }}
+          build-args: ${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
