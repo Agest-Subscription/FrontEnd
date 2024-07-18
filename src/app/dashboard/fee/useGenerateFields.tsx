@@ -24,7 +24,7 @@ export const useGenerateFields = () => {
         type: "select",
         options: enumToSelectOptions(FeeTypeEnum),
         componentProps: {
-          style: {height: "40px"}
+          style: { height: "40px" },
         },
       },
       description: {

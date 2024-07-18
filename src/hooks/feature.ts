@@ -9,6 +9,7 @@ import {
 } from "@/api/feature";
 import { FEATURE, FEATURES } from "@/constants/query";
 import { FeatureFilterParams } from "@/interfaces/model/feature.type";
+import { CustomError } from "@/interfaces/base";
 
 export const useGetListFeature = (params: FeatureFilterParams) => {
   return useQuery({
@@ -36,6 +37,9 @@ export const useAddFeature = () => {
     onSuccess: () => {
       queryClient.invalidateQueries([FEATURES]);
     },
+    onError: (error: CustomError) => {
+      return error;
+    },
   });
 };
 
@@ -45,6 +49,9 @@ export const useUpdateFeature = () => {
     onSuccess: () => {
       queryClient.invalidateQueries([FEATURES]);
     },
+    onError: (error: CustomError) => {
+      return error;
+    },
   });
 };
 
@@ -53,6 +60,9 @@ export const useDeleteFeature = () => {
   return useMutation(deleteFeatureApi, {
     onSuccess: () => {
       queryClient.invalidateQueries([FEATURES]);
+    },
+    onError: (error: CustomError) => {
+      return error;
     },
   });
 };

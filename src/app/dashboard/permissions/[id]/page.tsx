@@ -39,7 +39,7 @@ const Page: React.FC<Props> = () => {
     popup_id: "",
     popup_text: "",
     popup_type: "Confirm",
-    onConfirm: () => { },
+    onConfirm: () => {},
     onClose: () => setOpenModal(false),
   });
 
@@ -76,7 +76,7 @@ const Page: React.FC<Props> = () => {
             popup_id: "successpopup",
             popup_text: capitalize("Permission updated successfully!"),
             popup_type: "Success",
-            onConfirm: () => { },
+            onConfirm: () => {},
             onClose: () => goToPermission(),
           }),
         onError: (err: CustomError) =>
@@ -84,7 +84,7 @@ const Page: React.FC<Props> = () => {
             popup_id: "fail",
             popup_text: `${capitalize(getErrorDetail(err) ?? "Permission update failed")}`,
             popup_type: "Fail",
-            onConfirm: () => { },
+            onConfirm: () => {},
             onClose: () => setOpenModal(false),
           }),
       },
@@ -106,7 +106,7 @@ const Page: React.FC<Props> = () => {
           popup_id: "fail",
           popup_text: `${capitalize(getErrorDetail(err) ?? "Permission delete failed")}`,
           popup_type: "Fail",
-          onConfirm: () => { },
+          onConfirm: () => {},
           onClose: () => setOpenModal(false),
         }),
     });

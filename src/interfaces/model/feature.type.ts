@@ -20,7 +20,10 @@ export type FeatureResponseItem = Feature;
 
 export type FeatureFilterParams = FilterBase<FeatureResponseItem>;
 
-export type FeatureFormValues = Omit<Feature, "id" | "created_at" | "updated_at" | "permissions"> & {
+export type FeatureFormValues = Omit<
+  Feature,
+  "id" | "created_at" | "updated_at" | "permissions"
+> & {
   is_active: boolean;
   permissions: string[];
 };

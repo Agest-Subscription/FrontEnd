@@ -20,7 +20,9 @@ const tableTag = ({ permissions }: Props) => {
     >
       <Flex>
         {permissions.map((permission) => (
-          <Tag bordered={false}>{permission.display_name}</Tag>
+          <Tag key={permission.id} bordered={false}>
+            {permission.display_name}
+          </Tag>
         ))}
       </Flex>
     </ConfigProvider>

@@ -84,11 +84,12 @@ const FeaturesList: React.FC<Props> = () => {
         no: index + 1 + ((params.page ?? 1) - 1) * (params?.page_size ?? 5),
       })) ?? []
     );
-  }, [FeatureTableData]);
+  }, [FeatureTableData, params.page, params?.page_size]);
 
   return (
     <div>
       <TableV1
+        loading={isFetching}
         tableTitle="feature"
         showSearchBar={true}
         columns={columns}
