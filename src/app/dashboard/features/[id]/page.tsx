@@ -35,11 +35,11 @@ const Page: React.FC<Props> = () => {
     popup_id: "",
     popup_text: "",
     popup_type: "Confirm",
-    onConfirm: () => {},
+    onConfirm: () => { },
     onClose: () => setOpenModal(false),
   });
 
-  const methods = useForm<FeatureFormValues >({
+  const methods = useForm<FeatureFormValues>({
     mode: "onBlur",
     resolver: yupResolver(featureFormValuesSchema),
   });
@@ -50,12 +50,12 @@ const Page: React.FC<Props> = () => {
 
   useEffect(() => {
     if (Feature) {
-      const permissionName = Feature.permissions.map(permission => permission.display_name)
+      const permissionId = Feature.permissions.map(permission => permission.id)
       methods.setValue("description", Feature.description);
       methods.setValue("name", Feature.name);
-      methods.setValue("is_valid", Feature.is_valid);
+      methods.setValue("is_active", Feature.is_active);
       methods.setValue("fee_type", Feature.fee_type);
-      methods.setValue("permissions", permissionName);
+      methods.setValue("permissions", permissionId);
     }
   }, [Feature, methods]);
 
@@ -67,7 +67,7 @@ const Page: React.FC<Props> = () => {
   const handleSubmit = (data: FeatureFormValues) => {
     updateFeature(
       {
-          id, ...data
+        id, ...data
       },
       {
         onSuccess: () =>
@@ -75,7 +75,7 @@ const Page: React.FC<Props> = () => {
             popup_id: "successpopup",
             popup_text: capitalize("Feature updated successfully!"),
             popup_type: "Success",
-            onConfirm: () => {},
+            onConfirm: () => { },
             onClose: () => goToFeature(),
           }),
         onError: () =>
@@ -83,7 +83,7 @@ const Page: React.FC<Props> = () => {
             popup_id: "fail",
             popup_text: capitalize("Feature update failed!"),
             popup_type: "Fail",
-            onConfirm: () => {},
+            onConfirm: () => { },
             onClose: () => setOpenModal(false),
           }),
       },
@@ -97,7 +97,7 @@ const Page: React.FC<Props> = () => {
           popup_id: "successpopup",
           popup_text: capitalize("This Feature is successfully deleted!"),
           popup_type: "Success",
-          onConfirm: () => {},
+          onConfirm: () => { },
           onClose: () => goToFeature(),
         }),
       onError: () =>
@@ -105,7 +105,7 @@ const Page: React.FC<Props> = () => {
           popup_id: "fail",
           popup_text: capitalize("this Feature delete failed!"),
           popup_type: "Fail",
-          onConfirm: () => {},
+          onConfirm: () => { },
           onClose: () => setOpenModal(false),
         }),
     });

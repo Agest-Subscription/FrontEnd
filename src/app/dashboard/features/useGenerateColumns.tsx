@@ -23,8 +23,8 @@ const useGenerateColumns = () => {
       },
       {
         title: "Permission",
-        dataIndex: "permission",
-        key: "permission",
+        dataIndex: "permissions",
+        key: "permissions",
         render: (_, record) => {
           return <TableTag permissions={record.permissions}></TableTag>;
         },
@@ -35,12 +35,12 @@ const useGenerateColumns = () => {
         key: "description",
       },
       {
-        title: "Valid",
-        dataIndex: "valid",
-        key: "valid",
+        title: "Active",
+        dataIndex: "is_active",
+        key: "is_active",
         align: "center" as const,
         render: (_, record) => {
-          return <Checkbox checked={record.is_valid}></Checkbox>;
+          return <Checkbox checked={record.is_active}></Checkbox>;
         },
       },
       {

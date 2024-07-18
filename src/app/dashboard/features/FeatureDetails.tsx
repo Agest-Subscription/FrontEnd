@@ -36,7 +36,7 @@ const FeatureDetails: React.FC<DetailsProp> = ({
         <Flex>
           <FormField name="description" />
         </Flex>
-        <FormField name="is_valid" />
+        <FormField name="is_active" />
       </Flex>
       <Flex
         style={{ width: "100%" }}

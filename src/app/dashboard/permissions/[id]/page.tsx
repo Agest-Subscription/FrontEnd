@@ -35,7 +35,7 @@ const Page: React.FC<Props> = () => {
     popup_id: "",
     popup_text: "",
     popup_type: "Confirm",
-    onConfirm: () => {},
+    onConfirm: () => { },
     onClose: () => setOpenModal(false),
   });
 
@@ -53,7 +53,7 @@ const Page: React.FC<Props> = () => {
       methods.setValue("description", Permission.description);
       methods.setValue("display_name", Permission.display_name);
       methods.setValue("name", Permission.name);
-      methods.setValue("is_valid", Permission.is_valid);
+      methods.setValue("is_active", Permission.is_active);
     }
   }, [Permission, methods]);
 
@@ -71,7 +71,7 @@ const Page: React.FC<Props> = () => {
             popup_id: "successpopup",
             popup_text: capitalize("Permission updated successfully!"),
             popup_type: "Success",
-            onConfirm: () => {},
+            onConfirm: () => { },
             onClose: () => goToPermission(),
           }),
         onError: () =>
@@ -79,7 +79,7 @@ const Page: React.FC<Props> = () => {
             popup_id: "fail",
             popup_text: capitalize("Permission update failed!"),
             popup_type: "Fail",
-            onConfirm: () => {},
+            onConfirm: () => { },
             onClose: () => setOpenModal(false),
           }),
       },
@@ -93,7 +93,7 @@ const Page: React.FC<Props> = () => {
           popup_id: "successpopup",
           popup_text: capitalize("This Permission is successfully deleted!"),
           popup_type: "Success",
-          onConfirm: () => {},
+          onConfirm: () => { },
           onClose: () => goToPermission(),
         }),
       onError: () =>
@@ -101,7 +101,7 @@ const Page: React.FC<Props> = () => {
           popup_id: "fail",
           popup_text: capitalize("this Permission delete failed!"),
           popup_type: "Fail",
-          onConfirm: () => {},
+          onConfirm: () => { },
           onClose: () => setOpenModal(false),
         }),
     });

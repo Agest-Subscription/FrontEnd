@@ -27,8 +27,8 @@ export const useGenerateFields = () => {
           style: { width: "100%" },
         },
       },
-      is_valid: {
-        label: "Is Valid",
+      is_active: {
+        label: "Is Active",
         type: "singleCheckbox",
       },
     };

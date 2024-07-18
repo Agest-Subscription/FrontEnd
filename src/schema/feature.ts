@@ -7,7 +7,7 @@ const featureFormValuesSchema: ObjectSchema<FeatureFormValues> = object({
   description: string().nullable().default(null),
   permissions: array<Permission>().default(null).required("Permission is required"),
   fee_type: string().required("Fee type is required"),
-  is_valid: boolean().required("Validity status is required").default(false),
+  is_active: boolean().required("Validity status is required").default(false),
 });
 
 export default featureFormValuesSchema;

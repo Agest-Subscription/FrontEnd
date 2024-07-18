@@ -5,10 +5,10 @@ export type Permission = {
   name: string;
   display_name: string;
   description: string | null;
-  is_valid: boolean;
+  is_active: boolean;
 };
 
-export type PermissionTableData = Omit<Permission, "is_valid"> & {
+export type PermissionTableData = Omit<Permission, "is_active"> & {
   no: number;
 };
 
