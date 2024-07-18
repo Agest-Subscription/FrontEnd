@@ -1,6 +1,6 @@
 import { Permission } from "./permission.type";
 
-export type feature = {
+export type Feature = {
   id: string;
   name: string;
   description: string;
