@@ -48,6 +48,7 @@ export const useUpdateFeature = () => {
   return useMutation(updateFeatureApi, {
     onSuccess: () => {
       queryClient.invalidateQueries([FEATURES]);
+      queryClient.invalidateQueries([FEATURE]);
     },
     onError: (error: CustomError) => {
       return error;

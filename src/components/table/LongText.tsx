@@ -4,9 +4,10 @@ import { Tooltip } from "antd";
 interface LongTextProps {
   text: string | null;
   width?: string | number;
+  centerText?: boolean;
 }
 
-const LongText: React.FC<LongTextProps> = ({ text, width = 200 }) => {
+const LongText: React.FC<LongTextProps> = ({ text,centerText = false, width = 200 }) => {
   const textRef = useRef<HTMLParagraphElement | null>(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
 
@@ -26,6 +27,7 @@ const LongText: React.FC<LongTextProps> = ({ text, width = 200 }) => {
           overflow: "hidden",
           whiteSpace: "nowrap",
           width: width,
+          textAlign: `${centerText ? "center" : "start"}`,
         }}
       >
         {text}
