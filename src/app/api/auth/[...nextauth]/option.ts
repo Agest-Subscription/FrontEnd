@@ -1,6 +1,7 @@
 import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import axios from "axios";
+
+import { axiosClient } from "@/config/axios/client";
 
 export const options: AuthOptions = {
   providers: [
@@ -17,15 +18,11 @@ export const options: AuthOptions = {
       },
       async authorize(credentials) {
         try {
-          const response = await axios.post(
-            "http://localhost:8000/api/v1/auth/login",
-            {
-              email: credentials?.email as string,
-              password: credentials?.password as string,
-            },
-          );
+          const response = await axiosClient.post("/auth/login", {
+            email: credentials?.email as string,
+            password: credentials?.password as string,
+          });
           const user = response.data;
-          console.log("user: ", user);
 
           // If no error and we have user data, return it
           if (response.status === 200 && user) {
@@ -53,11 +50,6 @@ export const options: AuthOptions = {
         token.refresh_token = user?.authenticate?.refresh_token;
         token.isAdmin = user?.is_admin;
       }
-      console.log(
-        "user?.authenticate?.access_token: ",
-        user?.authenticate?.access_token,
-      );
-
       return token;
     },
 
