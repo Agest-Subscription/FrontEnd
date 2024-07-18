@@ -3,7 +3,7 @@ import { Tooltip } from "antd";
 
 interface LongTextProps {
   text: string | null;
-  width?: number;
+  width?: string | number;
 }
 
 const LongText: React.FC<LongTextProps> = ({ text, width = 200 }) => {

@@ -1,12 +1,12 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { EditOutlined } from "@ant-design/icons";
-import { Checkbox, Tooltip } from "antd";
+import { Checkbox } from "antd";
 import { ColumnType } from "antd/es/table";
 
+import LongText from "@/components/table/LongText";
 import { FEES } from "@/constants/routes";
 import { FeeTableData } from "@/interfaces/model/fee.type";
-import LongText from "@/components/table/LongText";
 
 const useGenerateColumns = () => {
   return useMemo<ColumnType<FeeTableData>[]>(

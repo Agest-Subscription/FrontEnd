@@ -3,9 +3,9 @@ import Link from "next/link";
 import { EditOutlined } from "@ant-design/icons";
 import { ColumnType } from "antd/es/table";
 
+import LongText from "@/components/table/LongText";
 import { PERMISSIONS } from "@/constants/routes";
 import { PermissionTableData } from "@/interfaces/model/permission.type";
-import LongText from "@/components/table/LongText";
 
 const useGenerateColumns = () => {
   return useMemo<ColumnType<PermissionTableData>[]>(
@@ -15,27 +15,34 @@ const useGenerateColumns = () => {
         dataIndex: "no",
         key: "no",
         align: "center",
+        width: 100,
       },
       {
         title: "Name",
         dataIndex: "name",
         key: "name",
+        width: 350,
         render: (value) => {
-          return <LongText text={value} />;
+          return <LongText text={value} width={350} />;
         },
       },
       {
         title: "Display Name",
         dataIndex: "display_name",
         key: "display_name",
+        width: 350,
         render: (value) => {
-          return <LongText text={value} />;
+          return <LongText text={value} width={350} />;
         },
       },
       {
         title: "Description",
         dataIndex: "description",
         key: "description",
+        width: 350,
+        render: (value) => {
+          return <LongText text={value} width={350} />;
+        },
       },
       {
         title: "Action",
