@@ -8,8 +8,8 @@ import {
   updateFeatureApi,
 } from "@/api/feature";
 import { FEATURE, FEATURES } from "@/constants/query";
-import { FeatureFilterParams } from "@/interfaces/model/feature.type";
 import { CustomError } from "@/interfaces/base";
+import { FeatureFilterParams } from "@/interfaces/model/feature.type";
 
 export const useGetListFeature = (params: FeatureFilterParams) => {
   return useQuery({

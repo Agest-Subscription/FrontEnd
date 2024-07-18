@@ -1,12 +1,16 @@
+"use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import styled from "styled-components";
 
 import Loader from "@/components/Loader/Loader";
 import LoadingBtn from "@/components/LoadingBtn/Loading";
+import { PERMISSIONS } from "@/constants/routes";
+import { LoginModel } from "@/interfaces/login";
 
 const StyledFormContainer = styled.div`
   position: absolute;
@@ -37,10 +41,39 @@ const StyledFormContainer = styled.div`
 const LoginContainer = () => {
   const { status } = useSession();
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const searchParams = useSearchParams();
 
-  const handleSubmit = (values: any) => {
+  const callbackUrl = searchParams.get("callbackUrl") || PERMISSIONS;
+
+  const handleSubmit = async (data: LoginModel) => {
     // Handle form submission logic here
-    console.log(values); // Example: log form values
+    console.log(data); // Example: log form values
+
+    try {
+      console.log("data: ", data);
+      setLoading(true);
+      const res = await signIn("credentials", {
+        email: data?.email as string,
+        password: data?.password as string,
+        redirect: true,
+        callbackUrl: callbackUrl,
+      });
+      setLoading(false);
+
+      if (!res?.error) {
+        setError("");
+        if (status === "loading") {
+          return <Loader fullScreen spinning={true} />;
+        }
+      } else {
+        setError("Invalid password or email");
+        console.log(error);
+      }
+    } catch (error: any) {
+      setLoading(false);
+      setError(error?.message);
+    }
   };
   if (status === "loading") {
     return <Loader spinning fullScreen />;
@@ -92,19 +125,15 @@ const LoginContainer = () => {
             type="primary"
             htmlType="submit"
             className="auth__btn"
-            disabled={loading}
-            loading={loading}
+            // disabled={loading}
+            disabled={loading ? true : false}
           >
             {loading ? <LoadingBtn userState={status} /> : "Sign in"}
           </Button>
         </Form.Item>
 
         {/* Error handling example */}
-        {/* {status === 'unauthenticated' && (
-      <p className="auth__error">
-        Authentication failed, either email or password is not correct
-      </p>
-    )} */}
+        {status === "unauthenticated" && <p className="auth__error">{error}</p>}
 
         <p>
           Don&apos;t have an account? <Link href="/register">Click here</Link>
