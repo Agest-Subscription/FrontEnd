@@ -1,8 +1,16 @@
 "use client";
 import React from "react";
 
-const FeaturePage = () => {
-  return <div>FeaturePage</div>;
+import FeaturesList from "./FeaturesList";
+
+type Props = {};
+
+const FeaturesManagementPage: React.FC<Props> = () => {
+  return (
+    <div>
+      <FeaturesList />
+    </div>
+  );
 };
 
-export default FeaturePage;
+export default FeaturesManagementPage;
