@@ -20,99 +20,7 @@ import {
 type Props = {};
 
 const PermissionList: React.FC<Props> = () => {
-  const dataSource: PricingPlanTableData[] = [
-    {
-      no: 1,
-      id: "1",
-      name: "Basic Plan",
-      start_date: "2023-01-01",
-      end_date: "2023-12-31",
-      price: 9.99,
-      description: "A basic plan for individuals.",
-      features: ["Feature A", "Feature B"],
-      is_free_trial: true,
-      free_period: "days",
-      free_period_count: 14,
-      is_active: true,
-    },
-    {
-      no: 2,
-      id: "2",
-      name: "Standard Plan",
-      start_date: "2023-01-01",
-      end_date: "2023-12-31",
-      price: 19.99,
-      description: "A standard plan for small teams.",
-      features: ["Feature A", "Feature B", "Feature C"],
-      is_free_trial: true,
-      free_period: "days",
-      free_period_count: 30,
-      is_active: true,
-    },
-    {
-      no: 3,
-      id: "3",
-      name: "Pro Plan",
-      start_date: "2023-01-01",
-      end_date: "2023-12-31",
-      price: 49.99,
-      description: "A professional plan for businesses.",
-      features: ["Feature A", "Feature B", "Feature C", "Feature D"],
-      is_free_trial: false,
-      free_period: null,
-      free_period_count: null,
-      is_active: true,
-    },
-    {
-      no: 4,
-      id: "4",
-      name: "Enterprise Plan",
-      start_date: "2023-01-01",
-      end_date: "2023-12-31",
-      price: 99.99,
-      description: "An enterprise plan with all features.",
-      features: [
-        "Feature A",
-        "Feature B",
-        "Feature C",
-        "Feature D",
-        "Feature E",
-      ],
-      is_free_trial: false,
-      free_period: null,
-      free_period_count: null,
-      is_active: false,
-    },
-    {
-      no: 5,
-      id: "5",
-      name: "Student Plan",
-      start_date: "2023-01-01",
-      end_date: "2023-06-30",
-      price: 4.99,
-      description: "A discounted plan for students.",
-      features: ["Feature A", "Feature B"],
-      is_free_trial: true,
-      free_period: "weeks",
-      free_period_count: 2,
-      is_active: true,
-    },
-    {
-      no: 6,
-      id: "6",
-      name: "Annual Plan",
-      start_date: "2023-01-01",
-      end_date: "2024-01-01",
-      price: 199.99,
-      description: "A yearly plan with additional savings.",
-      features: ["Feature A", "Feature B", "Feature C"],
-      is_free_trial: true,
-      free_period: "months",
-      free_period_count: 1,
-      is_active: true,
-    },
-  ];
-
+ 
   const router = useRouter();
   const { searchQuery, handleSearch } = useSearchSync();
   const [tableParams, setTableParams] = useState<
@@ -171,15 +79,15 @@ const PermissionList: React.FC<Props> = () => {
     });
   }, [PricingPlanTableData]);
 
-  // const dataSource = useMemo<DataSourceItem<PricingPlanTableData>[]>(() => {
-  //   return (
-  //     PricingPlanTableData?.data.map((pricingPlan, index) => ({
-  //       ...pricingPlan,
-  //       key: pricingPlan.id,
-  //       no: index + 1 + ((params.page ?? 1) - 1) * (params?.page_size ?? 5),
-  //     })) ?? []
-  //   );
-  // }, [PricingPlanTableData?.data, params.page, params?.page_size]);
+  const dataSource = useMemo<DataSourceItem<PricingPlanTableData>[]>(() => {
+    return (
+      PricingPlanTableData?.data.map((pricingPlan, index) => ({
+        ...pricingPlan,
+        key: pricingPlan.id,
+        no: index + 1 + ((params.page ?? 1) - 1) * (params?.page_size ?? 5),
+      })) ?? []
+    );
+  }, [PricingPlanTableData?.data, params.page, params?.page_size]);
 
   return (
     <div>
