@@ -4,31 +4,32 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
 
-import FeesDetails from "../FeesDetails";
+import FeatureDetails from "../FeatureDetails";
 import { useGenerateFields } from "../useGenerateFields";
 
 import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
 import PopUp from "@/components/popup/Popup";
-import { useAddFee } from "@/hooks/fee";
-import { FeeFormValues } from "@/interfaces/model/fee.type";
+import { useAddFeature } from "@/hooks/feature";
+import { CustomError } from "@/interfaces/base";
+import { FeatureFormValues } from "@/interfaces/model/feature.type";
 import { popUpPropType } from "@/interfaces/popup";
-import feeFormValuesSchema from "@/schema/fee";
+import featureFormValuesSchema from "@/schema/feature";
+import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
-import { getErrorDetail } from "@/utils/error";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
-  const goToFee = useGoToDashboardTab("fee");
+  const goToFeature = useGoToDashboardTab("features");
   const [openModal, setOpenModal] = useState(false);
-  const { mutate: addFee, isLoading: isAdding } = useAddFee();
-  const methods = useForm<FeeFormValues>({
+  const { mutate: addFeature, isLoading: isAdding } = useAddFeature();
+  const methods = useForm<FeatureFormValues>({
     mode: "onBlur",
-    resolver: yupResolver(feeFormValuesSchema),
+    resolver: yupResolver(featureFormValuesSchema),
   });
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "successpopup",
-    popup_text: `${capitalize("Are you sure to create a new Fee?")}`,
+    popup_text: `${capitalize("Are you sure to create a new feature?")}`,
     popup_type: "Confirm",
     onConfirm: methods.handleSubmit(onSubmit),
     onClose: () => setOpenModal(false),
@@ -39,49 +40,21 @@ const Page: React.FC<Props> = () => {
     setOpenModal(true);
   }
 
-  function formatPayload(data: FeeFormValues) {
-    if (data.fee_type === "transaction") {
-      return {
-        ...data,
-        recurrence_cycle_count: null,
-        recurrence_type: null,
-      };
-    }
-    if (data.fee_type === "onetime") {
-      return {
-        ...data,
-        transaction_unit: null,
-        is_overrate: null,
-        recurrence_cycle_count: null,
-        recurrence_type: null,
-      };
-    }
-    if (data.fee_type === "recurrence") {
-      return {
-        ...data,
-        transaction_unit: null,
-        is_overrate: null,
-      };
-    }
-    return data; // or handle other fee_type cases if necessary
-  }
-
-  function onSubmit(data: FeeFormValues) {
-    const newData = formatPayload(data);
-    addFee(newData, {
+  function onSubmit(data: FeatureFormValues) {
+    addFeature(data, {
       onSuccess: () => {
         showModal({
           popup_id: "successpopup",
-          popup_text: `${capitalize("This Fee is successfully created!")}`,
+          popup_text: `${capitalize("This Feature is successfully created!")}`,
           popup_type: "Success",
           onConfirm: () => {},
-          onClose: () => goToFee(),
+          onClose: () => goToFeature(),
         });
       },
-      onError: (error) => {
+      onError: (err: CustomError) => {
         showModal({
           popup_id: "fail",
-          popup_text: `${capitalize(getErrorDetail(error) ?? "Fee creation failed!")}`,
+          popup_text: `${getErrorDetail(err) ?? "Feature Creation failed"}`,
           popup_type: "Fail",
           onConfirm: () => {},
           onClose: () => setOpenModal(false),
@@ -97,7 +70,7 @@ const Page: React.FC<Props> = () => {
     if (isValid) {
       showModal({
         popup_id: "confirm",
-        popup_text: `${capitalize("Are you sure to create a new Fee?")}`,
+        popup_text: `${capitalize("Are you sure to create a new feature?")}`,
         popup_type: "Confirm",
         onConfirm: methods.handleSubmit(onSubmit),
         onClose: () => setOpenModal(false),
@@ -108,7 +81,7 @@ const Page: React.FC<Props> = () => {
   return (
     <Flex vertical gap={24}>
       <Typography style={{ fontSize: 24, fontWeight: 600, color: "#2F80ED" }}>
-        {capitalize("Fee Creation")}
+        {capitalize("Feature Creation")}
       </Typography>
       <Spin spinning={isAdding}>
         <FormWrapperV2 methods={methods} fields={fields}>
@@ -121,7 +94,7 @@ const Page: React.FC<Props> = () => {
             layout="vertical"
             onFinish={methods.handleSubmit(onSubmit)}
           >
-            <FeesDetails onSave={handleSave} methods={methods} />
+            <FeatureDetails onSave={handleSave} />
             <PopUp popupProps={modalProp} isOpen={openModal} />
           </Form>
         </FormWrapperV2>
