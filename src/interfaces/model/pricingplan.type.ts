@@ -1,14 +1,51 @@
-import { FeatureType } from "../Feature";
+import { FilterBase } from "../base";
+import { EnumStruct } from "../enum";
+import { Feature } from "./feature.type";
 
-export type PricingPlanType = {
+export type FreeTrialPeriod = "daily" | "weekly" | "monthly";
+
+export type PricingPlan = {
   id: string;
-  pricing_name: string;
-  pricing_start_date: string;
-  pricing_end_date: string;
-  is_free: boolean;
-  free_period: string;
-  free_time: string;
-  fee_id: string;
-  feature_id: FeatureType[];
-  pricing_desc: string;
+  name: string;
+  start_date: string;
+  end_date: string;
+  price: number;
+  description: string | null;
+  features: Feature[];
+  is_free_trial: boolean;
+  free_trial_period: FreeTrialPeriod | null;
+  free_trial_period_count: number | null;
+  is_active: boolean;
 };
+
+export type PricingPlanTableData = PricingPlan & {
+  no: number;
+};
+
+export type PricingPlanFilterParams = FilterBase<PricingPlanTableData>;
+
+export type PricingPlanFormValues = Omit<
+  PricingPlan,
+  "id" | "price" | "features"
+>;
+
+export type PricingPlanResponseItem = PricingPlan;
+
+export type AddPricingPlanPayload = PricingPlanFormValues;
+
+export type UpdatePricingPlanPayload = PricingPlan;
+
+export const FreeTrialPeriodEnum = Object.freeze({
+  daily: {
+    label: "Daily",
+    value: "daily",
+  },
+  weekly: {
+    label: "Weekly",
+    value: "weekly",
+  },
+  monthly: {
+    label: "Monthly",
+    value: "monthly",
+  },
+}) satisfies EnumStruct<FreeTrialPeriod>;
