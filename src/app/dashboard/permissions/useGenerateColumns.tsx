@@ -5,6 +5,7 @@ import { ColumnType } from "antd/es/table";
 
 import { PERMISSIONS } from "@/constants/routes";
 import { PermissionTableData } from "@/interfaces/model/permission.type";
+import LongText from "@/components/table/LongText";
 
 const useGenerateColumns = () => {
   return useMemo<ColumnType<PermissionTableData>[]>(
@@ -19,11 +20,17 @@ const useGenerateColumns = () => {
         title: "Name",
         dataIndex: "name",
         key: "name",
+        render: (value) => {
+          return <LongText text={value} />;
+        },
       },
       {
         title: "Display Name",
         dataIndex: "display_name",
         key: "display_name",
+        render: (value) => {
+          return <LongText text={value} />;
+        },
       },
       {
         title: "Description",

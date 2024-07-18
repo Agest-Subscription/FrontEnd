@@ -13,6 +13,7 @@ import { useAddFee } from "@/hooks/fee";
 import { FeeFormValues } from "@/interfaces/model/fee.type";
 import { popUpPropType } from "@/interfaces/popup";
 import feeFormValuesSchema from "@/schema/fee";
+import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
 
@@ -77,10 +78,10 @@ const Page: React.FC<Props> = () => {
           onClose: () => goToFee(),
         });
       },
-      onError: () => {
+      onError: (error) => {
         showModal({
           popup_id: "fail",
-          popup_text: `${capitalize("Fee creation failed!")}`,
+          popup_text: `${capitalize(getErrorDetail(error) ?? "Fee creation failed!")}`,
           popup_type: "Fail",
           onConfirm: () => {},
           onClose: () => setOpenModal(false),

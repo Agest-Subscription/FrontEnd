@@ -37,7 +37,7 @@ export const useAddFee = () => {
     onSuccess: () => {
       queryClient.invalidateQueries([FEES]);
     },
-    onError: (error) => {
+    onError: (error: CustomError) => {
       return error;
     },
   });
