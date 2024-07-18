@@ -14,7 +14,7 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
     .nullable()
     .default(null)
     .max(255, "Description cannot exceed 255 characters"),
-  fee_type: string<FeeType>().required("Display name is required"),
+  fee_type: string<FeeType>().required("Fee type is required"),
   fee_price: number()
     .min(0)
     .required("Fee price is a required fields")
