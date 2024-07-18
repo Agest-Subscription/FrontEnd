@@ -13,7 +13,7 @@ export type Fee = {
   recurrence_cycle_count: number | null;
   fee_price: number;
   transaction_unit: string | null;
-  fee_desc: string | null;
+  description: string | null;
   is_active: boolean;
 };
 
