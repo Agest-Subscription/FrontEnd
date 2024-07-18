@@ -25,7 +25,7 @@ export const useGenerateFields = () => {
         options: enumToSelectOptions(FeeTypeEnum),
         componentProps: {},
       },
-      fee_desc: {
+      description: {
         label: "Description",
         type: "textarea",
         componentProps: {

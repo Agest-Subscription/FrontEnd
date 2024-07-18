@@ -55,7 +55,7 @@ const PermissionDetails: React.FC<DetailsProp> = ({
         </Row>
         <Row gutter={16}>
           <Col span={8}>
-            <FormField name="fee_desc" />
+            <FormField name="description" />
           </Col>
         </Row>
         {fee_type === "recurrence" && (
