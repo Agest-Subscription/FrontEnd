@@ -2,7 +2,8 @@
 import React, { FC, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Flex, Layout, MenuProps, theme, Typography } from "antd";
+import { signOut } from "next-auth/react";
+import { Button, Flex, Layout, MenuProps, theme, Typography } from "antd";
 
 import MenuCustom from "@/components/Menu/MenuCustom";
 import {
@@ -88,15 +89,25 @@ const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
   return (
     <Layout style={{ minHeight: "100vh", padding: "24px" }}>
       <Flex vertical gap={24}>
-        <Typography
-          style={{
-            color: "#2F80ED",
-            fontSize: 32,
-            fontWeight: 400,
-          }}
-        >
-          Subscription
-        </Typography>
+        <Flex justify="space-between" align="center">
+          <Typography
+            style={{
+              color: "#2F80ED",
+              fontSize: 32,
+              fontWeight: 400,
+            }}
+          >
+            Subscription
+          </Typography>
+
+          <Button
+            onClick={() => {
+              signOut();
+            }}
+          >
+            Sign Out
+          </Button>
+        </Flex>
         <Content>
           <MenuCustom
             mode="horizontal"
