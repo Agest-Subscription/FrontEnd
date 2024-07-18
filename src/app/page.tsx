@@ -1,7 +1,11 @@
 "use client";
 
-import DashboardLayout from "./dashboard/layout";
+import LoginContainer from "@/containers/login/Login";
 
 export default function Home() {
-  return <DashboardLayout />;
+  return (
+    <>
+      <LoginContainer />
+    </>
+  );
 }

@@ -1,12 +1,8 @@
 import React from "react";
-import { InputProps, Tooltip } from "antd";
-import { isNil } from "lodash";
+import { Input, InputProps } from "antd";
 import styled from "styled-components";
 
 import { CommonFormItemProps, FormItem } from "./FormItem";
-import { StyledInput } from "./StyleComponents";
-
-import isTextTruncated from "@/utils/textTruncated";
 
 // TODO: will replace the function renderValue to renderReadOnlyValue
 
@@ -30,7 +26,7 @@ let TextField: React.FC<TextFieldProps> = ({
   labelPosition,
   readOnly = false,
   disabled,
-  renderValue,
+  //renderValue,
   index,
   styleLabel = {},
   className,
@@ -49,47 +45,8 @@ let TextField: React.FC<TextFieldProps> = ({
       index={index}
       styleLabel={styleLabel}
       render={({ onChange, onBlur, ...field }) => {
-        if (readOnly) {
-          const styleDiv: React.CSSProperties = {
-            visibility: !isNil(field.value) ? "visible" : "hidden",
-            width: "100%",
-            fontSize: "14px",
-            fontWeight: 400,
-            lineHeight: "18px",
-            background: "transparent",
-            overflow: "hidden",
-            whiteSpace: "nowrap",
-            textOverflow: "ellipsis",
-          };
-          const idTruncate = `truncate${name}`;
-          return (
-            <div
-              style={{
-                width: "auto",
-                border: disabled ? "none" : "1px solid #CCD1D4",
-                borderRadius: "8px",
-                boxSizing: "border-box",
-                backgroundColor: disabled
-                  ? "rgba(38, 62, 86, 0.10)"
-                  : undefined,
-                alignItems: "center",
-                height: "40px",
-                padding: "10px 16px",
-                display: "flex",
-                ...rest.style,
-              }}
-            >
-              <Tooltip title={isTextTruncated(idTruncate) ? field.value : ""}>
-                <div style={styleDiv} id={idTruncate}>
-                  {renderValue ? renderValue(field.value) : field.value}
-                </div>
-              </Tooltip>
-            </div>
-          );
-        }
-
         return (
-          <StyledInput
+          <Input
             onChange={(e) => {
               let value: string | number = e.target.value;
               if (rest.type === "number") {
@@ -116,13 +73,10 @@ let TextField: React.FC<TextFieldProps> = ({
 };
 
 TextField = styled(TextField)`
-  &.mobile {
-    .form-item-label {
-      color: #7f8eac;
-    }
-
     .form-textfield {
       color: #06417c;
+      padding-top: 8px;
+      padding-bottom: 8px;
     }
   }
 `;

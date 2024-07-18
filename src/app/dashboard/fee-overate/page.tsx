@@ -1,8 +1,6 @@
 import React from "react";
 
-type Props = {};
-
-const FeeOveratePage = (props: Props) => {
+const FeeOveratePage = () => {
   return <div>FeeOveratePage</div>;
 };
 

@@ -1,24 +1,16 @@
 import * as React from "react";
 import { FieldValues, FormProvider, UseFormReturn } from "react-hook-form";
 import { Alert } from "antd";
-import {
-  removeShouldNavigateItemThunk,
-  selectShouldNavigate,
-  setShouldNavigatesItemThunk,
-} from "shared";
 
 import FormField, { FormFieldProps } from "./FormField";
 
 import { FieldsData } from "@/interfaces/form";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { generateUid } from "@/utils/random";
 
 interface FormWrapperProps<T extends FieldValues = any, V = any> {
   methods: UseFormReturn<T, V>;
   children: React.ReactNode | ((props: FormContextType<T>) => React.ReactNode);
   fields: FieldsData<T>;
 }
-
 export interface FormContextType<T extends FieldValues = any> {
   fields: FieldsData<T>;
   FormField: React.FC<FormFieldProps<T>>;
@@ -34,47 +26,11 @@ const FormFieldWithType = <T extends FieldValues>(props: FormFieldProps<T>) => {
   return <FormField<T> {...props} />;
 };
 
-export function FormWrapper<T extends FieldValues, V>({
-  children,
+const FormWrapperV2 = <T extends FieldValues, V>({
   methods,
+  children,
   fields,
-}: FormWrapperProps<T, V>) {
-  const dispatch = useAppDispatch();
-  const shouldNavigate = useAppSelector(selectShouldNavigate);
-
-  const [uid] = React.useState(generateUid());
-
-  React.useEffect(() => {
-    const payload = {
-      id: uid,
-      shouldNavigate: !methods.formState.isDirty,
-    };
-    dispatch(setShouldNavigatesItemThunk(payload));
-  }, [dispatch, methods.formState.isDirty, uid]);
-
-  React.useEffect(() => {
-    return () => {
-      dispatch(removeShouldNavigateItemThunk(uid));
-    };
-  }, [dispatch, uid]);
-
-  React.useEffect(() => {
-    const handleUnload = (event: BeforeUnloadEvent) => {
-      // Recommended
-      event.preventDefault();
-
-      // Included for legacy support, e.g. Chrome/Edge < 119
-      event.returnValue = true;
-    };
-    if (!shouldNavigate) window.addEventListener("beforeunload", handleUnload);
-    if (shouldNavigate)
-      window.removeEventListener("beforeunload", handleUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleUnload);
-    };
-  }, [shouldNavigate]);
-
+}: FormWrapperProps<T, V>) => {
   const value = React.useMemo(
     () => ({
       fields,
@@ -99,4 +55,6 @@ export function FormWrapper<T extends FieldValues, V>({
       </FormContext.Provider>
     </FormProvider>
   );
-}
+};
+
+export default FormWrapperV2;

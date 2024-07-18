@@ -1,6 +1,4 @@
-import { Inter } from "next/font/google";
 import type { ThemeConfig } from "antd";
-const inter = Inter({ subsets: ["latin"] });
 
 const themeCustom: ThemeConfig = {
   components: {
