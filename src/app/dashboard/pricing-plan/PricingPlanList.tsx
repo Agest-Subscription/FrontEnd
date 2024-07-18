@@ -23,7 +23,7 @@ const PermissionList: React.FC<Props> = () => {
   const dataSource: PricingPlanTableData[] = [
     {
       no: 1,
-      id: "plan1",
+      id: "1",
       name: "Basic Plan",
       start_date: "2023-01-01",
       end_date: "2023-12-31",
@@ -37,7 +37,7 @@ const PermissionList: React.FC<Props> = () => {
     },
     {
       no: 2,
-      id: "plan2",
+      id: "2",
       name: "Standard Plan",
       start_date: "2023-01-01",
       end_date: "2023-12-31",
@@ -51,7 +51,7 @@ const PermissionList: React.FC<Props> = () => {
     },
     {
       no: 3,
-      id: "plan3",
+      id: "3",
       name: "Pro Plan",
       start_date: "2023-01-01",
       end_date: "2023-12-31",
@@ -65,7 +65,7 @@ const PermissionList: React.FC<Props> = () => {
     },
     {
       no: 4,
-      id: "plan4",
+      id: "4",
       name: "Enterprise Plan",
       start_date: "2023-01-01",
       end_date: "2023-12-31",
@@ -85,7 +85,7 @@ const PermissionList: React.FC<Props> = () => {
     },
     {
       no: 5,
-      id: "plan5",
+      id: "5",
       name: "Student Plan",
       start_date: "2023-01-01",
       end_date: "2023-06-30",
@@ -99,7 +99,7 @@ const PermissionList: React.FC<Props> = () => {
     },
     {
       no: 6,
-      id: "plan6",
+      id: "6",
       name: "Annual Plan",
       start_date: "2023-01-01",
       end_date: "2024-01-01",
