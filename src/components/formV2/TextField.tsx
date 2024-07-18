@@ -75,6 +75,8 @@ let TextField: React.FC<TextFieldProps> = ({
 TextField = styled(TextField)`
     .form-textfield {
       color: #06417c;
+      padding-top: 8px;
+      padding-bottom: 8px;
     }
   }
 `;

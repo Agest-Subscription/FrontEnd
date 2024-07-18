@@ -25,6 +25,7 @@ export const useGenerateFields = () => {
         type: "textarea",
         componentProps: {
           style: { width: "100%" },
+          rows: 3,
         },
       },
       is_active: {

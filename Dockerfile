@@ -8,9 +8,11 @@ COPY package.json yarn.lock ./
 
 RUN yarn install --frozen-lockfile
 
-COPY . .
+ARG NEXT_PUBLIC_API_BASE_URL
 
-COPY ./.env.prod .env
+ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
+
+COPY . .
 
 RUN yarn build
 

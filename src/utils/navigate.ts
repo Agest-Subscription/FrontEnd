@@ -1,13 +1,6 @@
 import { useRouter } from "next/navigation";
 
-type DashboardTab =
-  | "permissions"
-  | "pricing-plan"
-  | "subscriptions"
-  | "fee"
-  | "fee-overate"
-  | "features"
-  | "users";
+import { DashboardTab } from "@/interfaces/base";
 
 export const useGoToDashboardTab = (value: DashboardTab) => {
   const router = useRouter();

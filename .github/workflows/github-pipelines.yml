@@ -1,13 +1,6 @@
 name: CI/CD Pipeline
 
 on:
-  push:
-    branches: 
-      - 'main'
-      - 'dev'
-      - 'uat'
-    tags: 
-      - '*.*.*'
   pull_request:
     branches: 
       - 'main'
@@ -15,37 +8,7 @@ on:
       - 'uat'
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Use Node.js 20.15.1
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.15.1
-      
-      - name: Cache Node.js modules
-        uses: actions/cache@v4
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      
-      - name: Install dependencies
-        run: yarn install
-      
-      - name: Build the project
-        run: yarn build
-      
-      - name: Lint the project
-        run: |
-          yarn lint:fix
-          yarn format:fix
-
   deploy:
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -72,3 +35,4 @@ jobs:
           tags: |
             quocc/sub:frontend-latest
             quocc/sub:frontend-${{ steps.short-sha.outputs.sha }}
+          build-args: NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
