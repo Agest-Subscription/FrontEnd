@@ -50,7 +50,7 @@ export const options: AuthOptions = {
         token.refresh_token = user?.authenticate?.refresh_token;
         token.isAdmin = user?.is_admin;
       }
-   
+
       return token;
     },
 

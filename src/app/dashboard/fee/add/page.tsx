@@ -13,9 +13,9 @@ import { useAddFee } from "@/hooks/fee";
 import { FeeFormValues } from "@/interfaces/model/fee.type";
 import { popUpPropType } from "@/interfaces/popup";
 import feeFormValuesSchema from "@/schema/fee";
+import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
-import { getErrorDetail } from "@/utils/error";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
