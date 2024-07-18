@@ -20,7 +20,6 @@ import {
 type Props = {};
 
 const PermissionList: React.FC<Props> = () => {
- 
   const router = useRouter();
   const { searchQuery, handleSearch } = useSearchSync();
   const [tableParams, setTableParams] = useState<

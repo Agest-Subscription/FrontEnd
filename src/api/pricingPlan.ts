@@ -8,9 +8,12 @@ import {
 } from "@/interfaces/model/pricingplan.type";
 
 export const getListPricingPlansApi = (params: PricingPlanFilterParams) => {
-  return axiosClient.get<GetListResponse<PricingPlanResponseItem>>("pricingplans", {
-    params,
-  });
+  return axiosClient.get<GetListResponse<PricingPlanResponseItem>>(
+    "pricingplans",
+    {
+      params,
+    },
+  );
 };
 
 export const getPricingPlanbyIdApi = (id: string) => {
