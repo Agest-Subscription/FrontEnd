@@ -8,6 +8,7 @@ export const useGenerateFields = () => {
   const { data: permissions } = useGetListPermission({
     page: 1,
     page_size: 5,
+    is_active: true,
   });
 
   const fields = useMemo<FieldsData<FeatureFormValues>>(() => {
