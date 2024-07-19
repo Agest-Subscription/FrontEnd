@@ -8,28 +8,24 @@ export const options: AuthOptions = {
     CredentialsProvider({
       name: "Sign in",
       id: "credentials",
-
       credentials: {
-        userName: {
-          label: "UserName",
-          type: "userName",
+        email: {
+          label: "Email",
+          type: "email",
           placeholder: "example@example.com",
         },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         try {
-          const response = await axiosClient.post("/user/auth/token", {
-            userName: credentials?.userName as string,
+          const response = await axiosClient.post("/auth/login", {
+            email: credentials?.email as string,
             password: credentials?.password as string,
           });
           const user = response.data;
-          console.log("return data user admin: ", user);
 
           // If no error and we have user data, return it
           if (response.status === 200 && user) {
-            console.log("return data user 200: ", user);
-
             return user;
           }
         } catch (error: any) {
@@ -41,4 +37,33 @@ export const options: AuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    signIn: async ({ account }) => {
+      if (account?.provider === "credentials") {
+        return true;
+      }
+      return false;
+    },
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.access_token = user?.authenticate?.access_token;
+        token.refresh_token = user?.authenticate?.refresh_token;
+        token.isAdmin = user?.is_admin;
+      }
+      return token;
+    },
+
+    session: async ({ session, token }) => {
+      session.user.accessToken = token?.access_token as string;
+      session.user.refreshToken = token?.refresh_token as string;
+      session.user.isAdmin = token?.isAdmin;
+      console.log("role: ", token?.isAdmin);
+      return session;
+    },
+  },
+  pages: {
+    signIn: "/",
+    newUser: "/sign-up",
+  },
+  secret: process.env.NEXTAUTH_SECRET,
 };
