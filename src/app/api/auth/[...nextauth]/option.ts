@@ -1,7 +1,6 @@
 import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-
-import { axiosClient } from "@/config/axios/client";
+import axios from "axios";
 
 export const options: AuthOptions = {
   providers: [
@@ -18,10 +17,13 @@ export const options: AuthOptions = {
       },
       async authorize(credentials) {
         try {
-          const response = await axiosClient.post("/auth/login", {
-            email: credentials?.email as string,
-            password: credentials?.password as string,
-          });
+          const response = await axios.post(
+            "http://api.sub.com/api/v1/auth/login",
+            {
+              email: credentials?.email as string,
+              password: credentials?.password as string,
+            },
+          );
           const user = response.data;
 
           // If no error and we have user data, return it
@@ -57,6 +59,7 @@ export const options: AuthOptions = {
       session.user.accessToken = token?.access_token as string;
       session.user.refreshToken = token?.refresh_token as string;
       session.user.isAdmin = token?.isAdmin;
+      console.log("role: ", token?.isAdmin);
       return session;
     },
   },

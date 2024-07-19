@@ -19,13 +19,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: [
-    "/dashboard/permissions/:path*",
-    "/dashboard/pricing-plan/:path*",
-    "/dashboard/features/:path*",
-    "/dashboard/fee/:path*",
-    "/dashboard/fee-overate/:path*",
-    "/dashboard/subscriptions/:path*",
-    "/dashboard/users/:path*",
-  ],
+  matcher: [],
 };
