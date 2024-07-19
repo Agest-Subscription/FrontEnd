@@ -1,6 +1,7 @@
 import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import axios from "axios";
+
+import { axiosClient } from "@/config/axios/client";
 
 export const options: AuthOptions = {
   providers: [
@@ -17,13 +18,10 @@ export const options: AuthOptions = {
       },
       async authorize(credentials) {
         try {
-          const response = await axios.post(
-            "http://api.sub.com/api/v1/auth/login",
-            {
-              email: credentials?.email as string,
-              password: credentials?.password as string,
-            },
-          );
+          const response = await axiosClient.post("/auth/login", {
+            email: credentials?.email as string,
+            password: credentials?.password as string,
+          });
           const user = response.data;
 
           // If no error and we have user data, return it
