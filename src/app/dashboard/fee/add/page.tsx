@@ -40,7 +40,6 @@ const Page: React.FC<Props> = () => {
   }
 
   function formatPayload(data: FeeFormValues) {
-    
     if (data.fee_type === "transaction") {
       return {
         ...data,

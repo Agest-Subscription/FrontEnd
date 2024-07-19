@@ -7,6 +7,7 @@ import { Flex, Form, Spin, Typography } from "antd";
 import FeatureDetails from "../FeatureDetails";
 import { useGenerateFields } from "../useGenerateFields";
 
+import NotFound from "@/app/not-found";
 import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
 import PopUp from "@/components/popup/Popup";
 import {
@@ -22,7 +23,6 @@ import featureFormValuesSchema from "@/schema/feature";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize, trimString } from "@/utils/string";
-import NotFound from "@/app/not-found";
 
 type Props = {};
 
@@ -132,7 +132,7 @@ const Page: React.FC<Props> = () => {
   if (isError) {
     return <NotFound previousPage="features" />;
   }
-  
+
   return (
     <Flex vertical gap={24}>
       <Typography style={{ fontSize: 24, fontWeight: 600, color: "#2F80ED" }}>

@@ -1,11 +1,10 @@
-name: CI/CD Pipeline
+name: Production Build
 
 on:
   pull_request:
     branches:
-      - "main"
       - "dev"
-      - "uat"
+      - "main"
 
 jobs:
   deploy:
@@ -30,12 +29,12 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ${{ github.ref == 'refs/heads/dev' && 'Dockerfile.dev' || '.' }}
           push: true
           tags: |
-            quocc/sub:frontend-latest
-            quocc/sub:frontend-${{ steps.short-sha.outputs.sha }}
+            ${{ github.ref == 'refs/heads/dev' && 'quocc/sub:frontend-test' || 'quocc/sub:frontend-latest' }}
+            ${{ github.ref == 'refs/heads/dev' && 'quocc/sub:frontend-test-${{ steps.short-sha.outputs.sha }}' || 'quocc/sub:frontend-${{ steps.short-sha.outputs.sha }}' }}
           build-args: |
-            NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
+            NEXT_PUBLIC_API_BASE_URL=${{ github.ref == 'refs/heads/dev' && secrets.NEXT_PUBLIC_API_BASE_URL_DEV || secrets.NEXT_PUBLIC_API_BASE_URL }}
             NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
             NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
