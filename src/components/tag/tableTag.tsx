@@ -1,6 +1,7 @@
 import { ConfigProvider, Flex, Tag } from "antd";
 
 import { Permission } from "@/interfaces/model/permission.type";
+import LongText from "../table/LongText";
 
 type Props = {
   permissions: Permission[];
@@ -13,7 +14,7 @@ const tableTag = ({ permissions }: Props) => {
         token: {
           colorText: "#15ABFF",
           borderRadiusSM: 14,
-          fontFamily: "Manrope",
+          fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
           fontSize: 20,
         },
       }}
@@ -21,7 +22,7 @@ const tableTag = ({ permissions }: Props) => {
       <Flex>
         {permissions.map((permission) => (
           <Tag key={permission.id} bordered={false}>
-            {permission.display_name}
+            <LongText text={permission.display_name} centerText width={80} />
           </Tag>
         ))}
       </Flex>

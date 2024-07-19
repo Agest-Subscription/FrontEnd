@@ -4,6 +4,7 @@ import { EditOutlined } from "@ant-design/icons";
 import { Checkbox } from "antd";
 import { ColumnType } from "antd/es/table";
 
+import LongText from "@/components/table/LongText";
 import TableTag from "@/components/tag/tableTag";
 import { FEATURES } from "@/constants/routes";
 import { FeatureTableData } from "@/interfaces/model/feature.type";
@@ -20,11 +21,16 @@ const useGenerateColumns = () => {
         title: "Name",
         dataIndex: "name",
         key: "name",
+        width: 250,
+        render: (value) => {
+          return <LongText text={value} width={250} />;
+        },
       },
       {
         title: "Permission",
         dataIndex: "permissions",
         key: "permissions",
+        width: 250,
         render: (_, record) => {
           return <TableTag permissions={record.permissions}></TableTag>;
         },
@@ -33,6 +39,10 @@ const useGenerateColumns = () => {
         title: "Description",
         dataIndex: "description",
         key: "description",
+        width: 450,
+        render: (value) => {
+          return <LongText text={value} width={450} />;
+        },
       },
       {
         title: "Active",
