@@ -22,7 +22,7 @@ import { popUpPropType } from "@/interfaces/popup";
 import permissionFormValuesSchema from "@/schema/permission";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
-import { capitalize } from "@/utils/string";
+import { capitalize, trimString } from "@/utils/string";
 
 type Props = {};
 
@@ -68,8 +68,9 @@ const Page: React.FC<Props> = () => {
   };
 
   const handleSubmit = (data: PermissionFormValues) => {
+    const trimmed = trimString(data, ["name", "display_name"]);
     updatePermission(
-      { id, ...data },
+      { id, ...trimmed },
       {
         onSuccess: () =>
           showModal({

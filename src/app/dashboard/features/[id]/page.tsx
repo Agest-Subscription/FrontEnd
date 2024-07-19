@@ -21,7 +21,8 @@ import { popUpPropType } from "@/interfaces/popup";
 import featureFormValuesSchema from "@/schema/feature";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
-import { capitalize } from "@/utils/string";
+import { capitalize, trimString } from "@/utils/string";
+import NotFound from "@/app/not-found";
 
 type Props = {};
 
@@ -44,7 +45,7 @@ const Page: React.FC<Props> = () => {
     resolver: yupResolver(featureFormValuesSchema),
   });
 
-  const { data: Feature } = useGetFeatureById(id);
+  const { data: Feature, isError } = useGetFeatureById(id);
 
   const fields = useGenerateFields();
 
@@ -67,10 +68,11 @@ const Page: React.FC<Props> = () => {
   };
 
   const handleSubmit = (data: FeatureFormValues) => {
+    const trimmed = trimString(data, ["name"]);
     updateFeature(
       {
         id,
-        ...data,
+        ...trimmed,
       },
       {
         onSuccess: () =>
@@ -127,6 +129,10 @@ const Page: React.FC<Props> = () => {
     }
   };
 
+  if (isError) {
+    return <NotFound previousPage="features" />;
+  }
+  
   return (
     <Flex vertical gap={24}>
       <Typography style={{ fontSize: 24, fontWeight: 600, color: "#2F80ED" }}>

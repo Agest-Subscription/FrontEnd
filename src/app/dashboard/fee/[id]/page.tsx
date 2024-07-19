@@ -18,7 +18,7 @@ import { popUpPropType } from "@/interfaces/popup";
 import feeFormValuesSchema from "@/schema/fee";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
-import { capitalize } from "@/utils/string";
+import { capitalize, trimString } from "@/utils/string";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
@@ -73,8 +73,9 @@ const Page: React.FC<Props> = () => {
   }
   function onSubmit(data: FeeFormValues) {
     const newData = formatPayload(data);
+    const trimmed = trimString(data, ["name"]);
     updateFee(
-      { id, ...newData },
+      { id, ...trimmed },
       {
         onSuccess: () => {
           showModal({
