@@ -89,7 +89,7 @@ const FeaturesList: React.FC<Props> = () => {
   return (
     <div>
       <TableV1
-        scroll={{ x: "max-content"}}
+        scroll={{ x: "max-content" }}
         loading={isFetching}
         tableTitle="feature"
         showSearchBar={true}

@@ -36,16 +36,15 @@ export function replaceLastOccurrence(
   }
 }
 
-
 type TrimmedFields<T> = {
-  [K in keyof T]: T[K] extends string ? K : never
+  [K in keyof T]: T[K] extends string ? K : never;
 }[keyof T];
 
 export function trimString<T>(data: T, fields: TrimmedFields<T>[]): T {
   const trimmedData = { ...data };
 
   fields.forEach((field) => {
-    if (typeof trimmedData[field] === 'string') {
+    if (typeof trimmedData[field] === "string") {
       trimmedData[field] = (trimmedData[field] as string).trim() as any;
     }
   });

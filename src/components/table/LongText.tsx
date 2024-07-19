@@ -7,7 +7,11 @@ interface LongTextProps {
   centerText?: boolean;
 }
 
-const LongText: React.FC<LongTextProps> = ({ text,centerText = false, width = 200 }) => {
+const LongText: React.FC<LongTextProps> = ({
+  text,
+  centerText = false,
+  width = 200,
+}) => {
   const textRef = useRef<HTMLParagraphElement | null>(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
 

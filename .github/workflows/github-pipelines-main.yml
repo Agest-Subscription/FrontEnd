@@ -1,9 +1,10 @@
-name: Production Build
+name: CI/CD Pipeline
 
 on:
   pull_request:
     branches:
-      - "dev"
+      - "main"
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -30,5 +31,9 @@ jobs:
           context: .
           push: true
           tags: |
-            quocc/sub:frontend-test
-            quocc/sub:frontend-test-${{ steps.short-sha.outputs.sha }}
+            quocc/sub:frontend-latest
+            quocc/sub:frontend-${{ steps.short-sha.outputs.sha }}
+          build-args: |
+            NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
+            NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+            NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
