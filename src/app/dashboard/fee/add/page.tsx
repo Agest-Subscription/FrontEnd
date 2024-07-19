@@ -15,7 +15,7 @@ import { popUpPropType } from "@/interfaces/popup";
 import feeFormValuesSchema from "@/schema/fee";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
-import { capitalize } from "@/utils/string";
+import { capitalize, trimString } from "@/utils/string";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
@@ -40,6 +40,7 @@ const Page: React.FC<Props> = () => {
   }
 
   function formatPayload(data: FeeFormValues) {
+    
     if (data.fee_type === "transaction") {
       return {
         ...data,
@@ -68,7 +69,8 @@ const Page: React.FC<Props> = () => {
 
   function onSubmit(data: FeeFormValues) {
     const newData = formatPayload(data);
-    addFee(newData, {
+    const trimmed = trimString(newData, ["name"]);
+    addFee(trimmed, {
       onSuccess: () => {
         showModal({
           popup_id: "successpopup",
