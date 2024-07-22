@@ -1,22 +1,29 @@
 import { useMemo } from "react";
+import { Spin } from "antd";
 
-import { useGetListPermission } from "@/hooks/permission";
+import { useGetInfinitePermission } from "@/hooks/permission";
 import { FieldsData } from "@/interfaces/form";
 import { FeatureFormValues } from "@/interfaces/model/feature.type";
 
 export const useGenerateFields = () => {
-  const { data: permissions } = useGetListPermission({
-    page: 1,
-    page_size: 5,
+  const {
+    data: permissionsPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isInitialLoading,
+  } = useGetInfinitePermission({
+    page_size: 10,
+    is_active: true,
   });
 
   const fields = useMemo<FieldsData<FeatureFormValues>>(() => {
     const mapAllPermission =
-      permissions?.data?.map((permission) => ({
-        value: permission.id,
-        label: permission.display_name,
-      })) ?? [];
-
+      permissionsPage?.pages.flatMap((permissions) =>
+        permissions.data.data.map((permission) => ({
+          value: permission.id,
+          label: permission.display_name,
+        })),
+      ) ?? [];
     return {
       name: {
         label: "Name",
@@ -46,8 +53,24 @@ export const useGenerateFields = () => {
         componentProps: {
           mode: "multiple",
           isRequired: true,
-          style: { width: "250px", height: "40px" },
+          style: { width: "250px" },
           maxTagCount: "responsive",
+          onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
+            const target = event.target as HTMLDivElement;
+            if (
+              !isFetchingNextPage &&
+              target.scrollTop + target.offsetHeight === target.scrollHeight
+            ) {
+              target.scrollTo(0, target.scrollHeight);
+
+              fetchNextPage();
+            }
+          },
+          dropdownRender: (menu) => (
+            <Spin spinning={isFetchingNextPage || isInitialLoading}>
+              {menu}
+            </Spin>
+          ),
         },
       },
       description: {
@@ -62,6 +85,11 @@ export const useGenerateFields = () => {
         type: "singleCheckbox",
       },
     };
-  }, [permissions?.data]);
+  }, [
+    permissionsPage?.pages,
+    fetchNextPage,
+    isFetchingNextPage,
+    isInitialLoading,
+  ]);
   return fields;
 };
