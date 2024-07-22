@@ -23,19 +23,6 @@ export const useGetListPermission = (params: PermissionFilterParams) => {
   });
 };
 
-// export const useGetInfinitePermission = (params: PermissionFilterParams) => {
-//   return useInfiniteQuery({
-//     queryKey: [PERMISSIONS, params],
-//     queryFn: ({ pageParam:page  = 1 }) => getListPermissionApi({ ...params, page: page}),
-//     initialPageParam: 1,
-//     getNextPageParam: (lastPage,pages,lastPageParams) => {
-//       if (lastPage.length === 0) {
-//         return undefined
-//       }
-//       return lastPageParams + 1
-//     },
-//     }
-// }
 
 export const useGetInfinitePermission = (params: PermissionFilterParams) => {
   return useInfiniteQuery({

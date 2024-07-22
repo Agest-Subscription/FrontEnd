@@ -22,7 +22,7 @@ import { popUpPropType } from "@/interfaces/popup";
 import overratefeeFormValuesSchema from "@/schema/overrateFee";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
-import { capitalize } from "@/utils/string";
+import { capitalize, trimString } from "@/utils/string";
 
 type Props = {};
 
@@ -69,8 +69,9 @@ const Page: React.FC<Props> = () => {
   };
 
   const handleSubmit = (data: OverrateFeeFormValues) => {
+    const trimmed = trimString(data, ["name"]);
     updateOverrateFee(
-      { id, ...data },
+      { id, ...trimmed },
       {
         onSuccess: () =>
           showModal({

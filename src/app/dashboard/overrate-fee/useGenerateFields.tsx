@@ -1,22 +1,28 @@
 import { useMemo } from "react";
+import { Spin } from "antd";
 
+import { useGetInfiniteFee } from "@/hooks/fee";
 import { FieldsData } from "@/interfaces/form";
 import { OverrateFeeFormValues } from "@/interfaces/model/overrateFee.type";
-import { useGetListFees } from "@/hooks/fee";
 
 export const useGenerateFields = () => {
-  const { data: fees } = useGetListFees({
-    page: 1,
-    page_size: 5,
+  const {
+    data: feesPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isInitialLoading,
+  } = useGetInfiniteFee({
+    page_size: 10,
   });
 
   const fields = useMemo<FieldsData<OverrateFeeFormValues>>(() => {
     const mapAllFee =
-      fees?.data?.map((fee) => ({
-        value: fee.id,
-        label: fee.name,
-      })) ?? [];
-
+      feesPage?.pages.flatMap((fees) =>
+        fees.data.data.map((fee) => ({
+          value: fee.id,
+          label: fee.name,
+        })),
+      ) ?? [];
     return {
       name: {
         label: "Name",
@@ -32,8 +38,23 @@ export const useGenerateFields = () => {
         options: mapAllFee,
         componentProps: {
           isRequired: true,
-          style: { width: "250px", height: "40px" },
-          maxTagCount: "responsive",
+          style: { width: "250px" },
+          onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
+            const target = event.target as HTMLDivElement;
+            if (
+              !isFetchingNextPage &&
+              target.scrollTop + target.offsetHeight === target.scrollHeight
+            ) {
+              target.scrollTo(0, target.scrollHeight);
+
+              fetchNextPage();
+            }
+          },
+          dropdownRender: (menu) => (
+            <Spin spinning={isFetchingNextPage || isInitialLoading}>
+              {menu}
+            </Spin>
+          ),
         },
       },
       threshold: {
@@ -61,6 +82,6 @@ export const useGenerateFields = () => {
         },
       },
     };
-  }, [fees?.data]);
+  }, [feesPage?.pages, fetchNextPage, isFetchingNextPage, isInitialLoading]);
   return fields;
 };
