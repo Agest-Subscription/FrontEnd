@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
@@ -9,7 +9,6 @@ import styled from "styled-components";
 
 import Loader from "@/components/Loader/Loader";
 import LoadingBtn from "@/components/LoadingBtn/Loading";
-import { PERMISSIONS } from "@/constants/routes";
 import { LoginModel } from "@/interfaces/login";
 
 const StyledFormContainer = styled.div`
@@ -42,20 +41,15 @@ const LoginContainer = () => {
   const { status } = useSession();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const searchParams = useSearchParams();
 
-  const callbackUrl = searchParams.get("callbackUrl") || PERMISSIONS;
   const router = useRouter();
   const handleSubmit = async (data: LoginModel) => {
-    // Handle form submission logic here
-
     try {
       setLoading(true);
       const res = await signIn("credentials", {
         email: data?.email as string,
         password: data?.password as string,
         redirect: false,
-        callbackUrl: callbackUrl,
       });
       setLoading(false);
 
@@ -64,7 +58,7 @@ const LoginContainer = () => {
         if (status === "loading") {
           return <Loader fullScreen spinning={true} />;
         }
-        router.push(PERMISSIONS);
+        //router.push(PERMISSIONS);
       } else {
         setError("Invalid password or email");
         console.log(error);
