@@ -31,9 +31,11 @@ jobs:
           if [[ ${{ github.base_ref }} == 'main' ]]; then
             echo "DOCKER_TAG=frontend" >> $GITHUB_ENV
             echo "API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}" >> $GITHUB_ENV
+            echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}" >> $GITHUB_ENV
           else
             echo "DOCKER_TAG=frontend-test" >> $GITHUB_ENV
             echo "API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL_DEV }}" >> $GITHUB_ENV
+            echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL_DEV }}" >> $GITHUB_ENV
           fi
  
       - name: Build and push Docker image
@@ -47,4 +49,4 @@ jobs:
           build-args: |
             NEXT_PUBLIC_API_BASE_URL=${{ env.API_BASE_URL }}
             NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
-            NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
+            NEXTAUTH_URL=${{ env.NEXTAUTH_URL }}
