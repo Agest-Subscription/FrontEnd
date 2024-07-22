@@ -27,6 +27,7 @@ const Page: React.FC<Props> = () => {
     mode: "onBlur",
     resolver: yupResolver(featureFormValuesSchema),
   });
+
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "successpopup",
     popup_text: `${capitalize("Are you sure to create a new feature?")}`,

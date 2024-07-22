@@ -73,7 +73,7 @@ const Page: React.FC<Props> = () => {
   }
   function onSubmit(data: FeeFormValues) {
     const newData = formatPayload(data);
-    const trimmed = trimString(data, ["name"]);
+    const trimmed = trimString(newData, ["name"]);
     updateFee(
       { id, ...trimmed },
       {
