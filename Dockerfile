@@ -44,8 +44,5 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # Switch to non-root user
 USER nextjs
 
-# Expose the application port
-ENV PORT 3000
-
 # Command to run the application
 CMD ["node", "server.js"]
