@@ -23,7 +23,6 @@ export const useGetListPermission = (params: PermissionFilterParams) => {
   });
 };
 
-
 export const useGetInfinitePermission = (params: PermissionFilterParams) => {
   return useInfiniteQuery({
     queryKey: ["PERMISSIONS", params],

@@ -8,8 +8,8 @@ import { Button, Flex, Layout, MenuProps, theme, Typography } from "antd";
 import MenuCustom from "@/components/Menu/MenuCustom";
 import {
   FEATURES,
-  OVERRATE_FEE,
   FEES,
+  OVERRATE_FEE,
   PERMISSIONS,
   PRICING_PlANS,
   SUBSCRIPTIONS,

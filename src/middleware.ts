@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-import { NextRequestWithAuth, withAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
+import { withAuth } from "next-auth/middleware";
 const adminRoutes = [
   "/dashboard/permissions",
   "/dashboard/pricing-plan",
