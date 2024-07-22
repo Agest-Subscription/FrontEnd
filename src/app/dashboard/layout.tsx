@@ -101,6 +101,7 @@ const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
           </Typography>
 
           <Button
+            type="primary"
             onClick={() => {
               signOut();
             }}

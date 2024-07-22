@@ -7,11 +7,14 @@ import { PERMISSIONS } from "@/constants/routes";
 import LoginContainer from "@/containers/login/Login";
 
 export default function Home() {
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
 
-  if (status === "authenticated") {
+  if (status === "authenticated" && session?.user?.isAdmin) {
     return router.push(PERMISSIONS);
+  }
+  if (status === "authenticated" && !session?.user?.isAdmin) {
+    return router.push("/payment");
   }
   return (
     <>
