@@ -20,7 +20,7 @@ export const useGenerateFields = () => {
         },
       },
       fee_type: {
-        label: "Fee Type",
+        label: "Fee Type *",
         type: "select",
         options: enumToSelectOptions(FeeTypeEnum),
         componentProps: {
@@ -44,19 +44,22 @@ export const useGenerateFields = () => {
         },
       },
       recurrence_type: {
-        label: "Reccurence Type",
+        label: "Reccurence Type *",
         type: "select",
         options: enumToSelectOptions(RecurrenceTypeEnum),
+        componentProps: {
+          style: { height: "40px" },
+        },
       },
       recurrence_cycle_count: {
-        label: "Reccurence cycle count",
+        label: "Reccurence cycle count *",
         type: "text",
         componentProps: {
           type: "number",
         },
       },
       transaction_unit: {
-        label: "Transaction unit",
+        label: "Transaction unit *",
         type: "text",
       },
       is_active: {
