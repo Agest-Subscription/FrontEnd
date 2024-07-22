@@ -24,7 +24,7 @@ export const config = {
     "/dashboard/pricing-plan/:path*",
     "/dashboard/features/:path*",
     "/dashboard/fee/:path*",
-    "/dashboard/fee-overate/:path*",
+    "/dashboard/overrate-fee/:path*",
     "/dashboard/subscriptions/:path*",
     "/dashboard/users/:path*",
   ],

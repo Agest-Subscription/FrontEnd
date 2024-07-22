@@ -14,7 +14,7 @@ export type DashboardTab =
   | "pricing-plan"
   | "subscriptions"
   | "fee"
-  | "fee-overate"
+  | "overrate-fee"
   | "features"
   | "users";
 
