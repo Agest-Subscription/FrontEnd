@@ -22,7 +22,7 @@ export type PricingPlanTableData = PricingPlan & {
   no: number;
 };
 
-export type PricingPlanLandingPage = PricingPlan 
+export type PricingPlanLandingPage = PricingPlan;
 
 export type PricingPlanFilterParams = FilterBase<PricingPlanTableData>;
 
