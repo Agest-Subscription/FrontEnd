@@ -15,6 +15,7 @@ export type PricingPlan = {
   is_free_trial: boolean;
   free_trial_period: FreeTrialPeriod | null;
   free_trial_period_count: number | null;
+  recurrence_fee_name: string | null;
   is_active: boolean;
 };
 
