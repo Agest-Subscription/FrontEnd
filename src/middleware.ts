@@ -40,7 +40,6 @@ export default withAuth(
       }
       return res;
     }
-    return res;
   },
   {
     callbacks: {
