@@ -46,9 +46,8 @@ const Page: React.FC<Props> = () => {
   });
 
   const { data: Feature, isError } = useGetFeatureById(id);
-
-  const fields = useGenerateFields();
-
+  const initialPermissons = Feature?.permissions;
+  const fields = useGenerateFields(initialPermissons);
   useEffect(() => {
     if (Feature) {
       const permissionId = Feature.permissions.map(
