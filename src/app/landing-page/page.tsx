@@ -11,11 +11,7 @@ import PricingCarousel from "@/components/pricing/PricingCarousel";
 
 const LandingPage = () => {
   const [value, setValue] = useState("Weekly");
-  const [value, setValue] = useState("Weekly");
   const Options = [
-    { label: "Weekly", value: "Weekly" },
-    { label: "Monthly", value: "Monthly" },
-    { label: "Yearly", value: "Yearly" },
     { label: "Weekly", value: "Weekly" },
     { label: "Monthly", value: "Monthly" },
     { label: "Yearly", value: "Yearly" },
@@ -40,8 +36,15 @@ const LandingPage = () => {
         <Typography style={{ fontSize: 16, fontWeight: 400 }}>
           Officia exercitation quis voluptate elit consequat nostrud
         </Typography>
-        <br/>
-        <Flex style={{ backgroundColor: "#15ABFF", padding: "3px", height: "fit-content", borderRadius: 8 }}>
+        <br />
+        <Flex
+          style={{
+            backgroundColor: "#15ABFF",
+            padding: "3px",
+            height: "fit-content",
+            borderRadius: 8,
+          }}
+        >
           <ConfigProvider
             theme={{
               components: {
@@ -50,7 +53,6 @@ const LandingPage = () => {
                   buttonColor: "white",
                   borderRadius: 8,
                   colorBorder: "#15ABFF",
-
                 },
               },
             }}
@@ -61,10 +63,9 @@ const LandingPage = () => {
               onChange={onChange}
               optionType="button"
             />
-
           </ConfigProvider>
         </Flex>
-        <br/>
+        <br />
         <PricingCarousel PricingList={DummyData} />
       </Flex>
     </div>
