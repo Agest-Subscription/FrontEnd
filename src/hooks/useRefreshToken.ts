@@ -13,7 +13,6 @@ export const useRefreshToken = () => {
     } catch (error) {
       console.error("Failed to refresh token, signing out...", error);
       await axiosClient.delete("/auth/logout");
-
       signOut();
     }
   };
