@@ -21,7 +21,7 @@ export type OverrateFeeFilterParams = FilterBase<OverrateFeeResponseItem>;
 
 export type OverrateFeeFormValues = Omit<
   OverrateFee,
-  "id" | "transaction_unit"
+  "id" | "transaction_unit" | "fee_name"
 >;
 
 export type AddOverrateFeePayload = OverrateFeeFormValues;
@@ -30,7 +30,7 @@ export type UpdateOverrateFeePayload = OverrateFeeFormValues & {
   id: string;
 };
 
-export type IsOverratFee = {
+export type IsOverrateFee = {
   id: string;
   name: string;
 };
