@@ -58,11 +58,11 @@ export const useGenerateFields = (start_date: string) => {
         },
       },
       is_active: {
-        label: "Is Active",
+        label: "Is active",
         type: "singleCheckbox",
       },
       is_free_trial: {
-        label: "Has Free trial",
+        label: "Has free trial",
         type: "singleCheckbox",
       },
     };

@@ -133,7 +133,6 @@ const Page: React.FC<Props> = () => {
       popup_id: "addfeature",
       popup_type: "Confirm",
       width: "1408px",
-      show_footer: false,
       pop_up_content: <AddFeature handleCancel={() => setOpenModal(false)} />,
       onConfirm: () => setOpenModal(false),
       onClose: () => setOpenModal(false),

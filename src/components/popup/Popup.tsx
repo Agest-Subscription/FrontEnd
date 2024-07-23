@@ -16,7 +16,6 @@ type Props = {
 
 //3 popup types "Success", "Fail", "Confirm"
 const PopUp = ({ popupProps, isOpen = false }: Props) => {
-  const { show_footer = true } = popupProps;
   const formatText = popupProps?.popup_text?.split("\n");
 
   useEffect(() => {
@@ -56,7 +55,6 @@ const PopUp = ({ popupProps, isOpen = false }: Props) => {
             : []
       }
       footer={
-        show_footer &&
         popupProps.popup_type === "Confirm" && (
           <div
             style={{ display: "flex", justifyContent: "center", gap: "24px" }}
