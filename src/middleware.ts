@@ -10,10 +10,6 @@ const adminRoutes = [
   "/dashboard/users",
 ];
 
-const nonAdminRoutes = [
-  "/payment",
-  // Add other non-admin specific routes here
-];
 export default withAuth(
   // `withAuth` augments your `Request` with the user's token.
   async function middleware(req) {
