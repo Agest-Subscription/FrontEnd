@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
@@ -42,7 +41,6 @@ const LoginContainer = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
-  const router = useRouter();
   const handleSubmit = async (data: LoginModel) => {
     try {
       setLoading(true);
@@ -58,7 +56,6 @@ const LoginContainer = () => {
         if (status === "loading") {
           return <Loader fullScreen spinning={true} />;
         }
-        //router.push(PERMISSIONS);
       } else {
         setError("Invalid password or email");
         console.log(error);
