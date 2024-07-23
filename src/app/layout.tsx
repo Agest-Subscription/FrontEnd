@@ -6,8 +6,6 @@ import Config from "./config";
 
 import "./globals.css";
 
-import Providers from "@/lib/Provider/Provider";
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -27,9 +25,7 @@ const RootLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
         className={inter.className}
         style={{ padding: 0, margin: 0, height: "100%" }}
       >
-        <Config>
-          <Providers>{children}</Providers>
-        </Config>
+        <Config>{children}</Config>
       </body>
     </html>
   );

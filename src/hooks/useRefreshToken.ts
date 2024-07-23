@@ -1,19 +1,21 @@
 "use client";
 
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 
 import { axiosClient } from "@/config/axios/client";
 
 export const useRefreshToken = () => {
-  const { data: session } = useSession();
+  console.log("trigger useRefreshToken");
 
   const refreshToken = async () => {
-    const res = await axiosClient.post("/auth/refresh", {
-      refresh: session?.user.refreshToken,
-    });
+    try {
+      await axiosClient.post("/auth/refresh");
+    } catch (error) {
+      console.error("Failed to refresh token, signing out...", error);
+      await axiosClient.delete("/auth/logout");
 
-    if (session) session.user.accessToken = res.data.accessToken;
-    else signOut();
+      signOut();
+    }
   };
   return refreshToken;
 };

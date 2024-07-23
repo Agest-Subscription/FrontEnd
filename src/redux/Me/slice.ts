@@ -11,7 +11,7 @@ const initialState: UserMeSate = {
   dataMe: undefined,
 };
 
-const slice = createSlice({
+const getMeSlide = createSlice({
   name: "userMeReducer",
   initialState,
   reducers: {
@@ -21,11 +21,11 @@ const slice = createSlice({
   },
 });
 
-export const { setUserMe } = slice.actions;
+export const { setUserMe } = getMeSlide.actions;
 
-export default slice.reducer;
+export default getMeSlide.reducer;
 
-export const getLeadStatuses = () => {
+export const getUserMe = () => {
   return async (dispatch: AppDispatch) => {
     try {
       const result = await axiosClient.get("/user/me");
@@ -34,7 +34,7 @@ export const getLeadStatuses = () => {
       // Dispatch action with the fetched user data
       dispatch(setUserMe(content));
     } catch (err) {
-      console.log(err);
+      console.log("error api getMe redux", err);
     }
   };
 };

@@ -16,34 +16,34 @@ const nonAdminRoutes = [
 ];
 export default withAuth(
   // `withAuth` augments your `Request` with the user's token.
-  function middleware(req) {
+  async function middleware(req) {
+    const res = NextResponse.next();
     const token = req.nextauth.token;
     const { pathname } = req.nextUrl.clone();
-    console.log("pathname clone,", pathname);
+    const accessToken = "Bearer " + token?.access_token;
+
+    res.cookies.set({
+      name: "access_token",
+      value: accessToken.toString(),
+      path: "/",
+      httpOnly: true,
+    });
+    res.cookies.set({
+      name: "refresh_token",
+      value: token?.refresh_token as string,
+      path: "/",
+      httpOnly: true,
+    });
 
     // Check for admin routes
     if (adminRoutes.some((path) => pathname.startsWith(path))) {
       if (!token?.isAdmin) {
         return NextResponse.redirect(new URL("/access-denied", req.url));
       }
-
-      return NextResponse.next();
     }
+    return res;
   },
   {
-    // callbacks: {
-    //   authorized: ({ token, req }) => {
-    //     const { pathname } = req.nextUrl;
-    //     if (token?.isAdmin) {
-    //       return true;
-    //     }
-
-    //     // if (!token?.isAdmin) {
-    //     //   return pathname === "/payment";
-    //     // }
-    //     return false;
-    //   },
-    // },
     callbacks: {
       authorized: ({ token }) => !!token,
     },

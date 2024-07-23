@@ -1,11 +1,12 @@
 "use client";
-import React, { FC, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { Button, Flex, Layout, MenuProps, theme, Typography } from "antd";
+import { Button, Flex, Layout, MenuProps, Spin, theme, Typography } from "antd";
 
 import MenuCustom from "@/components/Menu/MenuCustom";
+import { axiosClient } from "@/config/axios/client";
 import {
   FEATURES,
   FEES,
@@ -15,11 +16,24 @@ import {
   SUBSCRIPTIONS,
   USERS,
 } from "@/constants/routes";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { getUserMe } from "@/redux/Me/slice";
 
 const { Content } = Layout;
 
 const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
+  const { dataMe } = useAppSelector((state) => state.getMeReducer);
+  const dispatch = useAppDispatch();
   const urlParams = usePathname();
+
+  const getMeApi = useCallback(() => {
+    const actionAsync = getUserMe();
+    dispatch(actionAsync);
+  }, [dispatch]);
+
+  useEffect(() => {
+    getMeApi();
+  }, [getMeApi]);
 
   const [current, setCurrent] = useState<string>(`${urlParams}`);
 
@@ -97,12 +111,13 @@ const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
               fontWeight: 400,
             }}
           >
-            Subscription
+            Subscription, Hi {dataMe?.email || <Spin spinning={true}></Spin>}
           </Typography>
 
           <Button
             type="primary"
             onClick={() => {
+              axiosClient.delete("/auth/logout");
               signOut();
             }}
           >
