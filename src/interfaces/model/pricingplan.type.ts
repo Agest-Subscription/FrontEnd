@@ -22,6 +22,8 @@ export type PricingPlanTableData = PricingPlan & {
   no: number;
 };
 
+export type PricingPlanLandingPage = PricingPlan 
+
 export type PricingPlanFilterParams = FilterBase<PricingPlanTableData>;
 
 export type PricingPlanFormValues = Omit<

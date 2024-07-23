@@ -52,14 +52,14 @@ export const useGenerateFields = () => {
         },
       },
       recurrence_cycle_count: {
-        label: "Reccurence cycle count *",
+        label: "Reccurence cycle count",
         type: "text",
         componentProps: {
           type: "number",
         },
       },
       transaction_unit: {
-        label: "Transaction unit *",
+        label: "Transaction unit",
         type: "text",
       },
       is_active: {
