@@ -1,4 +1,5 @@
 "use client";
+"use client";
 
 import React, { useState } from "react";
 import type { RadioChangeEvent } from "antd";
@@ -10,7 +11,11 @@ import PricingCarousel from "@/components/pricing/PricingCarousel";
 
 const LandingPage = () => {
   const [value, setValue] = useState("Weekly");
+  const [value, setValue] = useState("Weekly");
   const Options = [
+    { label: "Weekly", value: "Weekly" },
+    { label: "Monthly", value: "Monthly" },
+    { label: "Yearly", value: "Yearly" },
     { label: "Weekly", value: "Weekly" },
     { label: "Monthly", value: "Monthly" },
     { label: "Yearly", value: "Yearly" },
