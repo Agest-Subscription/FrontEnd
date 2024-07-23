@@ -23,7 +23,6 @@ export const options: AuthOptions = {
             password: credentials?.password as string,
           });
           const user = response.data;
-
           // If no error and we have user data, return it
           if (response.status === 200 && user) {
             return user;
