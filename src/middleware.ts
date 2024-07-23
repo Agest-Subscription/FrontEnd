@@ -36,8 +36,8 @@ export default withAuth(
       if (!token?.isAdmin) {
         return NextResponse.redirect(new URL("/access-denied", req.url));
       }
+      return res;
     }
-    return res;
   },
   {
     callbacks: {
