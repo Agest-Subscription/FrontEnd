@@ -23,14 +23,14 @@ export default withAuth(
       value: accessToken,
       path: "/",
       httpOnly: true,
-      sameSite: "none",
+      sameSite: "lax",
     });
     res.cookies.set({
       name: "refresh_token",
       value: token?.refresh_token as string,
       path: "/",
       httpOnly: true,
-      sameSite: "none",
+      sameSite: "lax",
     });
 
     // Check for admin routes
