@@ -26,8 +26,8 @@ const useGenerateColumns = () => {
       },
       {
         title: "Fee name",
-        dataIndex: "fee_id",
-        key: "fee_id",
+        dataIndex: "fee_name",
+        key: "fee_name",
         render: (value) => {
           return <LongText text={value} width={250} />;
         },

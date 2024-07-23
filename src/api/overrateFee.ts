@@ -1,7 +1,9 @@
 import { axiosClient } from "@/config/axios/client";
 import { GetListResponse } from "@/interfaces/base";
+import { FeeFilterParams } from "@/interfaces/model/fee.type";
 import {
   AddOverrateFeePayload,
+  IsOverrateFee,
   OverrateFeeFilterParams,
   OverrateFeeResponseItem,
   UpdateOverrateFeePayload,
@@ -28,4 +30,10 @@ export const updateOverrateFeeApi = (data: UpdateOverrateFeePayload) => {
 
 export const deleteOverrateFeeApi = (id: string) => {
   return axiosClient.delete(`overrate/${id}`);
+};
+
+export const getListIsOverrateFeesApi = (params: FeeFilterParams) => {
+  return axiosClient.get<GetListResponse<IsOverrateFee>>("overrate/fee/all", {
+    params,
+  });
 };

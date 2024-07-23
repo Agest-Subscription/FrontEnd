@@ -54,11 +54,6 @@ const useGenerateColumns = () => {
         },
       },
       {
-        title: "Fee type",
-        dataIndex: "fee_type",
-        key: "fee_type",
-      },
-      {
         title: "Action",
         dataIndex: "action",
         key: "action",

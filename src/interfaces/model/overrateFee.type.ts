@@ -2,12 +2,13 @@ import { FilterBase } from "../base";
 
 export type OverrateFee = {
   id: string;
-  name: string;
   fee_id: string;
+  name: string;
+  fee_name: string;
   threshold: number;
   price: number;
-  transaction_unit: string;
   description: string | null;
+  transaction_unit: string;
 };
 
 export type OverrateFeeTableData = OverrateFee & {
@@ -20,11 +21,16 @@ export type OverrateFeeFilterParams = FilterBase<OverrateFeeResponseItem>;
 
 export type OverrateFeeFormValues = Omit<
   OverrateFee,
-  "id" | "fees" | "transaction_unit"
+  "id" | "transaction_unit" | "fee_name"
 >;
 
 export type AddOverrateFeePayload = OverrateFeeFormValues;
 
 export type UpdateOverrateFeePayload = OverrateFeeFormValues & {
   id: string;
+};
+
+export type IsOverrateFee = {
+  id: string;
+  name: string;
 };

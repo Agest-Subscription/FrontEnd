@@ -56,7 +56,6 @@ const Page: React.FC<Props> = () => {
       methods.setValue("description", Feature.description);
       methods.setValue("name", Feature.name);
       methods.setValue("is_active", Feature.is_active);
-      methods.setValue("fee_type", Feature.fee_type);
       methods.setValue("permissions", permissionId);
     }
   }, [Feature, methods]);
