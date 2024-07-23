@@ -18,7 +18,9 @@ export type FeatureTableData = Omit<Feature, "created_at" | "updated_at"> & {
 
 export type FeatureResponseItem = Feature;
 
-export type FeatureFilterParams = FilterBase<FeatureResponseItem>;
+export type FeatureFilterParams = FilterBase<FeatureResponseItem> & {
+  is_active?: boolean;
+};
 
 export type FeatureFormValues = Omit<
   Feature,

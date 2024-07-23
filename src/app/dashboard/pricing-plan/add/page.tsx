@@ -1,9 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
 
+import AddFeature from "../AddFeature";
 import PricingPlanDetails from "../PricingPlanDetails";
 import { useGenerateFields } from "../useGenerateFields";
 
@@ -32,6 +32,18 @@ const Page: React.FC<Props> = () => {
     onConfirm: methods.handleSubmit(onSubmit),
     onClose: () => setOpenModal(false),
   });
+
+  function handleAddFeature() {
+    showModal({
+      popup_id: "addfeature",
+      popup_type: "Confirm",
+      width: "1408px",
+      show_footer: false,
+      pop_up_content: <AddFeature handleCancel={() => setOpenModal(false)} />,
+      onConfirm: () => setOpenModal(false),
+      onClose: () => setOpenModal(false),
+    });
+  }
 
   function showModal(modalProp: popUpPropType) {
     setModalProp(modalProp);
@@ -92,7 +104,10 @@ const Page: React.FC<Props> = () => {
             layout="vertical"
             onFinish={methods.handleSubmit(onSubmit)}
           >
-            <PricingPlanDetails onSave={handleSave} />
+            <PricingPlanDetails
+              onAddFeature={handleAddFeature}
+              onSave={handleSave}
+            />
             <PopUp popupProps={modalProp} isOpen={openModal} />
           </Form>
         </FormWrapperV2>

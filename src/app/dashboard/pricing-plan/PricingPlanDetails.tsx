@@ -5,13 +5,13 @@ import { Col, Flex, Row } from "antd";
 import ButtonV1 from "@/components/button/CustomButton";
 import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
 import { PricingPlanFormValues } from "@/interfaces/model/pricingplan.type";
-import PopUp from "@/components/popup/Popup";
 
 interface DetailsProp {
   edit?: boolean;
   disableSaveBtn?: boolean;
   onDelete?: any;
   onSave: any;
+  onAddFeature: any;
 }
 
 const PricingPlanDetails: React.FC<DetailsProp> = ({
@@ -19,6 +19,7 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
   disableSaveBtn = false,
   onDelete,
   onSave,
+  onAddFeature,
 }) => {
   const router = useRouter();
   const { FormField } = useFormWrapperCtx<PricingPlanFormValues>();
@@ -64,7 +65,11 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
           </Col>
         </Row>
         <Flex justify="end">
-          <ButtonV1 title="Add feature" customType="secondary" />
+          <ButtonV1
+            title="Add feature"
+            customType="secondary"
+            onClick={onAddFeature}
+          />
         </Flex>
       </Flex>
       <Flex

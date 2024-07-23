@@ -16,7 +16,8 @@ type Props = {
 
 //3 popup types "Success", "Fail", "Confirm"
 const PopUp = ({ popupProps, isOpen = false }: Props) => {
-  const formatText = popupProps.popup_text.split("\n");
+  const { show_footer = true } = popupProps;
+  const formatText = popupProps?.popup_text?.split("\n");
 
   useEffect(() => {
     const handleEscape: any = (e: KeyboardEvent) => {
@@ -34,6 +35,7 @@ const PopUp = ({ popupProps, isOpen = false }: Props) => {
       onOk={popupProps.onConfirm}
       onCancel={popupProps.onClose}
       centered
+      width={popupProps.width || "520px"}
       title={
         popupProps.popup_type === "Success"
           ? [
@@ -54,8 +56,11 @@ const PopUp = ({ popupProps, isOpen = false }: Props) => {
             : []
       }
       footer={
+        show_footer &&
         popupProps.popup_type === "Confirm" && (
-          <Flex justify="center" gap={24}>
+          <div
+            style={{ display: "flex", justifyContent: "center", gap: "24px" }}
+          >
             <ButtonV1
               customType="cancel"
               key="cancel"
@@ -75,7 +80,7 @@ const PopUp = ({ popupProps, isOpen = false }: Props) => {
             >
               Yes
             </ButtonV1>
-          </Flex>
+          </div>
         )
       }
     >
@@ -83,18 +88,19 @@ const PopUp = ({ popupProps, isOpen = false }: Props) => {
         vertical
         gap={12}
         style={{
-          paddingBottom: "30px",
+          paddingBottom: "18px",
+          paddingTop: "18px",
           fontSize: "18px",
           fontWeight: "400",
           color: "#171A1F",
         }}
       >
         <center>
-          {formatText.map((line, index) => (
-            <p key={index}>{line}</p>
-          ))}
+          {formatText &&
+            formatText.map((line, index) => <p key={index}>{line}</p>)}
         </center>
       </Flex>
+      {popupProps.pop_up_content}
     </Modal>
   );
 };

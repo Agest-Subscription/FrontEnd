@@ -57,6 +57,7 @@ export const options: AuthOptions = {
       session.user.accessToken = token?.access_token as string;
       session.user.refreshToken = token?.refresh_token as string;
       session.user.isAdmin = token?.isAdmin;
+
       return session;
     },
   },

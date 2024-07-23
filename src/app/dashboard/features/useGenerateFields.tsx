@@ -4,8 +4,12 @@ import { Spin } from "antd";
 import { useGetInfinitePermission } from "@/hooks/permission";
 import { FieldsData } from "@/interfaces/form";
 import { FeatureFormValues } from "@/interfaces/model/feature.type";
+import { Permission } from "@/interfaces/model/permission.type";
+import { mergeAndMapInfiniteData } from "@/utils/infiniteFetch";
 
-export const useGenerateFields = () => {
+export const useGenerateFields = (
+  initialSelectedPermissions?: Permission[],
+) => {
   const {
     data: permissionsPage,
     fetchNextPage,
@@ -17,13 +21,16 @@ export const useGenerateFields = () => {
   });
 
   const fields = useMemo<FieldsData<FeatureFormValues>>(() => {
-    const mapAllPermission =
-      permissionsPage?.pages.flatMap((permissions) =>
-        permissions.data.data.map((permission) => ({
-          value: permission.id,
-          label: permission.display_name,
-        })),
-      ) ?? [];
+    const mergedPermissions =
+      mergeAndMapInfiniteData<Permission>(
+        initialSelectedPermissions,
+        "id",
+        "display_name",
+        permissionsPage?.pages ?? [],
+      ).map((permission) => ({
+        value: permission.value,
+        label: permission.label,
+      })) ?? [];
     return {
       name: {
         label: "Name",
@@ -49,7 +56,7 @@ export const useGenerateFields = () => {
       permissions: {
         label: "Permission",
         type: "select",
-        options: mapAllPermission,
+        options: mergedPermissions,
         componentProps: {
           mode: "multiple",
           isRequired: true,
@@ -87,8 +94,9 @@ export const useGenerateFields = () => {
     };
   }, [
     permissionsPage?.pages,
-    fetchNextPage,
+    initialSelectedPermissions,
     isFetchingNextPage,
+    fetchNextPage,
     isInitialLoading,
   ]);
   return fields;
