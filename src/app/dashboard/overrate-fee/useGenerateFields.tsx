@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Spin } from "antd";
 
-import { useGetInfiniteFee } from "@/hooks/fee";
+import { useGetInfiniteIsOverrateFee } from "@/hooks/overrateFee";
 import { FieldsData } from "@/interfaces/form";
 import { OverrateFeeFormValues } from "@/interfaces/model/overrateFee.type";
 
@@ -11,7 +11,7 @@ export const useGenerateFields = () => {
     fetchNextPage,
     isFetchingNextPage,
     isInitialLoading,
-  } = useGetInfiniteFee({
+  } = useGetInfiniteIsOverrateFee({
     page_size: 10,
   });
 
@@ -38,7 +38,7 @@ export const useGenerateFields = () => {
         options: mapAllFee,
         componentProps: {
           isRequired: true,
-          style: { width: "250px" },
+          style: { width: "250px", height: "40px" },
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
             const target = event.target as HTMLDivElement;
             if (

@@ -33,19 +33,6 @@ export const useGenerateFields = () => {
           style: { width: "250px", height: "40px" },
         },
       },
-      fee_type: {
-        label: "Fee type",
-        type: "select",
-        options: [
-          { value: "recurrence", label: "Recurrence" },
-          { value: "transaction", label: "Transaction" },
-          { value: "onetime", label: "One-time" },
-        ],
-        componentProps: {
-          isRequired: true,
-          style: { width: "250px", height: "40px" },
-        },
-      },
       permissions: {
         label: "Permission",
         type: "select",
