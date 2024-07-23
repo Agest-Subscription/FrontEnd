@@ -1,14 +1,21 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 import {
   addOverrateFeeApi,
   deleteOverrateFeeApi,
+  getListIsOverrateFeesApi,
   getListOverrateFeeApi,
   getOverrateFeeByIdApi,
   updateOverrateFeeApi,
 } from "@/api/overrateFee";
 import { OVERRATE_FEE, OVERRATE_FEES } from "@/constants/query";
 import { CustomError } from "@/interfaces/base";
+import { FeeFilterParams } from "@/interfaces/model/fee.type";
 import { OverrateFeeFilterParams } from "@/interfaces/model/overrateFee.type";
 export const useGetListOverrateFee = (params: OverrateFeeFilterParams) => {
   return useQuery({
@@ -63,6 +70,20 @@ export const useDeleteOverrateFee = () => {
     },
     onError: (error: CustomError) => {
       return error;
+    },
+  });
+};
+
+export const useGetInfiniteIsOverrateFee = (params: FeeFilterParams) => {
+  return useInfiniteQuery({
+    queryKey: ["FEES", params],
+    queryFn: ({ pageParam = 1 }) =>
+      getListIsOverrateFeesApi({ ...params, page: pageParam }),
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.data.data.length === 0) {
+        return undefined;
+      }
+      return pages.length + 1;
     },
   });
 };

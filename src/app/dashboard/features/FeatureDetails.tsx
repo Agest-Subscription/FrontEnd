@@ -30,7 +30,6 @@ const FeatureDetails: React.FC<DetailsProp> = ({
       >
         <Flex gap={24}>
           <FormField name="name" />
-          <FormField name="fee_type" />
           <FormField name="permissions" />
         </Flex>
         <Flex>

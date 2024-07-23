@@ -6,7 +6,6 @@ export type Feature = {
   name: string;
   description: string | null;
   permissions: Permission[];
-  fee_type: string;
   is_active: boolean;
   created_at: string;
   updated_at: string;

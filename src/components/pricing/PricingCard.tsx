@@ -1,7 +1,7 @@
-
 import React from "react";
-import  {CheckCircleOutlined} from "@ant-design/icons";
+import { CheckCircleOutlined } from "@ant-design/icons";
 import { Button, Flex, Typography } from "antd";
+
 import { PricingPlan } from "@/interfaces/model/pricingplan.type";
 import { capitalize } from "@/utils/string";
 
@@ -59,7 +59,6 @@ const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
         maxWidth: "350px",
       }}
     >
-   
       <Typography
         style={{
           fontSize: styles.fontSize,
@@ -70,7 +69,6 @@ const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
         {PricingPlan.name}
       </Typography>
       <Typography style={{ fontSize: 16, fontWeight: 400 }}>
-     
         {PricingPlan.description}
       </Typography>
       <Typography style={{ fontSize: 40, fontWeight: 700 }}>
@@ -78,10 +76,9 @@ const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
         <sup style={{ fontSize: 14, fontWeight: 400 }}>/month</sup>
       </Typography>
       {PricingPlan.features.map((feature) => (
-        
         <Flex gap={8} key={feature.id}>
-          <CheckCircleOutlined style={{color:"green"}}/>
-          <Typography style={{ fontSize: 16, fontWeight: 400 }} >
+          <CheckCircleOutlined style={{ color: "green" }} />
+          <Typography style={{ fontSize: 16, fontWeight: 400 }}>
             {capitalize(feature.name)}
           </Typography>
         </Flex>
