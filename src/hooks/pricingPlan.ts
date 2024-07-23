@@ -37,7 +37,7 @@ export const useAddPricingPlan = () => {
     onSuccess: () => {
       queryClient.invalidateQueries([PRICING_PLANS]);
     },
-    onError: (error) => {
+    onError: (error: CustomError) => {
       return error;
     },
   });

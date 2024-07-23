@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 import {
   addFeatureApi,
@@ -16,6 +21,19 @@ export const useGetListFeature = (params: FeatureFilterParams) => {
     queryKey: [FEATURES, params],
     queryFn: () => getListFeatureApi(params),
     select: ({ data }) => data,
+  });
+};
+export const useGetInfiniteFeatures = (params: FeatureFilterParams) => {
+  return useInfiniteQuery({
+    queryKey: ["PERMISSIONS", params],
+    queryFn: ({ pageParam = 1 }) =>
+      getListFeatureApi({ ...params, page: pageParam }),
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.data.data.length === 0) {
+        return undefined;
+      }
+      return pages.length + 1;
+    },
   });
 };
 
