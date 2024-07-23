@@ -20,15 +20,17 @@ export default withAuth(
 
     res.cookies.set({
       name: "access_token",
-      value: accessToken.toString(),
+      value: accessToken,
       path: "/",
       httpOnly: true,
+      sameSite: "none",
     });
     res.cookies.set({
       name: "refresh_token",
       value: token?.refresh_token as string,
       path: "/",
       httpOnly: true,
+      sameSite: "none",
     });
 
     // Check for admin routes
@@ -38,6 +40,7 @@ export default withAuth(
       }
       return res;
     }
+    return res;
   },
   {
     callbacks: {
