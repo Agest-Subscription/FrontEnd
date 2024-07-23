@@ -4,22 +4,22 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
 
-import PermissionDetails from "../PermissionDetails";
+import OverrateFeeDetails from "../OverrateFeeDetails";
 import { useGenerateFields } from "../useGenerateFields";
 
 import NotFound from "@/app/not-found";
 import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
 import PopUp from "@/components/popup/Popup";
 import {
-  useDeletePermission,
-  useGetPermissionById,
-  useUpdatePermission,
-} from "@/hooks/permission";
+  useDeleteOverrateFee,
+  useGetOverrateFeeById,
+  useUpdateOverrateFee,
+} from "@/hooks/overrateFee";
 import useGetId from "@/hooks/useGetId";
 import { CustomError } from "@/interfaces/base";
-import { PermissionFormValues } from "@/interfaces/model/permission.type";
+import { OverrateFeeFormValues } from "@/interfaces/model/overrateFee.type";
 import { popUpPropType } from "@/interfaces/popup";
-import permissionFormValuesSchema from "@/schema/permission";
+import overratefeeFormValuesSchema from "@/schema/overrateFee";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize, trimString } from "@/utils/string";
@@ -27,11 +27,11 @@ import { capitalize, trimString } from "@/utils/string";
 type Props = {};
 
 const Page: React.FC<Props> = () => {
-  const { mutate: updatePermission, isLoading: isUpdating } =
-    useUpdatePermission();
-  const { mutate: deletePermission, isLoading: isDeleting } =
-    useDeletePermission();
-  const goToPermission = useGoToDashboardTab("permissions");
+  const { mutate: updateOverrateFee, isLoading: isUpdating } =
+    useUpdateOverrateFee();
+  const { mutate: deleteOverrateFee, isLoading: isDeleting } =
+    useDeleteOverrateFee();
+  const goToOverrateFee = useGoToDashboardTab("overrate-fee");
   const id = useGetId();
   const fields = useGenerateFields();
   const [openModal, setOpenModal] = useState(false);
@@ -43,47 +43,48 @@ const Page: React.FC<Props> = () => {
     onClose: () => setOpenModal(false),
   });
 
-  const methods = useForm<PermissionFormValues>({
+  const methods = useForm<OverrateFeeFormValues>({
     mode: "onBlur",
-    resolver: yupResolver(permissionFormValuesSchema),
+    resolver: yupResolver(overratefeeFormValuesSchema),
   });
 
-  const { data: Permission, isError } = useGetPermissionById(id);
+  const { data: OverrateFee, isError } = useGetOverrateFeeById(id);
 
   useEffect(() => {
-    if (Permission) {
-      methods.setValue("description", Permission.description);
-      methods.setValue("display_name", Permission.display_name);
-      methods.setValue("name", Permission.name);
-      methods.setValue("is_active", Permission.is_active);
+    if (OverrateFee) {
+      methods.setValue("name", OverrateFee.name);
+      methods.setValue("fee_id", OverrateFee.fee_id);
+      methods.setValue("threshold", OverrateFee.threshold);
+      methods.setValue("price", OverrateFee.price);
+      methods.setValue("description", OverrateFee.description);
     }
-  }, [Permission, methods]);
+  }, [OverrateFee, methods]);
 
   if (isError) {
-    return <NotFound previousPage="permissions" />;
+    return <NotFound previousPage="overrate-fee" />;
   }
   const showModal = (prop: popUpPropType) => {
     setModalProp(prop);
     setOpenModal(true);
   };
 
-  const handleSubmit = (data: PermissionFormValues) => {
-    const trimmed = trimString(data, ["name", "display_name"]);
-    updatePermission(
+  const handleSubmit = (data: OverrateFeeFormValues) => {
+    const trimmed = trimString(data, ["name"]);
+    updateOverrateFee(
       { id, ...trimmed },
       {
         onSuccess: () =>
           showModal({
             popup_id: "successpopup",
-            popup_text: capitalize("Permission updated successfully!"),
+            popup_text: capitalize("Overrate Fee updated successfully!"),
             popup_type: "Success",
             onConfirm: () => {},
-            onClose: () => goToPermission(),
+            onClose: () => goToOverrateFee(),
           }),
         onError: (err: CustomError) =>
           showModal({
             popup_id: "fail",
-            popup_text: `${capitalize(getErrorDetail(err) ?? "Permission update failed")}`,
+            popup_text: `${capitalize(getErrorDetail(err) ?? "Overrate Fee update failed")}`,
             popup_type: "Fail",
             onConfirm: () => {},
             onClose: () => setOpenModal(false),
@@ -93,19 +94,19 @@ const Page: React.FC<Props> = () => {
   };
 
   const handleDelete = () => {
-    deletePermission(id, {
+    deleteOverrateFee(id, {
       onSuccess: () =>
         showModal({
           popup_id: "successpopup",
-          popup_text: capitalize("This Permission is successfully deleted!"),
+          popup_text: capitalize("This Overrate Fee is successfully deleted!"),
           popup_type: "Success",
           onConfirm: () => {},
-          onClose: () => goToPermission(),
+          onClose: () => goToOverrateFee(),
         }),
       onError: (err: CustomError) =>
         showModal({
           popup_id: "fail",
-          popup_text: `${capitalize(getErrorDetail(err) ?? "Permission delete failed")}`,
+          popup_text: `${capitalize(getErrorDetail(err) ?? "Overrate Fee delete failed")}`,
           popup_type: "Fail",
           onConfirm: () => {},
           onClose: () => setOpenModal(false),
@@ -118,7 +119,7 @@ const Page: React.FC<Props> = () => {
     if (isValid) {
       showModal({
         popup_id: "update",
-        popup_text: `${capitalize("Are you sure you want to update this permission?")}`,
+        popup_text: `${capitalize("Are you sure you want to update this overrate fee?")}`,
         popup_type: "Confirm",
         onConfirm: methods.handleSubmit(handleSubmit),
         onClose: () => setOpenModal(false),
@@ -129,7 +130,7 @@ const Page: React.FC<Props> = () => {
   return (
     <Flex vertical gap={24}>
       <Typography style={{ fontSize: 24, fontWeight: 600, color: "#2F80ED" }}>
-        {capitalize("Permission Detail")}
+        {capitalize("Overrate Fee Detail")}
       </Typography>
       <Spin spinning={isUpdating || isDeleting}>
         <FormWrapperV2 methods={methods} fields={fields}>
@@ -138,12 +139,12 @@ const Page: React.FC<Props> = () => {
             layout="vertical"
             onFinish={methods.handleSubmit(handleSubmit)}
           >
-            <PermissionDetails
+            <OverrateFeeDetails
               edit
               onDelete={() =>
                 showModal({
                   popup_id: "delete",
-                  popup_text: `${capitalize("Are you sure you want to delete this permission?")}`,
+                  popup_text: `${capitalize("Are you sure you want to delete this overrate fee?")}`,
                   popup_type: "Confirm",
                   onConfirm: handleDelete,
                   onClose: () => setOpenModal(false),

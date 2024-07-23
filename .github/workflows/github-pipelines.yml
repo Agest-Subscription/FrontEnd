@@ -1,41 +1,52 @@
 name: CI/CD Pipeline
-
+ 
 on:
   pull_request:
     branches:
       - "main"
       - "dev"
-      - "uat"
-
+ 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
+ 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
+ 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
+ 
       - uses: benjlevesque/short-sha@v3.0
         id: short-sha
         with:
           length: 6
-
+ 
+      - name: Set environment variables
+        run: |
+          if [[ ${{ github.base_ref }} == 'main' ]]; then
+            echo "DOCKER_TAG=frontend" >> $GITHUB_ENV
+            echo "API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}" >> $GITHUB_ENV
+            echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}" >> $GITHUB_ENV
+          else
+            echo "DOCKER_TAG=frontend-test" >> $GITHUB_ENV
+            echo "API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL_DEV }}" >> $GITHUB_ENV
+            echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL_DEV }}" >> $GITHUB_ENV
+          fi
+ 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           tags: |
-            quocc/sub:frontend-latest
-            quocc/sub:frontend-${{ steps.short-sha.outputs.sha }}
+            quocc/sub:${{ env.DOCKER_TAG }}-latest
+            quocc/sub:${{ env.DOCKER_TAG }}-${{ steps.short-sha.outputs.sha }}
           build-args: |
-            NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
+            NEXT_PUBLIC_API_BASE_URL=${{ env.API_BASE_URL }}
             NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
-            NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
+            NEXTAUTH_URL=${{ env.NEXTAUTH_URL }}

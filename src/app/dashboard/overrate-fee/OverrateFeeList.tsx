@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import useGenerateColumns from "./useGenerateColumns";
 
 import TableV1 from "@/components/table/TableV1";
-import { FEATURES } from "@/constants/routes";
-import { useGetListFeature } from "@/hooks/feature";
+import { OVERRATE_FEE } from "@/constants/routes";
+import { useGetListOverrateFee } from "@/hooks/overrateFee";
 import useSearchSync from "@/hooks/useSearchSync";
 import {
   DataSourceItem,
@@ -13,26 +13,26 @@ import {
   TableParams,
 } from "@/interfaces/base";
 import {
-  FeatureFilterParams,
-  FeatureTableData,
-} from "@/interfaces/model/feature.type";
+  OverrateFeeFilterParams,
+  OverrateFeeTableData,
+} from "@/interfaces/model/overrateFee.type";
 
 type Props = {};
 
-const FeaturesList: React.FC<Props> = () => {
+const OverrateFeeList: React.FC<Props> = () => {
   const router = useRouter();
   const { searchQuery, handleSearch } = useSearchSync();
-  const [tableParams, setTableParams] = useState<TableParams<FeatureTableData>>(
-    {
-      pagination: {
-        current: 1,
-        pageSize: 5,
-        showSizeChanger: false,
-      },
+  const [tableParams, setTableParams] = useState<
+    TableParams<OverrateFeeTableData>
+  >({
+    pagination: {
+      current: 1,
+      pageSize: 5,
+      showSizeChanger: false,
     },
-  );
+  });
 
-  const params = useMemo<FeatureFilterParams>(
+  const params = useMemo<OverrateFeeFilterParams>(
     () => ({
       page: tableParams.pagination.current,
       page_size: tableParams.pagination?.pageSize,
@@ -41,14 +41,15 @@ const FeaturesList: React.FC<Props> = () => {
     [searchQuery, tableParams.pagination],
   );
 
-  const { data: FeatureTableData, isFetching } = useGetListFeature(params);
+  const { data: OverrateFeeTableData, isFetching } =
+    useGetListOverrateFee(params);
   const columns = useGenerateColumns();
 
   const handleTableChange = ({
     pagination,
     filters,
     sorter,
-  }: TableChangeParams<FeatureTableData>) => {
+  }: TableChangeParams<OverrateFeeTableData>) => {
     if (Array.isArray(sorter)) return;
     setTableParams({
       pagination,
@@ -58,7 +59,7 @@ const FeaturesList: React.FC<Props> = () => {
   };
 
   useEffect(() => {
-    if (!FeatureTableData) return;
+    if (!OverrateFeeTableData) return;
     setTableParams((prev) => {
       const current = prev.pagination.current || 1;
       const pageSize = prev.pagination.pageSize || 5;
@@ -66,32 +67,32 @@ const FeaturesList: React.FC<Props> = () => {
         ...prev,
         pagination: {
           ...prev.pagination,
-          total: FeatureTableData?.total,
+          total: OverrateFeeTableData?.total,
           current:
-            current > 1 && FeatureTableData?.total === pageSize * (current - 1)
+            current > 1 &&
+            OverrateFeeTableData?.total === pageSize * (current - 1)
               ? current - 1
               : current,
         },
       };
     });
-  }, [FeatureTableData]);
+  }, [OverrateFeeTableData]);
 
-  const dataSource = useMemo<DataSourceItem<FeatureTableData>[]>(() => {
+  const dataSource = useMemo<DataSourceItem<OverrateFeeTableData>[]>(() => {
     return (
-      FeatureTableData?.data.map((feature, index) => ({
-        ...feature,
-        key: feature.id,
+      OverrateFeeTableData?.data.map((overrateFee, index) => ({
+        ...overrateFee,
+        key: overrateFee.id,
         no: index + 1 + ((params.page ?? 1) - 1) * (params?.page_size ?? 5),
       })) ?? []
     );
-  }, [FeatureTableData, params.page, params?.page_size]);
+  }, [OverrateFeeTableData?.data, params.page, params?.page_size]);
 
   return (
     <div>
       <TableV1
-        scroll={{ x: "max-content" }}
         loading={isFetching}
-        tableTitle="feature"
+        tableTitle="Overrate Fee"
         showSearchBar={true}
         columns={columns}
         dataSource={dataSource}
@@ -99,7 +100,7 @@ const FeaturesList: React.FC<Props> = () => {
           handleTableChange({ pagination, filters })
         }
         pagination={tableParams.pagination}
-        addItem={() => router.push(`${FEATURES}/add`)}
+        addItem={() => router.push(`${OVERRATE_FEE}/add`)}
         onSearch={handleSearch}
         searchValue={searchQuery}
       />
@@ -107,4 +108,4 @@ const FeaturesList: React.FC<Props> = () => {
   );
 };
 
-export default FeaturesList;
+export default OverrateFeeList;

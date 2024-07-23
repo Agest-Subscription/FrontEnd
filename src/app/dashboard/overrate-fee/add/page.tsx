@@ -4,33 +4,32 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
 
-import FeatureDetails from "../FeatureDetails";
+import OverrateFeeDetails from "../OverrateFeeDetails";
 import { useGenerateFields } from "../useGenerateFields";
 
 import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
 import PopUp from "@/components/popup/Popup";
-import { useAddFeature } from "@/hooks/feature";
+import { useAddOverrateFee } from "@/hooks/overrateFee";
 import { CustomError } from "@/interfaces/base";
-import { FeatureFormValues } from "@/interfaces/model/feature.type";
+import { OverrateFeeFormValues } from "@/interfaces/model/overrateFee.type";
 import { popUpPropType } from "@/interfaces/popup";
-import featureFormValuesSchema from "@/schema/feature";
+import overrateFeeFormValuesSchema from "@/schema/overrateFee";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
-import { capitalize, trimString } from "@/utils/string";
+import { capitalize } from "@/utils/string";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
-  const goToFeature = useGoToDashboardTab("features");
+  const goToOverrateFee = useGoToDashboardTab("overrate-fee");
   const [openModal, setOpenModal] = useState(false);
-  const { mutate: addFeature, isLoading: isAdding } = useAddFeature();
-  const methods = useForm<FeatureFormValues>({
+  const { mutate: addOverrateFee, isLoading: isAdding } = useAddOverrateFee();
+  const methods = useForm<OverrateFeeFormValues>({
     mode: "onBlur",
-    resolver: yupResolver(featureFormValuesSchema),
+    resolver: yupResolver(overrateFeeFormValuesSchema),
   });
-
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "successpopup",
-    popup_text: `${capitalize("Are you sure to create a new feature?")}`,
+    popup_text: `${capitalize("Are you sure to create a new overrate fee?")}`,
     popup_type: "Confirm",
     onConfirm: methods.handleSubmit(onSubmit),
     onClose: () => setOpenModal(false),
@@ -40,23 +39,21 @@ const Page: React.FC<Props> = () => {
     setModalProp(modalProp);
     setOpenModal(true);
   }
-
-  function onSubmit(data: FeatureFormValues) {
-    const trimmed = trimString(data, ["name"]);
-    addFeature(trimmed, {
+  function onSubmit(data: OverrateFeeFormValues) {
+    addOverrateFee(data, {
       onSuccess: () => {
         showModal({
           popup_id: "successpopup",
-          popup_text: `${capitalize("This Feature is successfully created!")}`,
+          popup_text: `${capitalize("This Overrate Fee is successfully created!")}`,
           popup_type: "Success",
           onConfirm: () => {},
-          onClose: () => goToFeature(),
+          onClose: () => goToOverrateFee(),
         });
       },
       onError: (err: CustomError) => {
         showModal({
           popup_id: "fail",
-          popup_text: `${getErrorDetail(err) ?? "Feature Creation failed"}`,
+          popup_text: `${getErrorDetail(err) ?? "Overrate Fee Creation failed"}`,
           popup_type: "Fail",
           onConfirm: () => {},
           onClose: () => setOpenModal(false),
@@ -72,7 +69,7 @@ const Page: React.FC<Props> = () => {
     if (isValid) {
       showModal({
         popup_id: "confirm",
-        popup_text: `${capitalize("Are you sure to create a new feature?")}`,
+        popup_text: `${capitalize("Are you sure to create a new overrate fee?")}`,
         popup_type: "Confirm",
         onConfirm: methods.handleSubmit(onSubmit),
         onClose: () => setOpenModal(false),
@@ -83,7 +80,7 @@ const Page: React.FC<Props> = () => {
   return (
     <Flex vertical gap={24}>
       <Typography style={{ fontSize: 24, fontWeight: 600, color: "#2F80ED" }}>
-        {capitalize("Feature Creation")}
+        {capitalize("Overrate Fee Creation")}
       </Typography>
       <Spin spinning={isAdding}>
         <FormWrapperV2 methods={methods} fields={fields}>
@@ -96,7 +93,7 @@ const Page: React.FC<Props> = () => {
             layout="vertical"
             onFinish={methods.handleSubmit(onSubmit)}
           >
-            <FeatureDetails onSave={handleSave} />
+            <OverrateFeeDetails onSave={handleSave} />
             <PopUp popupProps={modalProp} isOpen={openModal} />
           </Form>
         </FormWrapperV2>

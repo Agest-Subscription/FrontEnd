@@ -8,8 +8,8 @@ import { Button, Flex, Layout, MenuProps, theme, Typography } from "antd";
 import MenuCustom from "@/components/Menu/MenuCustom";
 import {
   FEATURES,
-  FEE_OVERATE,
   FEES,
+  OVERRATE_FEE,
   PERMISSIONS,
   PRICING_PlANS,
   SUBSCRIPTIONS,
@@ -47,10 +47,10 @@ const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
     {
       label: (
         <>
-          <Link href={FEE_OVERATE}>Fee Overate</Link>
+          <Link href={OVERRATE_FEE}>Overrate Fee</Link>
         </>
       ),
-      key: FEE_OVERATE,
+      key: OVERRATE_FEE,
     },
     {
       label: (
@@ -101,6 +101,7 @@ const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
           </Typography>
 
           <Button
+            type="primary"
             onClick={() => {
               signOut();
             }}

@@ -7,6 +7,7 @@ import { Flex, Form, Spin, Typography } from "antd";
 import FeatureDetails from "../FeatureDetails";
 import { useGenerateFields } from "../useGenerateFields";
 
+import NotFound from "@/app/not-found";
 import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
 import PopUp from "@/components/popup/Popup";
 import {
@@ -21,7 +22,7 @@ import { popUpPropType } from "@/interfaces/popup";
 import featureFormValuesSchema from "@/schema/feature";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
-import { capitalize } from "@/utils/string";
+import { capitalize, trimString } from "@/utils/string";
 
 type Props = {};
 
@@ -44,7 +45,7 @@ const Page: React.FC<Props> = () => {
     resolver: yupResolver(featureFormValuesSchema),
   });
 
-  const { data: Feature } = useGetFeatureById(id);
+  const { data: Feature, isError } = useGetFeatureById(id);
 
   const fields = useGenerateFields();
 
@@ -67,10 +68,11 @@ const Page: React.FC<Props> = () => {
   };
 
   const handleSubmit = (data: FeatureFormValues) => {
+    const trimmed = trimString(data, ["name"]);
     updateFeature(
       {
         id,
-        ...data,
+        ...trimmed,
       },
       {
         onSuccess: () =>
@@ -126,6 +128,10 @@ const Page: React.FC<Props> = () => {
       });
     }
   };
+
+  if (isError) {
+    return <NotFound previousPage="features" />;
+  }
 
   return (
     <Flex vertical gap={24}>
