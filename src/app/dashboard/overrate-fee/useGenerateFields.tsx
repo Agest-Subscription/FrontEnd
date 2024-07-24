@@ -15,6 +15,7 @@ export const useGenerateFields = (initialSelectedFees?: IsOverrateFee) => {
     fetchNextPage,
     isFetchingNextPage,
     isInitialLoading,
+    setSearchTerm,
   } = useGetInfiniteIsOverrateFee({
     page_size: 10,
   });
@@ -49,6 +50,14 @@ export const useGenerateFields = (initialSelectedFees?: IsOverrateFee) => {
         options: mergedFees,
         componentProps: {
           isRequired: true,
+          showSearch: true,
+          filterOption: true,
+          optionFilterProp: "label",
+          onSearch: (searchTerm) => {
+            setSearchTerm(searchTerm);
+          },
+          onChange: () => setSearchTerm(""),
+          allowClear: true,
           style: { width: "250px", height: "40px" },
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
             const target = event.target as HTMLDivElement;
@@ -99,6 +108,7 @@ export const useGenerateFields = (initialSelectedFees?: IsOverrateFee) => {
     initialSelectedFees,
     isFetchingNextPage,
     isInitialLoading,
+    setSearchTerm,
   ]);
   return fields;
 };

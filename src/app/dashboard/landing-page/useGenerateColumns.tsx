@@ -1,15 +1,14 @@
 import React, { useMemo } from "react";
 import Link from "next/link";
 import { EditOutlined } from "@ant-design/icons";
-import { Checkbox } from "antd";
 import { ColumnType } from "antd/es/table";
 
 import LongText from "@/components/table/LongText";
-import { PERMISSIONS } from "@/constants/routes";
-import { PermissionTableData } from "@/interfaces/model/permission.type";
+import { LANDING_PAGE } from "@/constants/routes";
+import { LandingPageTableData } from "@/interfaces/model/landingPage.type";
 
 const useGenerateColumns = () => {
-  return useMemo<ColumnType<PermissionTableData>[]>(
+  return useMemo<ColumnType<LandingPageTableData>[]>(
     () => [
       {
         title: "No",
@@ -46,16 +45,6 @@ const useGenerateColumns = () => {
         },
       },
       {
-        title: "Active",
-        dataIndex: "is_active",
-        key: "is_active",
-        align: "center",
-        width: 150,
-        render: (is_active: boolean) => {
-          return <Checkbox checked={is_active}></Checkbox>;
-        },
-      },
-      {
         title: "Action",
         dataIndex: "action",
         key: "action",
@@ -63,7 +52,7 @@ const useGenerateColumns = () => {
         width: 150,
         render: (_, record) => {
           return (
-            <Link href={`${PERMISSIONS}/${record.id}`}>
+            <Link href={`${LANDING_PAGE}/${record.id}`}>
               <EditOutlined size={100} />
             </Link>
           );

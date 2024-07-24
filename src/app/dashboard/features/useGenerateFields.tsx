@@ -15,6 +15,7 @@ export const useGenerateFields = (
     fetchNextPage,
     isFetchingNextPage,
     isInitialLoading,
+    setSearchTerm,
   } = useGetInfinitePermission({
     page_size: 10,
     is_active: true,
@@ -51,6 +52,13 @@ export const useGenerateFields = (
         componentProps: {
           mode: "multiple",
           isRequired: true,
+          filterOption: true,
+          optionFilterProp: "label",
+          onSearch: (searchTerm) => {
+            setSearchTerm(searchTerm);
+          },
+          onChange: () => setSearchTerm(""),
+          allowClear: true,
           style: { width: "250px" },
           maxTagCount: "responsive",
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
@@ -86,6 +94,7 @@ export const useGenerateFields = (
   }, [
     permissionsPage?.pages,
     initialSelectedPermissions,
+    setSearchTerm,
     isFetchingNextPage,
     fetchNextPage,
     isInitialLoading,

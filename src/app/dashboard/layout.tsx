@@ -9,6 +9,7 @@ import MenuCustom from "@/components/Menu/MenuCustom";
 import {
   FEATURES,
   FEES,
+  LANDING_PAGE,
   OVERRATE_FEE,
   PERMISSIONS,
   PRICING_PlANS,
@@ -88,6 +89,14 @@ const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
         </>
       ),
       key: USERS,
+    },
+    {
+      label: (
+        <>
+          <Link href={LANDING_PAGE}>Landing Page</Link>
+        </>
+      ),
+      key: LANDING_PAGE,
     },
   ];
   const onClick: MenuProps["onClick"] = (e) => {
