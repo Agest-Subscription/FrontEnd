@@ -25,7 +25,7 @@ const useGenerateColumns = () => {
         },
       },
       {
-        title: "Fee name",
+        title: "Fee Name",
         dataIndex: "fee_name",
         key: "fee_name",
         render: (value) => {
@@ -51,7 +51,7 @@ const useGenerateColumns = () => {
         },
       },
       {
-        title: "Transaction unit",
+        title: "Transaction Unit",
         dataIndex: "transaction_unit",
         key: "transaction_unit",
         render: (value) => {

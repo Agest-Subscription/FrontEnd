@@ -27,8 +27,9 @@ const pricingplanFormValuesSchema: ObjectSchema<PricingPlanFormValues> = object(
         then: (schema) => schema.required("Free trial period type is required"),
       }),
     free_trial_period_count: number()
+      .integer("Please enter an integer")
       .nullable()
-      .default(null)
+      .default(0)
       .when("is_free_trial", {
         is: "true",
         then: (schema) =>
