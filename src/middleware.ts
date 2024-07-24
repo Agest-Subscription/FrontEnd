@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { withAuth } from "next-auth/middleware";
+import { NextApiResponse } from "next";
 const adminRoutes = [
   "/dashboard/permissions",
   "/dashboard/pricing-plan",
@@ -20,15 +21,19 @@ export default withAuth(
 
     res.cookies.set({
       name: "access_token",
-      value: accessToken.toString(),
+      value: accessToken,
       path: "/",
       httpOnly: true,
+      sameSite: "lax",
+      secure: false,
     });
     res.cookies.set({
       name: "refresh_token",
       value: token?.refresh_token as string,
       path: "/",
       httpOnly: true,
+      sameSite: "lax",
+      secure: false,
     });
 
     // Check for admin routes
@@ -38,6 +43,7 @@ export default withAuth(
       }
       return res;
     }
+    return res;
   },
   {
     callbacks: {
