@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { withAuth } from "next-auth/middleware";
-import { NextApiResponse } from "next";
 const adminRoutes = [
   "/dashboard/permissions",
   "/dashboard/pricing-plan",

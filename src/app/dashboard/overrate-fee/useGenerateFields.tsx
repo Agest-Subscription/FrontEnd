@@ -29,7 +29,7 @@ export const useGenerateFields = (initialSelectedFees?: IsOverrateFee) => {
       })) ?? [];
     const mergedFees =
       mergeAndMapInfiniteData<IsOverrateFee>(
-        initialSelectedFees ?? [],yan
+        initialSelectedFees ?? [],
         "id",
         "name",
         mappedFeesPages,
