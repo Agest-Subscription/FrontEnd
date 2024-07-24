@@ -6,7 +6,6 @@ import { signOut } from "next-auth/react";
 import { Button, Flex, Layout, MenuProps, Spin, theme, Typography } from "antd";
 
 import MenuCustom from "@/components/Menu/MenuCustom";
-import { axiosClient } from "@/config/axios/client";
 import {
   FEATURES,
   FEES,
@@ -117,7 +116,6 @@ const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
           <Button
             type="primary"
             onClick={() => {
-              axiosClient.delete("/auth/logout");
               signOut();
             }}
           >

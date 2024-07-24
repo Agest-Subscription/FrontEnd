@@ -3,9 +3,13 @@ import { Spin } from "antd";
 
 import { useGetInfiniteIsOverrateFee } from "@/hooks/overrateFee";
 import { FieldsData } from "@/interfaces/form";
-import { OverrateFeeFormValues } from "@/interfaces/model/overrateFee.type";
+import {
+  IsOverrateFee,
+  OverrateFeeFormValues,
+} from "@/interfaces/model/overrateFee.type";
+import { mergeAndMapInfiniteData } from "@/utils/infiniteFetch";
 
-export const useGenerateFields = () => {
+export const useGenerateFields = (initialSelectedFees?: IsOverrateFee) => {
   const {
     data: feesPage,
     fetchNextPage,
@@ -16,12 +20,19 @@ export const useGenerateFields = () => {
   });
 
   const fields = useMemo<FieldsData<OverrateFeeFormValues>>(() => {
-    const mapAllFee =
-      feesPage?.pages.flatMap((fees) =>
-        fees.data.data.map((fee) => ({
-          value: fee.id,
-          label: fee.name,
+    const mappedFeesPages =
+      feesPage?.pages.map((fee) => ({
+        data: fee.data.data.map((fee) => ({
+          valueKey: fee.id,
+          labelKey: fee.name,
         })),
+      })) ?? [];
+    const mergedFees =
+      mergeAndMapInfiniteData<IsOverrateFee>(
+        initialSelectedFees ?? [],
+        "id",
+        "name",
+        mappedFeesPages,
       ) ?? [];
     return {
       name: {
@@ -35,7 +46,7 @@ export const useGenerateFields = () => {
       fee_id: {
         label: "Fee name",
         type: "select",
-        options: mapAllFee,
+        options: mergedFees,
         componentProps: {
           isRequired: true,
           style: { width: "250px", height: "40px" },
@@ -82,6 +93,12 @@ export const useGenerateFields = () => {
         },
       },
     };
-  }, [feesPage?.pages, fetchNextPage, isFetchingNextPage, isInitialLoading]);
+  }, [
+    feesPage?.pages,
+    fetchNextPage,
+    initialSelectedFees,
+    isFetchingNextPage,
+    isInitialLoading,
+  ]);
   return fields;
 };

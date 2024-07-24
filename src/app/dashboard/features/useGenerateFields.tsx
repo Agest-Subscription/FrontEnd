@@ -19,18 +19,22 @@ export const useGenerateFields = (
     page_size: 10,
     is_active: true,
   });
-
   const fields = useMemo<FieldsData<FeatureFormValues>>(() => {
+    const mappedPermissionsPages =
+      permissionsPage?.pages.map((page) => ({
+        data: page.data.data.map((permission) => ({
+          valueKey: permission.id,
+          labelKey: permission.display_name,
+        })),
+      })) ?? [];
+
     const mergedPermissions =
       mergeAndMapInfiniteData<Permission>(
-        initialSelectedPermissions,
+        initialSelectedPermissions ?? [],
         "id",
         "display_name",
-        permissionsPage?.pages ?? [],
-      ).map((permission) => ({
-        value: permission.value,
-        label: permission.label,
-      })) ?? [];
+        mappedPermissionsPages,
+      ) ?? [];
     return {
       name: {
         label: "Name",

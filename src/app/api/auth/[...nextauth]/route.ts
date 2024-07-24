@@ -1,8 +1,22 @@
-import { cookies } from "next/headers";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-const cookie = require("cookie");
+import axios from "axios";
+import jwtDecode from "jwt-decode";
+
 import { axiosClient } from "@/config/axios/client";
+interface BaseTokenClaims {
+  exp: number;
+}
+// Server refresh token is 7 day, access token is 15mins
+const checkTokenExpired = (token: string) => {
+  if (!token) throw new Error("No token provided to be decoded");
+
+  const { exp } = jwtDecode<BaseTokenClaims>(token);
+  const nowTimeStamp = new Date().getTime(); // current time in milliseconds
+  const bufferTimeStamp = nowTimeStamp + 10 * 60 * 1000; // 10 minute from now
+  if (bufferTimeStamp > exp * 1000) return true;
+  return false;
+};
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
@@ -20,84 +34,10 @@ const handler = NextAuth({
             email: credentials?.email as string,
             password: credentials?.password as string,
           });
-          const apiCookies = response.headers["set-cookie"];
-          const firstCookie = Array.isArray(apiCookies)
-            ? apiCookies[0]
-            : undefined;
-          const secondCookie = Array.isArray(apiCookies)
-            ? apiCookies[1]
-            : undefined;
-          // console.log("cookies header1: ", firstCookie as string);
-
-          // console.log("cookies header2: ", secondCookie as string);
-
-          if (firstCookie) {
-            // Find the part that starts with 'access_token='
-            const [accessTokenPart, ...attributesParts] =
-              firstCookie.split(";");
-            const [accessTokenKey, accessTokenValue] = accessTokenPart.split(
-              "=",
-              2,
-            );
-
-            // Trim and get the access token and its value
-            const accessToken = accessTokenKey.trim();
-            const valueToken = accessTokenValue ? accessTokenValue.trim() : "";
-
-            // Join the remaining parts back into the valueToken string
-            const attributes = attributesParts.join(";").trim();
-            const fullValueToken = `${valueToken}`;
-
-            // console.log("accessToken:", accessToken);
-            // console.log("valueToken:", fullValueToken);
-            cookies().set({
-              name: accessToken,
-              value: fullValueToken,
-              httpOnly: true, //optional
-              secure: false,
-              sameSite: "strict",
-              path: "/",
-            });
-          } else {
-            console.log("No cookies found.");
-          }
-          console.log();
-
-          if (secondCookie) {
-            // Find the part that starts with 'refresh_token='
-            const [tokenPart, ...attributesParts] = secondCookie.split(";");
-            const [refreshTokenKey, refreshTokenValue] = tokenPart.split(
-              "=",
-              2,
-            );
-
-            // Trim and get the refresh token and its value
-            const refreshToken = refreshTokenKey.trim();
-            const fullRefreshTokenValue = refreshTokenValue
-              ? refreshTokenValue.trim()
-              : "";
-
-            // Join the remaining parts back into the full valueToken string
-            const fullValueToken = `${fullRefreshTokenValue}`;
-
-            // console.log("refreshToken:", refreshToken);
-            // console.log("refreshTokenValue:", fullValueToken);
-
-            cookies().set({
-              name: refreshToken,
-              value: fullValueToken,
-              httpOnly: true, //optional
-              secure: false,
-              sameSite: "strict",
-              path: "/",
-            });
-          } else {
-            console.log("Second cookie not found.");
-          }
 
           return response.data;
         } catch (error) {
-          console.log(error);
+          console.log("error authorize: ", error);
           //  throw Error(error);
         }
       },
@@ -116,15 +56,64 @@ const handler = NextAuth({
         token.refresh_token = user?.authenticate?.refresh_token;
         token.isAdmin = user?.is_admin;
       }
-      return token;
+
+      const accessToken =
+        typeof token.access_token === "string" ? token.access_token : "";
+
+      const refreshToken =
+        typeof token.refresh_token === "string" ? token.refresh_token : "";
+
+      //console.log("token.refreshToken:  ", token.refreshToken);
+
+      // Here, check the token validity date
+      if (checkTokenExpired(accessToken)) {
+        // Call the endpoint where you handle the token refresh for a user
+
+        try {
+          const user = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/auth/refresh`,
+            {
+              access_token: accessToken,
+              refresh_token: refreshToken,
+            },
+          );
+          // Check for the result and update the data accordingly
+          // console.log("...user: ", user?.data);
+          // console.log("...token: ", token);
+
+          // console.log("new access_token: ", user?.data?.access_token);
+
+          return {
+            ...token,
+            access_token: user?.data?.access_token,
+          };
+          // return { ...token, ...user };
+        } catch (error) {
+          console.log("error refresh token: ", error);
+          //  throw Error(error);
+        }
+      }
+
+      // console.log("old access_token: ", accessToken);
+      // console.log("old refresh_token: ", refreshToken);
+
+      return {
+        ...token,
+        access_token: accessToken,
+        refresh_token: refreshToken,
+      };
     },
 
     session: async ({ session, token }) => {
-      session.user.accessToken = token?.access_token as string;
-      session.user.refreshToken = token?.refresh_token as string;
-      session.user.isAdmin = token?.isAdmin;
-
-      return session;
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          accessToken: token?.access_token as string,
+          refreshToken: token?.refresh_token as string,
+          isAdmin: token?.isAdmin,
+        },
+      };
     },
   },
   pages: {

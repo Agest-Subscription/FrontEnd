@@ -10,30 +10,33 @@ import {
 } from "@/interfaces/model/overrateFee.type";
 
 export const getListOverrateFeeApi = (params: OverrateFeeFilterParams) => {
-  return axiosClient.get<GetListResponse<OverrateFeeResponseItem>>("overrate", {
-    params,
-  });
+  return axiosClient.get<GetListResponse<OverrateFeeResponseItem>>(
+    "overrates",
+    {
+      params,
+    },
+  );
 };
 
 export const getOverrateFeeByIdApi = (id: string) => {
-  return axiosClient.get<OverrateFeeResponseItem>(`overrate/${id}`);
+  return axiosClient.get<OverrateFeeResponseItem>(`overrates/${id}`);
 };
 
 export const addOverrateFeeApi = (data: AddOverrateFeePayload) => {
-  return axiosClient.post("overrate", data);
+  return axiosClient.post("overrates", data);
 };
 
 export const updateOverrateFeeApi = (data: UpdateOverrateFeePayload) => {
   const { id, ...rest } = data;
-  return axiosClient.put(`overrate/${id}`, rest);
+  return axiosClient.put(`overrates/${id}`, rest);
 };
 
 export const deleteOverrateFeeApi = (id: string) => {
-  return axiosClient.delete(`overrate/${id}`);
+  return axiosClient.delete(`overrates/${id}`);
 };
 
 export const getListIsOverrateFeesApi = (params: FeeFilterParams) => {
-  return axiosClient.get<GetListResponse<IsOverrateFee>>("overrate/fee/all", {
+  return axiosClient.get<GetListResponse<IsOverrateFee>>("overrates/fee/all", {
     params,
   });
 };
