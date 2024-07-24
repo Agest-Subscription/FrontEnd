@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   useInfiniteQuery,
   useMutation,
@@ -24,10 +25,16 @@ export const useGetListPermission = (params: PermissionFilterParams) => {
 };
 
 export const useGetInfinitePermission = (params: PermissionFilterParams) => {
-  return useInfiniteQuery({
-    queryKey: ["PERMISSIONS", params],
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const query = useInfiniteQuery({
+    queryKey: ["PERMISSIONS", searchTerm, params],
     queryFn: ({ pageParam = 1 }) =>
-      getListPermissionApi({ ...params, page: pageParam }),
+      getListPermissionApi({
+        ...params,
+        page: pageParam,
+        search: searchTerm,
+      }),
     getNextPageParam: (lastPage, pages) => {
       if (lastPage.data.data.length === 0) {
         return undefined;
@@ -35,6 +42,7 @@ export const useGetInfinitePermission = (params: PermissionFilterParams) => {
       return pages.length + 1;
     },
   });
+  return { ...query, setSearchTerm };
 };
 
 export const useGetPermissionById = (id: string) => {
