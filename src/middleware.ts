@@ -16,24 +16,6 @@ export default withAuth(
     const res = NextResponse.next();
     const token = req.nextauth.token;
     const { pathname } = req.nextUrl.clone();
-    const accessToken = "Bearer " + token?.access_token;
-
-    res.cookies.set({
-      name: "access_token",
-      value: accessToken,
-      path: "/",
-      httpOnly: true,
-      sameSite: "lax",
-      secure: false,
-    });
-    res.cookies.set({
-      name: "refresh_token",
-      value: token?.refresh_token as string,
-      path: "/",
-      httpOnly: true,
-      sameSite: "lax",
-      secure: false,
-    });
 
     // Check for admin routes
     if (adminRoutes.some((path) => pathname.startsWith(path))) {
