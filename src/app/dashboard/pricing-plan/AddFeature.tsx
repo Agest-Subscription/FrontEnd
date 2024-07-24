@@ -1,20 +1,31 @@
 "use client";
-import { useEffect, useRef } from "react";
+import type { Key } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { SearchOutlined } from "@ant-design/icons";
 import type { TableColumnsType } from "antd";
-import { Flex, Spin, Table, Typography } from "antd";
-import Search from "antd/es/input/Search";
+import { Flex, Input, Modal, Spin, Table, Typography } from "antd";
 
 import ButtonV1 from "@/components/button/CustomButton";
 import { useGetInfiniteFeatures } from "@/hooks/feature";
-import { FeatureTableData } from "@/interfaces/model/feature.type";
+import useSearchSync from "@/hooks/useSearchSync";
+import { Feature } from "@/interfaces/model/feature.type";
 import { capitalize } from "@/utils/string";
 
 type Props = {
-  handleCancel?: () => void;
+  onCancel: () => void;
+  selectedRows?: Feature[];
+  onSave: (selectedRows: Feature[]) => void;
+  isModalOpen: boolean;
 };
 
-const AddFeature: React.FC<Props> = ({ handleCancel }) => {
+const AddFeature: React.FC<Props> = ({
+  onCancel,
+  selectedRows = [],
+  onSave,
+  isModalOpen,
+}) => {
   const tableRef = useRef<HTMLDivElement>(null);
+  const { searchQuery, handleSearch } = useSearchSync();
   const {
     data: featuresPage,
     fetchNextPage,
@@ -23,78 +34,129 @@ const AddFeature: React.FC<Props> = ({ handleCancel }) => {
   } = useGetInfiniteFeatures({
     page_size: 10,
     is_active: true,
+    search: searchQuery,
   });
+  const totalItemsRef = useRef<number | null>(null);
+  const [tempSelectedRowKeys, setTempSelectedRowKeys] = useState<Key[]>(
+    selectedRows.map((row) => row.id),
+  );
+  const [tempSelectedRows, setTempSelectedRows] =
+    useState<Feature[]>(selectedRows);
 
-  const columns: TableColumnsType<FeatureTableData> = [
+  const columns: TableColumnsType<Feature> = [
     {
       title: "Feature",
       dataIndex: "name",
       key: "name",
-      width: "75%",
+      width: "25%",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      width: "40%",
     },
   ];
+
   const dataSource =
     featuresPage?.pages.flatMap((features) =>
       features.data.data.map((feature) => ({
+        ...feature,
         key: feature.id,
-        name: feature.name,
       })),
     ) ?? [];
+
   const rowSelection = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows,
-      );
+    selectedRowKeys: tempSelectedRowKeys,
+    onChange: (selectedKeys: Key[], selectedRows: Feature[]) => {
+      setTempSelectedRowKeys(selectedKeys);
+      setTempSelectedRows(selectedRows);
     },
-    getCheckboxProps: (record: any) => ({
-      disabled: record.name === "Disabled User", // Column configuration not to be checked
-      name: record.name,
-    }),
   };
 
-  useEffect(() => {
-    const node = tableRef.current;
-    const handleScroll = () => {
-      if (node) {
-        const { scrollTop, scrollHeight, clientHeight } = node;
-        if (scrollTop + clientHeight >= scrollHeight - 5) {
-          fetchNextPage();
-        }
+  const handleScroll = useCallback(() => {
+    if (tableRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = tableRef.current;
+      if (scrollTop + clientHeight >= scrollHeight - 5) {
+        fetchNextPage();
       }
-    };
-    if (node) {
-      node.addEventListener("scroll", handleScroll);
     }
+  }, [fetchNextPage]);
+
+  useEffect(() => {
+    if (tableRef.current) {
+      console.log("hahaha")
+      tableRef.current.addEventListener("scroll", handleScroll);
+    }
+    const node = tableRef.current;
     return () => {
       if (node) {
         node.removeEventListener("scroll", handleScroll);
       }
     };
-  }, [fetchNextPage]);
+  }, [handleScroll, tableRef]);
 
+  const handleCancel = () => {
+    setTempSelectedRowKeys(selectedRows.map((row) => row.id));
+    setTempSelectedRows(selectedRows);
+    onCancel();
+  };
+
+  const handleSave = () => {
+    onSave(tempSelectedRows);
+  };
+  const handlePressEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const value = (e.target as HTMLInputElement).value;
+    handleSearch(value);
+  };
+  useEffect(() => {
+    if (
+      featuresPage &&
+      featuresPage.pages.length > 0 &&
+      totalItemsRef.current === null
+    ) {
+      totalItemsRef.current = featuresPage.pages[0].data.total;
+    }
+  }, [featuresPage]);
   return (
-    <>
+    <Modal
+      open={isModalOpen}
+      width={1408}
+      footer={null}
+      closable={false}
+      centered
+    >
       <Flex vertical gap={24} style={{ padding: "16px" }}>
         <Typography style={{ fontSize: 24, fontWeight: 600, color: "#2F80ED" }}>
           {capitalize("add feature")}
         </Typography>
         <Flex gap={32} align="center">
-          <Search
+          <Input
             placeholder="Search"
-            enterButton
             style={{ width: "50%", paddingBottom: "8px", paddingTop: "8px" }}
+            prefix={<SearchOutlined />}
+            onPressEnter={handlePressEnter}
           />
           <ButtonV1 title="Refresh" customSize="small" />
         </Flex>
-        <div ref={tableRef} style={{ height: 360, overflow: "auto" }}>
+        <Flex>
+          <Typography
+            style={{ fontSize: 14, fontWeight: 400, color: "#9095A1" }}
+          >
+            {`You've selected ${tempSelectedRowKeys.length}/${totalItemsRef.current}`}
+          </Typography>
+        </Flex>
+        <div
+          ref={tableRef}
+          style={{ height: 360, overflow: "auto", width: "50%" }}
+        >
           <Spin spinning={isFetchingNextPage || isInitialLoading}>
             <Table
               rowSelection={{
                 type: "checkbox",
                 ...rowSelection,
               }}
+              style={{ width: "100%" }}
               columns={columns}
               dataSource={dataSource}
               pagination={false}
@@ -103,10 +165,10 @@ const AddFeature: React.FC<Props> = ({ handleCancel }) => {
         </div>
         <Flex gap={24} justify="end">
           <ButtonV1 title="Cancel" customType="cancel" onClick={handleCancel} />
-          <ButtonV1 title="Save" />
+          <ButtonV1 title="Save" onClick={handleSave} />
         </Flex>
       </Flex>
-    </>
+    </Modal>
   );
 };
 

@@ -128,16 +128,7 @@ const Page: React.FC<Props> = () => {
     }
   };
 
-  function handleAddFeature() {
-    showModal({
-      popup_id: "addfeature",
-      popup_type: "Confirm",
-      width: "1408px",
-      pop_up_content: <AddFeature handleCancel={() => setOpenModal(false)} />,
-      onConfirm: () => setOpenModal(false),
-      onClose: () => setOpenModal(false),
-    });
-  }
+  
 
   return (
     <Flex vertical gap={24}>
@@ -162,7 +153,7 @@ const Page: React.FC<Props> = () => {
                   onClose: () => setOpenModal(false),
                 })
               }
-              onAddFeature={handleAddFeature}
+             
               onSave={handleSave}
             />
             <PopUp popupProps={modalProp} isOpen={openModal} />

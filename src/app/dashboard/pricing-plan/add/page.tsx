@@ -16,11 +16,13 @@ import { popUpPropType } from "@/interfaces/popup";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
+import { Feature } from "@/interfaces/model/feature.type";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
   const goToPricingPlan = useGoToDashboardTab("pricing-plan");
   const [openModal, setOpenModal] = useState(false);
+  const [selectedRows, setSelectedRows] = useState<Feature[]>([]);
   const { mutate: addPricingPlan, isLoading: isAdding } = useAddPricingPlan();
   const methods = useForm<PricingPlanFormValues>({
     mode: "onBlur",
@@ -33,15 +35,8 @@ const Page: React.FC<Props> = () => {
     onClose: () => setOpenModal(false),
   });
 
-  function handleAddFeature() {
-    showModal({
-      popup_id: "addfeature",
-      popup_type: "Info",
-      width: "1408px",
-      pop_up_content: <AddFeature handleCancel={() => setOpenModal(false)} />,
-      onConfirm: () => setOpenModal(false),
-      onClose: () => setOpenModal(false),
-    });
+  function handleSaveFeature(selectedRows: Feature[]) {
+    setSelectedRows(selectedRows);
   }
 
   function showModal(modalProp: popUpPropType) {
@@ -104,8 +99,9 @@ const Page: React.FC<Props> = () => {
             onFinish={methods.handleSubmit(onSubmit)}
           >
             <PricingPlanDetails
-              onAddFeature={handleAddFeature}
               onSave={handleSave}
+              selectedRows={selectedRows}
+              onSaveAddFeature={handleSaveFeature}
             />
             <PopUp popupProps={modalProp} isOpen={openModal} />
           </Form>

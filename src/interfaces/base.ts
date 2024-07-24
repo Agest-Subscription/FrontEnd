@@ -23,7 +23,7 @@ export interface FilterBase<T extends Record<string, any>> {
   page_size?: number;
   order?: "desc" | "asc";
   order_by?: keyof T;
-  text_value?: string;
+  search?: string;
 }
 
 export type DataSourceItem<T> = T & {

@@ -1,28 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Col, Flex, Row } from "antd";
 
 import ButtonV1 from "@/components/button/CustomButton";
 import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
 import { PricingPlanFormValues } from "@/interfaces/model/pricingplan.type";
+import AddFeature from "./AddFeature";
+import { Feature } from "@/interfaces/model/feature.type";
 
 interface DetailsProp {
   edit?: boolean;
   disableSaveBtn?: boolean;
   onDelete?: any;
-  onSave: any;
-  onAddFeature: any;
+  onSave: () => void;
+  selectedRows?: Feature[];
+  onSaveAddFeature: (arr: Feature[]) => void;
 }
 
 const PricingPlanDetails: React.FC<DetailsProp> = ({
   edit = false,
   disableSaveBtn = false,
   onDelete,
+  selectedRows,
   onSave,
-  onAddFeature,
+  onSaveAddFeature,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
   const { FormField } = useFormWrapperCtx<PricingPlanFormValues>();
+  function handleSaveFeature(selectedRows: Feature[]) {
+    onSaveAddFeature(selectedRows);
+    setIsModalOpen(false);
+  }
   return (
     <>
       <Flex
@@ -68,7 +77,7 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
           <ButtonV1
             title="Add feature"
             customType="secondary"
-            onClick={onAddFeature}
+            onClick={() => setIsModalOpen(true)}
           />
         </Flex>
       </Flex>
@@ -92,6 +101,12 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
           />
         </Flex>
       </Flex>
+      <AddFeature
+        isModalOpen={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        selectedRows={selectedRows}
+        onSave={handleSaveFeature}
+      />
     </>
   );
 };
