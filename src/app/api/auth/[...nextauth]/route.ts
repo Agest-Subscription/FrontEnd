@@ -60,8 +60,6 @@ const handler = NextAuth({
       const accessToken =
         typeof token.access_token === "string" ? token.access_token : "";
 
-      console.log("token.accessToken:  ", token.accessToken);
-
       const refreshToken =
         typeof token.refresh_token === "string" ? token.refresh_token : "";
 
@@ -70,10 +68,6 @@ const handler = NextAuth({
       // Here, check the token validity date
       if (checkTokenExpired(accessToken)) {
         // Call the endpoint where you handle the token refresh for a user
-        console.log(
-          "checkTokenExpired(accessToken): ",
-          checkTokenExpired(accessToken),
-        );
 
         try {
           const user = await axios.post(
