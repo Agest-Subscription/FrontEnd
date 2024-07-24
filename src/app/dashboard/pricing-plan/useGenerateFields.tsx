@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import dayjs from "dayjs";
 
 import { FieldsData } from "@/interfaces/form";
 import {
@@ -7,7 +8,7 @@ import {
 } from "@/interfaces/model/pricingplan.type";
 import { enumToSelectOptions } from "@/utils/enum";
 
-export const useGenerateFields = () => {
+export const useGenerateFields = (start_date: string) => {
   const fields = useMemo<FieldsData<PricingPlanFormValues>>(() => {
     return {
       name: {
@@ -17,33 +18,31 @@ export const useGenerateFields = () => {
           isRequired: true,
         },
       },
-      recurrent_fee_name: {
+      recurrence_fee_name: {
         label: "Recurrent fee name",
         type: "text",
-        componentProps: {
-          isRequired: true,
-        },
+        componentProps: {},
       },
-      start_day: {
+      start_date: {
         label: "Start date",
         type: "datepicker",
         componentProps: {
           isRequired: true,
         },
       },
-      end_day: {
-        label: "Start date",
+      end_date: {
+        label: "End date",
         type: "datepicker",
         componentProps: {
           isRequired: true,
+          minDate: dayjs(start_date),
         },
       },
       description: {
         label: "Description",
         type: "textarea",
         componentProps: {
-          style: { width: "100%" },
-          rows: 3,
+          rows: 4,
         },
       },
       free_trial_period: {
@@ -52,21 +51,21 @@ export const useGenerateFields = () => {
         options: enumToSelectOptions(FreeTrialPeriodEnum),
       },
       free_trial_period_count: {
-        label: "Free trial period count",
+        label: "Free trial cycle count",
         type: "text",
         componentProps: {
           type: "number",
         },
       },
       is_active: {
-        label: "Is Active",
+        label: "Is active",
         type: "singleCheckbox",
       },
       is_free_trial: {
-        label: "Is Active",
+        label: "Has free trial",
         type: "singleCheckbox",
       },
     };
-  }, []);
+  }, [start_date]);
   return fields;
 };

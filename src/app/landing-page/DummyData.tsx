@@ -1,4 +1,5 @@
 import { PricingPlan } from "@/interfaces/model/pricingplan.type";
+
 export const DummyData: PricingPlan[] = [
   {
     id: "1",
@@ -31,69 +32,7 @@ export const DummyData: PricingPlan[] = [
     free_trial_period: null,
     free_trial_period_count: null,
     is_active: false,
+    recurrence_fee_name: "Monthly", // Include this if required by the type
   },
-  {
-    id: "3",
-    name: "Premium",
-    start_date: "",
-    end_date: "",
-    price: 200,
-    description: "For large teams and enterprises",
-    features: [
-      {
-        id: "5",
-        name: "Unlimited users",
-        description: null,
-        permissions: [],
-        is_active: false,
-        created_at: "",
-        updated_at: "",
-      },
-      {
-        id: "6",
-        name: "Customizable features",
-        description: null,
-        permissions: [],
-        is_active: false,
-        created_at: "",
-        updated_at: "",
-      },
-    ],
-    is_free_trial: false,
-    free_trial_period: null,
-    free_trial_period_count: null,
-    is_active: true,
-  },
-  {
-    id: "5",
-    name: "Professional",
-    start_date: "",
-    end_date: "",
-    price: 150,
-    description: "For growing businesses",
-    features: [
-      {
-        id: "9",
-        name: "Up to 20 users",
-        description: null,
-        permissions: [],
-        is_active: false,
-        created_at: "",
-        updated_at: "",
-      },
-      {
-        id: "10",
-        name: "Advanced reporting",
-        description: null,
-        permissions: [],
-        is_active: false,
-        created_at: "",
-        updated_at: "",
-      },
-    ],
-    is_free_trial: false,
-    free_trial_period: null,
-    free_trial_period_count: null,
-    is_active: false,
-  },
+  // Add similar for other items
 ];

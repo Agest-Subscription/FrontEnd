@@ -11,6 +11,7 @@ interface DetailsProp {
   disableSaveBtn?: boolean;
   onDelete?: any;
   onSave: any;
+  onAddFeature: any;
 }
 
 const PricingPlanDetails: React.FC<DetailsProp> = ({
@@ -18,6 +19,7 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
   disableSaveBtn = false,
   onDelete,
   onSave,
+  onAddFeature,
 }) => {
   const router = useRouter();
   const { FormField } = useFormWrapperCtx<PricingPlanFormValues>();
@@ -33,13 +35,42 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
             <FormField name="name" />
           </Col>
           <Col span={6}>
+            <FormField name="recurrence_fee_name" />
+          </Col>
+          <Col span={6}>
             <FormField name="start_date" />
           </Col>
+          <Col span={6}>
+            <FormField name="end_date" />
+          </Col>
         </Row>
-        <Col span={6}>
-          <FormField name="description" />
-        </Col>
-        <FormField name="is_active" />
+        <Row gutter={24}>
+          <Col span={12}>
+            <FormField name="description" />
+          </Col>
+        </Row>
+        <Row gutter={24}>
+          <Col span={6}>
+            <Flex vertical gap={8}>
+              <FormField name="is_free_trial" />
+
+              <FormField name="is_active" />
+            </Flex>
+          </Col>
+          <Col span={6}>
+            <FormField name="free_trial_period" />
+          </Col>
+          <Col span={6}>
+            <FormField name="free_trial_period_count" />
+          </Col>
+        </Row>
+        <Flex justify="end">
+          <ButtonV1
+            title="Add feature"
+            customType="secondary"
+            onClick={onAddFeature}
+          />
+        </Flex>
       </Flex>
       <Flex
         style={{ width: "100%" }}

@@ -20,15 +20,17 @@ export default withAuth(
 
     res.cookies.set({
       name: "access_token",
-      value: accessToken.toString(),
+      value: accessToken,
       path: "/",
       httpOnly: true,
+      sameSite: "lax",
     });
     res.cookies.set({
       name: "refresh_token",
       value: token?.refresh_token as string,
       path: "/",
       httpOnly: true,
+      sameSite: "lax",
     });
 
     // Check for admin routes
@@ -36,6 +38,7 @@ export default withAuth(
       if (!token?.isAdmin) {
         return NextResponse.redirect(new URL("/access-denied", req.url));
       }
+      return res;
     }
     return res;
   },

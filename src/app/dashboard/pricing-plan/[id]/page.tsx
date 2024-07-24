@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
 
+import AddFeature from "../AddFeature";
 import PricingPlanDetails from "../PricingPlanDetails";
 import { useGenerateFields } from "../useGenerateFields";
 
@@ -19,7 +19,6 @@ import useGetId from "@/hooks/useGetId";
 import { CustomError } from "@/interfaces/base";
 import { PricingPlanFormValues } from "@/interfaces/model/pricingplan.type";
 import { popUpPropType } from "@/interfaces/popup";
-import pricingplanFormValuesSchema from "@/schema/pricingPlan";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
@@ -33,7 +32,7 @@ const Page: React.FC<Props> = () => {
     useDeletePricingPlan();
   const goToPricingPlan = useGoToDashboardTab("pricing-plan");
   const id = useGetId();
-  const fields = useGenerateFields();
+
   const [openModal, setOpenModal] = useState(false);
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "",
@@ -45,11 +44,11 @@ const Page: React.FC<Props> = () => {
 
   const methods = useForm<PricingPlanFormValues>({
     mode: "onBlur",
-    resolver: yupResolver(pricingplanFormValuesSchema),
   });
 
   const { data: PricingPlan, isError } = useGetPricingPlanById(id);
-
+  const start_date = methods.watch("start_date");
+  const fields = useGenerateFields(start_date);
   useEffect(() => {
     if (PricingPlan) {
       methods.setValue("description", PricingPlan.description);
@@ -129,6 +128,17 @@ const Page: React.FC<Props> = () => {
     }
   };
 
+  function handleAddFeature() {
+    showModal({
+      popup_id: "addfeature",
+      popup_type: "Confirm",
+      width: "1408px",
+      pop_up_content: <AddFeature handleCancel={() => setOpenModal(false)} />,
+      onConfirm: () => setOpenModal(false),
+      onClose: () => setOpenModal(false),
+    });
+  }
+
   return (
     <Flex vertical gap={24}>
       <Typography style={{ fontSize: 24, fontWeight: 600, color: "#2F80ED" }}>
@@ -152,6 +162,7 @@ const Page: React.FC<Props> = () => {
                   onClose: () => setOpenModal(false),
                 })
               }
+              onAddFeature={handleAddFeature}
               onSave={handleSave}
             />
             <PopUp popupProps={modalProp} isOpen={openModal} />
