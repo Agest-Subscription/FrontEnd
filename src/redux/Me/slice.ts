@@ -1,3 +1,4 @@
+import { signOut } from "next-auth/react";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { AppDispatch } from "../store";
@@ -34,7 +35,8 @@ export const getUserMe = () => {
       // Dispatch action with the fetched user data
       dispatch(setUserMe(content));
     } catch (err) {
-      console.log("error api getMe redux", err);
+      console.error("error api getMe redux", err);
+      signOut();
     }
   };
 };

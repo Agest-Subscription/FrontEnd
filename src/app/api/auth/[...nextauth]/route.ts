@@ -1,27 +1,19 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import axios from "axios";
 import jwtDecode from "jwt-decode";
 
 import { axiosClient } from "@/config/axios/client";
-import axios from "axios";
-export interface BaseTokenClaims {
-  ver: string;
-  iss: string;
-  sub: string;
-  aud: string;
+interface BaseTokenClaims {
   exp: number;
-  nonce: string;
-  iat: number;
-  tfp: string;
-  nbf: number;
 }
+// Server refresh token is 7 day, access token is 15mins
 const checkTokenExpired = (token: string) => {
   if (!token) throw new Error("No token provided to be decoded");
 
   const { exp } = jwtDecode<BaseTokenClaims>(token);
   const nowTimeStamp = new Date().getTime(); // current time in milliseconds
-  const bufferTimeStamp = nowTimeStamp + 1 * 60 * 1000; // 1 minute from now
-
+  const bufferTimeStamp = nowTimeStamp + 10 * 60 * 1000; // 10 minute from now
   if (bufferTimeStamp > exp * 1000) return true;
   return false;
 };
@@ -45,7 +37,7 @@ const handler = NextAuth({
 
           return response.data;
         } catch (error) {
-          console.log(error);
+          console.log("error authorize: ", error);
           //  throw Error(error);
         }
       },
@@ -58,43 +50,67 @@ const handler = NextAuth({
       }
       return false;
     },
-    jwt: async ({ token, user, account }) => {
+    jwt: async ({ token, user }) => {
       if (user) {
         token.access_token = user?.authenticate?.access_token;
         token.refresh_token = user?.authenticate?.refresh_token;
         token.isAdmin = user?.is_admin;
       }
-      console.log("token: ", token);
 
-      console.log("account: ", account);
       const accessToken =
-        typeof token.accessToken === "string" ? token.accessToken : "";
+        typeof token.access_token === "string" ? token.access_token : "";
 
       console.log("token.accessToken:  ", token.accessToken);
 
       const refreshToken =
-        typeof token.refreshToken === "string" ? token.refreshToken : "";
+        typeof token.refresh_token === "string" ? token.refresh_token : "";
 
-      console.log("token.refreshToken:  ", token.refreshToken);
+      //console.log("token.refreshToken:  ", token.refreshToken);
 
-      // // Here, check the token validity date
-      // if (checkTokenExpired(accessToken)) {
-      //   // Call the endpoint where you handle the token refresh for a user
-      //   const user = await axios.post(`${process.env.API_URL}/auth/refresh`, {
-      //     access_token: accessToken,
-      //     refresh_token: refreshToken,
-      //   });
-      //   // Check for the result and update the data accordingly
-      //   return { ...token, ...user };
-      // }
-      return token;
+      // Here, check the token validity date
+      if (checkTokenExpired(accessToken)) {
+        // Call the endpoint where you handle the token refresh for a user
+        console.log(
+          "checkTokenExpired(accessToken): ",
+          checkTokenExpired(accessToken),
+        );
+
+        try {
+          const user = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/auth/refresh`,
+            {
+              access_token: accessToken,
+              refresh_token: refreshToken,
+            },
+          );
+          // Check for the result and update the data accordingly
+          // console.log("...user: ", user?.data);
+          // console.log("...token: ", token);
+
+          // console.log("new access_token: ", user?.data?.access_token);
+
+          return {
+            ...token,
+            access_token: user?.data?.access_token,
+          };
+          // return { ...token, ...user };
+        } catch (error) {
+          console.log("error refresh token: ", error);
+          //  throw Error(error);
+        }
+      }
+
+      // console.log("old access_token: ", accessToken);
+      // console.log("old refresh_token: ", refreshToken);
+
+      return {
+        ...token,
+        access_token: accessToken,
+        refresh_token: refreshToken,
+      };
     },
 
     session: async ({ session, token }) => {
-      // session.user.accessToken = token?.access_token as string;
-      // session.user.refreshToken = token?.refresh_token as string;
-      // session.user.isAdmin = token?.isAdmin;
-
       return {
         ...session,
         user: {
