@@ -20,10 +20,11 @@ export const useGenerateFields = () => {
         },
       },
       fee_type: {
-        label: "Fee Type *",
+        label: "Fee Type",
         type: "select",
         options: enumToSelectOptions(FeeTypeEnum),
         componentProps: {
+          isRequired: true,
           style: { height: "40px" },
         },
       },
@@ -44,10 +45,11 @@ export const useGenerateFields = () => {
         },
       },
       recurrence_type: {
-        label: "Reccurence Type *",
+        label: "Reccurence Type",
         type: "select",
         options: enumToSelectOptions(RecurrenceTypeEnum),
         componentProps: {
+          isRequired: true,
           style: { height: "40px" },
         },
       },
@@ -55,12 +57,16 @@ export const useGenerateFields = () => {
         label: "Reccurence cycle count",
         type: "text",
         componentProps: {
+          isRequired: true,
           type: "number",
         },
       },
       transaction_unit: {
         label: "Transaction unit",
         type: "text",
+        componentProps: {
+          isRequired: true,
+        },
       },
       is_active: {
         label: "Is Active",
