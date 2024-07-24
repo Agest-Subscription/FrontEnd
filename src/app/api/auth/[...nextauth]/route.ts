@@ -27,9 +27,9 @@ const handler = NextAuth({
           const secondCookie = Array.isArray(apiCookies)
             ? apiCookies[1]
             : undefined;
-          console.log("cookies header1: ", firstCookie as string);
+          // console.log("cookies header1: ", firstCookie as string);
 
-          console.log("cookies header2: ", secondCookie as string);
+          // console.log("cookies header2: ", secondCookie as string);
 
           if (firstCookie) {
             // Find the part that starts with 'access_token='
@@ -48,8 +48,8 @@ const handler = NextAuth({
             const attributes = attributesParts.join(";").trim();
             const fullValueToken = `${valueToken}`;
 
-            console.log("accessToken:", accessToken);
-            console.log("valueToken:", fullValueToken);
+            // console.log("accessToken:", accessToken);
+            // console.log("valueToken:", fullValueToken);
             cookies().set({
               name: accessToken,
               value: fullValueToken,
@@ -80,8 +80,8 @@ const handler = NextAuth({
             // Join the remaining parts back into the full valueToken string
             const fullValueToken = `${fullRefreshTokenValue}`;
 
-            console.log("refreshToken:", refreshToken);
-            console.log("refreshTokenValue:", fullValueToken);
+            // console.log("refreshToken:", refreshToken);
+            // console.log("refreshTokenValue:", fullValueToken);
 
             cookies().set({
               name: refreshToken,
@@ -104,7 +104,7 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    signIn: async ({ account, user }) => {
+    signIn: async ({ account }) => {
       if (account?.provider === "credentials") {
         return true;
       }
