@@ -86,10 +86,10 @@ const Page: React.FC<Props> = () => {
             onClose: () => goToFee(),
           });
         },
-        onError: () => {
+        onError: (err: CustomError) => {
           showModal({
             popup_id: "fail",
-            popup_text: `${capitalize("Fee update failed!")}`,
+            popup_text: `${getErrorDetail(err) ?? "Fee update failed"}`,
             popup_type: "Fail",
             onConfirm: () => {},
             onClose: () => setOpenModal(false),

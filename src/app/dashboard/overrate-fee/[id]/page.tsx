@@ -17,7 +17,10 @@ import {
 } from "@/hooks/overrateFee";
 import useGetId from "@/hooks/useGetId";
 import { CustomError } from "@/interfaces/base";
-import { OverrateFeeFormValues } from "@/interfaces/model/overrateFee.type";
+import {
+  IsOverrateFee,
+  OverrateFeeFormValues,
+} from "@/interfaces/model/overrateFee.type";
 import { popUpPropType } from "@/interfaces/popup";
 import overratefeeFormValuesSchema from "@/schema/overrateFee";
 import { getErrorDetail } from "@/utils/error";
@@ -33,7 +36,12 @@ const Page: React.FC<Props> = () => {
     useDeleteOverrateFee();
   const goToOverrateFee = useGoToDashboardTab("overrate-fee");
   const id = useGetId();
-  const fields = useGenerateFields();
+  const { data: OverrateFee, isError } = useGetOverrateFeeById(id);
+  const selectedFee: IsOverrateFee = {
+    id: OverrateFee?.fee_id ?? "",
+    name: OverrateFee?.fee_name ?? "",
+  };
+  const fields = useGenerateFields(selectedFee);
   const [openModal, setOpenModal] = useState(false);
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "",
@@ -47,8 +55,6 @@ const Page: React.FC<Props> = () => {
     mode: "onBlur",
     resolver: yupResolver(overratefeeFormValuesSchema),
   });
-
-  const { data: OverrateFee, isError } = useGetOverrateFeeById(id);
 
   useEffect(() => {
     if (OverrateFee) {

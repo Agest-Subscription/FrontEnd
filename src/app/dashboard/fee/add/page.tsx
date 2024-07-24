@@ -10,6 +10,7 @@ import { useGenerateFields } from "../useGenerateFields";
 import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
 import PopUp from "@/components/popup/Popup";
 import { useAddFee } from "@/hooks/fee";
+import { CustomError } from "@/interfaces/base";
 import { FeeFormValues } from "@/interfaces/model/fee.type";
 import { popUpPropType } from "@/interfaces/popup";
 import feeFormValuesSchema from "@/schema/fee";
@@ -79,7 +80,7 @@ const Page: React.FC<Props> = () => {
           onClose: () => goToFee(),
         });
       },
-      onError: (error) => {
+      onError: (error: CustomError) => {
         showModal({
           popup_id: "fail",
           popup_text: `${capitalize(getErrorDetail(error) ?? "Fee creation failed!")}`,
