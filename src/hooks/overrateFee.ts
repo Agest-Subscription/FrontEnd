@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   useInfiniteQuery,
   useMutation,
@@ -75,10 +76,16 @@ export const useDeleteOverrateFee = () => {
 };
 
 export const useGetInfiniteIsOverrateFee = (params: FeeFilterParams) => {
-  return useInfiniteQuery({
-    queryKey: ["FEES", params],
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const query = useInfiniteQuery({
+    queryKey: ["FEES", searchTerm, params],
     queryFn: ({ pageParam = 1 }) =>
-      getListIsOverrateFeesApi({ ...params, page: pageParam }),
+      getListIsOverrateFeesApi({
+        ...params,
+        page: pageParam,
+        search: searchTerm,
+      }),
     getNextPageParam: (lastPage, pages) => {
       if (lastPage.data.data.length === 0) {
         return undefined;
@@ -86,4 +93,5 @@ export const useGetInfiniteIsOverrateFee = (params: FeeFilterParams) => {
       return pages.length + 1;
     },
   });
+  return { ...query, setSearchTerm };
 };
