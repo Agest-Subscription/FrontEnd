@@ -55,7 +55,7 @@ const handler = NextAuth({
               value: fullValueToken,
               httpOnly: true, //optional
               secure: false,
-              sameSite: "strict",
+              sameSite: "lax",
               path: "/",
             });
           } else {
@@ -88,7 +88,7 @@ const handler = NextAuth({
               value: fullValueToken,
               httpOnly: true, //optional
               secure: false,
-              sameSite: "strict",
+              sameSite: "lax",
               path: "/",
             });
           } else {
