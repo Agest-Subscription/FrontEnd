@@ -24,6 +24,8 @@ const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
     colorText: "#424856",
     buttonBackgroundColor: "#2F80ED",
     buttonTextColor: "white",
+    outerHeight: "450px",
+    outerWidth: "330px",
   };
 
   const secondaryStyles = {
@@ -39,6 +41,8 @@ const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
     colorText: "black",
     buttonBackgroundColor: "white",
     buttonTextColor: "#2F80ED",
+    outerHeight: "400px",
+    outerWidth: "300px",
   };
 
   const styles = isPrimary ? primaryStyles : secondaryStyles;
@@ -48,9 +52,9 @@ const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
       vertical
       style={{
         backgroundColor: styles.backgroundColor,
-        width: "300px",
+        width: styles.outerWidth,
         padding: styles.padding,
-        height: "fit-content",
+        height: styles.outerHeight,
         borderRadius: styles.borderRadius,
         border: styles.border,
         boxShadow: styles.boxShadow,
@@ -75,14 +79,18 @@ const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
         ${PricingPlan.price}
         <sup style={{ fontSize: 14, fontWeight: 400 }}>/month</sup>
       </Typography>
-      {PricingPlan.features.map((feature) => (
-        <Flex gap={8} key={feature.id}>
-          <CheckCircleOutlined style={{ color: "green" }} />
-          <Typography style={{ fontSize: 16, fontWeight: 400 }}>
-            {capitalize(feature.name)}
-          </Typography>
-        </Flex>
-      ))}
+
+      <Flex style={{ height: styles.outerHeight }} vertical>
+        {PricingPlan.features.map((feature) => (
+          <Flex gap={8} key={feature.id}>
+            <CheckCircleOutlined style={{ color: "green" }} />
+            <Typography style={{ fontSize: 16, fontWeight: 400 }}>
+              {capitalize(feature.name)}
+            </Typography>
+          </Flex>
+        ))}
+      </Flex>
+
       <Button
         style={{
           backgroundColor: styles.buttonBackgroundColor,
