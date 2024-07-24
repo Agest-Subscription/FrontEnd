@@ -1,7 +1,7 @@
+import { signOut } from "next-auth/react";
 import { AxiosInstance } from "axios";
 
 import { axiosClient } from "./client";
-import { signOut } from "next-auth/react";
 
 export type GetAccessToken = () => Promise<string | null>;
 
@@ -22,28 +22,16 @@ export const addInterceptor = (
     },
     async (error) => {
       // const prevRequest = error?.config;
-      // const { detail } = error.response.data;
+      const { detail } = error.response.data;
 
-      // if (error.response.status === 401 && !prevRequest?._retry) {
-      //   try {
-      //     console.log("token refresh");
-      //     prevRequest._retry = true;
-      //     await refreshToken();
-      //     const accessToken = await getAccessToken();
-      //     console.log("accesTokken inter: ", accessToken);
+      if (
+        error.response.status === 401 &&
+        detail === "Fail!, Refresh token expired"
+      ) {
+        console.log("refresh token expired");
 
-      //     if (accessToken) {
-      //       prevRequest.headers.Authorization = `Bearer ${accessToken}`;
-      //       return clientInstance.request(prevRequest);
-      //     }
-      //   } catch (error) {
-      //     console.log("error: ", error);
-
-      //     signOut();
-
-      //     return Promise.reject(error);
-      //   }
-      // }
+        signOut();
+      }
       return Promise.reject(error);
     },
   );

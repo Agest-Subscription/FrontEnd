@@ -5,7 +5,6 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 
 import { initHttpClient } from "@/config/axios/interceptor";
 import { QueryClientProvider } from "@/HOC/QueryClientProvider";
-import UseRefreshToken from "@/hooks/useRefreshToken";
 import { ReduxProvider } from "@/redux/provider";
 
 export const getAccessToken = async () => {
@@ -14,8 +13,6 @@ export const getAccessToken = async () => {
 };
 
 const InitializeHttpClient: React.FC = () => {
-  // const refreshToken = UseRefreshToken();
-
   useEffect(() => {
     initHttpClient(getAccessToken);
   }, []);
