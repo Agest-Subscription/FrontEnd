@@ -10,8 +10,9 @@ import { DummyData } from "./DummyData";
 import PricingCarousel from "@/components/pricing/PricingCarousel";
 
 const LandingPage = () => {
-  const [value, setValue] = useState("Weekly");
+  const [value, setValue] = useState("Monthly");
   const Options = [
+    { label: "Daily", value: "Daily" },
     { label: "Weekly", value: "Weekly" },
     { label: "Monthly", value: "Monthly" },
     { label: "Yearly", value: "Yearly" },
@@ -65,8 +66,9 @@ const LandingPage = () => {
             />
           </ConfigProvider>
         </Flex>
+
         <br />
-        <PricingCarousel PricingList={DummyData} />
+        <PricingCarousel PricingList={DummyData} pricingPeriod={value} />
       </Flex>
     </div>
   );
