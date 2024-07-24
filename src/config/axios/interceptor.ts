@@ -1,13 +1,13 @@
 import { AxiosInstance } from "axios";
 
 import { axiosClient } from "./client";
+import { signOut } from "next-auth/react";
 
 export type GetAccessToken = () => Promise<string | null>;
 
 export const addInterceptor = (
   clientInstance: AxiosInstance,
   getAccessToken: GetAccessToken,
-  refreshToken: () => Promise<void>,
 ) => {
   clientInstance.interceptors.request.use(async (config) => {
     if (config.headers.Authorization) return config;
@@ -21,31 +21,34 @@ export const addInterceptor = (
       return response;
     },
     async (error) => {
-      const originalRequest = error.config;
-      const { detail } = error.response.data;
+      // const prevRequest = error?.config;
+      // const { detail } = error.response.data;
 
-      originalRequest._retry = false;
-      if (
-        error.response.status === 401 &&
-        !originalRequest._retry &&
-        detail === "Fail!, Access token expired"
-      ) {
-        originalRequest._retry = true;
-        try {
-          await refreshToken();
-          return clientInstance.request(error.config);
-        } catch (error) {
-          return Promise.reject(error);
-        }
-      }
+      // if (error.response.status === 401 && !prevRequest?._retry) {
+      //   try {
+      //     console.log("token refresh");
+      //     prevRequest._retry = true;
+      //     await refreshToken();
+      //     const accessToken = await getAccessToken();
+      //     console.log("accesTokken inter: ", accessToken);
+
+      //     if (accessToken) {
+      //       prevRequest.headers.Authorization = `Bearer ${accessToken}`;
+      //       return clientInstance.request(prevRequest);
+      //     }
+      //   } catch (error) {
+      //     console.log("error: ", error);
+
+      //     signOut();
+
+      //     return Promise.reject(error);
+      //   }
+      // }
       return Promise.reject(error);
     },
   );
 };
 
-export const initHttpClient = (
-  getAccessToken: GetAccessToken,
-  refreshToken: () => Promise<void>,
-) => {
-  addInterceptor(axiosClient, getAccessToken, refreshToken);
+export const initHttpClient = (getAccessToken: GetAccessToken) => {
+  addInterceptor(axiosClient, getAccessToken);
 };

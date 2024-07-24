@@ -1,8 +1,30 @@
-import { cookies } from "next/headers";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-const cookie = require("cookie");
+import jwtDecode from "jwt-decode";
+
 import { axiosClient } from "@/config/axios/client";
+import axios from "axios";
+export interface BaseTokenClaims {
+  ver: string;
+  iss: string;
+  sub: string;
+  aud: string;
+  exp: number;
+  nonce: string;
+  iat: number;
+  tfp: string;
+  nbf: number;
+}
+const checkTokenExpired = (token: string) => {
+  if (!token) throw new Error("No token provided to be decoded");
+
+  const { exp } = jwtDecode<BaseTokenClaims>(token);
+  const nowTimeStamp = new Date().getTime(); // current time in milliseconds
+  const bufferTimeStamp = nowTimeStamp + 1 * 60 * 1000; // 1 minute from now
+
+  if (bufferTimeStamp > exp * 1000) return true;
+  return false;
+};
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
@@ -20,80 +42,6 @@ const handler = NextAuth({
             email: credentials?.email as string,
             password: credentials?.password as string,
           });
-          const apiCookies = response.headers["set-cookie"];
-          const firstCookie = Array.isArray(apiCookies)
-            ? apiCookies[0]
-            : undefined;
-          const secondCookie = Array.isArray(apiCookies)
-            ? apiCookies[1]
-            : undefined;
-          // console.log("cookies header1: ", firstCookie as string);
-
-          // console.log("cookies header2: ", secondCookie as string);
-
-          if (firstCookie) {
-            // Find the part that starts with 'access_token='
-            const [accessTokenPart, ...attributesParts] =
-              firstCookie.split(";");
-            const [accessTokenKey, accessTokenValue] = accessTokenPart.split(
-              "=",
-              2,
-            );
-
-            // Trim and get the access token and its value
-            const accessToken = accessTokenKey.trim();
-            const valueToken = accessTokenValue ? accessTokenValue.trim() : "";
-
-            // Join the remaining parts back into the valueToken string
-            const attributes = attributesParts.join(";").trim();
-            const fullValueToken = `${valueToken}`;
-
-            // console.log("accessToken:", accessToken);
-            // console.log("valueToken:", fullValueToken);
-            cookies().set({
-              name: accessToken,
-              value: fullValueToken,
-              httpOnly: true, //optional
-              secure: false,
-              sameSite: "lax",
-              path: "/",
-            });
-          } else {
-            console.log("No cookies found.");
-          }
-          console.log();
-
-          if (secondCookie) {
-            // Find the part that starts with 'refresh_token='
-            const [tokenPart, ...attributesParts] = secondCookie.split(";");
-            const [refreshTokenKey, refreshTokenValue] = tokenPart.split(
-              "=",
-              2,
-            );
-
-            // Trim and get the refresh token and its value
-            const refreshToken = refreshTokenKey.trim();
-            const fullRefreshTokenValue = refreshTokenValue
-              ? refreshTokenValue.trim()
-              : "";
-
-            // Join the remaining parts back into the full valueToken string
-            const fullValueToken = `${fullRefreshTokenValue}`;
-
-            // console.log("refreshToken:", refreshToken);
-            // console.log("refreshTokenValue:", fullValueToken);
-
-            cookies().set({
-              name: refreshToken,
-              value: fullValueToken,
-              httpOnly: true, //optional
-              secure: false,
-              sameSite: "lax",
-              path: "/",
-            });
-          } else {
-            console.log("Second cookie not found.");
-          }
 
           return response.data;
         } catch (error) {
@@ -110,21 +58,52 @@ const handler = NextAuth({
       }
       return false;
     },
-    jwt: async ({ token, user }) => {
+    jwt: async ({ token, user, account }) => {
       if (user) {
         token.access_token = user?.authenticate?.access_token;
         token.refresh_token = user?.authenticate?.refresh_token;
         token.isAdmin = user?.is_admin;
       }
+      console.log("token: ", token);
+
+      console.log("account: ", account);
+      const accessToken =
+        typeof token.accessToken === "string" ? token.accessToken : "";
+
+      console.log("token.accessToken:  ", token.accessToken);
+
+      const refreshToken =
+        typeof token.refreshToken === "string" ? token.refreshToken : "";
+
+      console.log("token.refreshToken:  ", token.refreshToken);
+
+      // // Here, check the token validity date
+      // if (checkTokenExpired(accessToken)) {
+      //   // Call the endpoint where you handle the token refresh for a user
+      //   const user = await axios.post(`${process.env.API_URL}/auth/refresh`, {
+      //     access_token: accessToken,
+      //     refresh_token: refreshToken,
+      //   });
+      //   // Check for the result and update the data accordingly
+      //   return { ...token, ...user };
+      // }
       return token;
     },
 
     session: async ({ session, token }) => {
-      session.user.accessToken = token?.access_token as string;
-      session.user.refreshToken = token?.refresh_token as string;
-      session.user.isAdmin = token?.isAdmin;
+      // session.user.accessToken = token?.access_token as string;
+      // session.user.refreshToken = token?.refresh_token as string;
+      // session.user.isAdmin = token?.isAdmin;
 
-      return session;
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          accessToken: token?.access_token as string,
+          refreshToken: token?.refresh_token as string,
+          isAdmin: token?.isAdmin,
+        },
+      };
     },
   },
   pages: {

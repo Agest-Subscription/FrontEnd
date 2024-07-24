@@ -5,7 +5,7 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 
 import { initHttpClient } from "@/config/axios/interceptor";
 import { QueryClientProvider } from "@/HOC/QueryClientProvider";
-import { useRefreshToken } from "@/hooks/useRefreshToken";
+import UseRefreshToken from "@/hooks/useRefreshToken";
 import { ReduxProvider } from "@/redux/provider";
 
 export const getAccessToken = async () => {
@@ -13,20 +13,24 @@ export const getAccessToken = async () => {
   return session?.user.accessToken || null;
 };
 
-export const InitializeHttpClient = () => {
-  const refreshToken = useRefreshToken();
+const InitializeHttpClient: React.FC = () => {
+  // const refreshToken = UseRefreshToken();
 
-  initHttpClient(getAccessToken, refreshToken);
+  useEffect(() => {
+    initHttpClient(getAccessToken);
+  }, []);
+
+  return null;
 };
 const Config: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  useEffect(() => {
-    InitializeHttpClient();
-  }, []);
   return (
     <QueryClientProvider>
       <ReduxProvider>
         <AntdRegistry>
-          <SessionProvider>{children}</SessionProvider>
+          <SessionProvider>
+            <InitializeHttpClient />
+            {children}
+          </SessionProvider>
         </AntdRegistry>
       </ReduxProvider>
     </QueryClientProvider>
