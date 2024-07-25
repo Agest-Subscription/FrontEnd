@@ -21,17 +21,17 @@ export const addInterceptor = (
       return response;
     },
     async (error) => {
-      // const prevRequest = error?.config;
       const { detail } = error.response.data;
 
       if (
-        error.response.status === 401 &&
+        error?.response?.status === 401 &&
         detail === "Fail!, Refresh token expired"
       ) {
         console.log("refresh token expired");
 
         signOut();
       }
+
       return Promise.reject(error);
     },
   );
