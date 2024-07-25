@@ -5,7 +5,7 @@ import { Checkbox } from "antd";
 import { ColumnType } from "antd/es/table";
 
 import LongText from "@/components/table/LongText";
-import TableTag from "@/components/tag/TableTag";
+//import TableTag from "@/components/tag/TableTag";
 import { FEATURES } from "@/constants/routes";
 import { FeatureTableData } from "@/interfaces/model/feature.type";
 
@@ -26,15 +26,15 @@ const useGenerateColumns = () => {
           return <LongText text={value} width={250} />;
         },
       },
-      {
-        title: "Permission",
-        dataIndex: "permissions",
-        key: "permissions",
-        width: 250,
-        render: (_, record) => {
-          return <TableTag permissions={record.permissions}></TableTag>;
-        },
-      },
+      // {
+      //   title: "Permission",
+      //   dataIndex: "permissions",
+      //   key: "permissions",
+      //   width: 250,
+      //   render: (_, record) => {
+      //     return <TableTag permissions={record.permissions}></TableTag>;
+      //   },
+      // },
       {
         title: "Description",
         dataIndex: "description",
