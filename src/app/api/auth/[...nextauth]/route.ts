@@ -13,7 +13,7 @@ const checkTokenExpired = (token: string) => {
 
   const { exp } = jwtDecode<BaseTokenClaims>(token);
   const nowTimeStamp = new Date().getTime(); // current time in milliseconds
-  const bufferTimeStamp = nowTimeStamp + 10 * 60 * 1000; // 10 minute from now
+  const bufferTimeStamp = nowTimeStamp + 5 * 60 * 1000; // 10 minute from now
   if (bufferTimeStamp > exp * 1000) return true;
   return false;
 };
@@ -34,11 +34,23 @@ const handler = NextAuth({
             email: credentials?.email as string,
             password: credentials?.password as string,
           });
+          const user = response.data;
 
-          return response.data;
+          if (response.status === 200 && user) {
+            return user;
+          }
+
+          return null;
         } catch (error) {
-          console.log("error authorize: ", error);
-          //  throw Error(error);
+          if (axios.isAxiosError(error) && error.response) {
+            console.log("error.response.data: ", error.response.data);
+
+            const errorMessage = error.response.data.detail || "Login failed";
+            console.log("error: ", errorMessage);
+
+            throw new Error(errorMessage);
+          }
+          throw new Error("Login failed");
         }
       },
     }),
@@ -87,10 +99,8 @@ const handler = NextAuth({
             ...token,
             access_token: user?.data?.access_token,
           };
-          // return { ...token, ...user };
         } catch (error) {
           console.log("error refresh token: ", error);
-          //  throw Error(error);
         }
       }
 
