@@ -50,7 +50,6 @@ const LoginContainer = () => {
         redirect: false,
       });
       setLoading(false);
-      console.log("res login: ", res);
 
       if (!res?.error) {
         setError("");
