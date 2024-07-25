@@ -13,7 +13,7 @@ const checkTokenExpired = (token: string) => {
 
   const { exp } = jwtDecode<BaseTokenClaims>(token);
   const nowTimeStamp = new Date().getTime(); // current time in milliseconds
-  const bufferTimeStamp = nowTimeStamp + 5 * 60 * 1000; // 10 minute from now
+  const bufferTimeStamp = nowTimeStamp + 5 * 60 * 1000; // 5 minute from now
   if (bufferTimeStamp > exp * 1000) return true;
   return false;
 };
