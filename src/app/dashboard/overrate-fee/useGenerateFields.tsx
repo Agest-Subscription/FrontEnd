@@ -41,7 +41,7 @@ export const useGenerateFields = (initialSelectedFees?: IsOverrateFee) => {
         type: "text",
         componentProps: {
           isRequired: true,
-          style: { width: "250px", height: "40px" },
+          style: { height: "40px" },
         },
       },
       fee_id: {
@@ -58,7 +58,7 @@ export const useGenerateFields = (initialSelectedFees?: IsOverrateFee) => {
           },
           onChange: () => setSearchTerm(""),
           allowClear: true,
-          style: { width: "250px", height: "40px" },
+          style: { height: "40px" },
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
             const target = event.target as HTMLDivElement;
             if (
@@ -82,7 +82,7 @@ export const useGenerateFields = (initialSelectedFees?: IsOverrateFee) => {
         type: "text",
         componentProps: {
           isRequired: true,
-          style: { width: "250px", height: "40px" },
+          style: { height: "40px" },
         },
       },
       price: {
@@ -90,7 +90,7 @@ export const useGenerateFields = (initialSelectedFees?: IsOverrateFee) => {
         type: "text",
         componentProps: {
           isRequired: true,
-          style: { width: "250px", height: "40px" },
+          style: { height: "40px" },
         },
       },
       description: {

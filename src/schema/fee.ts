@@ -19,9 +19,8 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
     .integer("Please enter an integer")
     .min(0)
     .required("Fee price is a required fields")
-    .max(9999999999, "Price cannot exceed 9999999999")
-    .default(0),
-  is_active: boolean().required("Validity status is required").default(false),
+    .max(9999999999, "Price cannot exceed 9999999999"),
+  is_active: boolean().default(false),
   is_overrate: boolean()
     .nullable()
     .default(null)

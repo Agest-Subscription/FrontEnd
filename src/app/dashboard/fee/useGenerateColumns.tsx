@@ -39,6 +39,9 @@ const useGenerateColumns = () => {
         title: "Transaction Unit",
         dataIndex: "transaction_unit",
         key: "transaction_unit",
+        render: (value) => {
+          return <LongText text={value} />;
+        },
       },
       {
         title: "Recurrence Type",
