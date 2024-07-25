@@ -1,25 +1,25 @@
+import { useState } from "react";
+import { CaretUpOutlined, EllipsisOutlined } from "@ant-design/icons";
 import { Button, ConfigProvider, Flex, Tag } from "antd";
-import { EllipsisOutlined, CaretUpOutlined  } from '@ant-design/icons';
 
 import LongText from "../table/LongText";
 
 import { Permission } from "@/interfaces/model/permission.type";
-import { useEffect, useState } from "react";
 
 type Props = {
   permissions: Permission[];
 };
 
-const tableTag = ({ permissions }: Props) => {
+const TableTag = ({ permissions }: Props) => {
   const [isLoadMore, setIsLoadMore] = useState(false);
 
   const loadMoreData = () => {
-    setIsLoadMore(true)
-  }
+    setIsLoadMore(true);
+  };
 
   const hiddenData = () => {
-    setIsLoadMore(false)
-  }
+    setIsLoadMore(false);
+  };
 
   return (
     <ConfigProvider
@@ -35,39 +35,50 @@ const tableTag = ({ permissions }: Props) => {
         },
       }}
     >
-      <Flex wrap gap="small" style={{width: '360px'}}>
-        
-        {isLoadMore ? permissions.map((permission) => (
-          <Tag key={permission.id} bordered={false}>
-            <LongText text={permission.display_name} centerText width={80} />
-          </Tag>
-        )): permissions.slice(0,3).map((permission) => (
-          <Tag key={permission.id} bordered={false}>
-            <LongText text={permission.display_name} centerText width={80} />
-          </Tag>
-        ))}
-        {permissions.length > 3 ? (!isLoadMore ? 
-        <Button
-          size="small"
-          type="primary"
-          ghost={true}
-          style={{borderColor: "transparent"}}
-          icon={<EllipsisOutlined />}
-          onClick={loadMoreData}
-        /> 
-        : 
-        <Button
-        size="small"
-        type="primary"
-        ghost={true}
-        style={{borderColor: "transparent"}}
-        icon={<CaretUpOutlined />}
-        onClick={hiddenData}
-        />) : null
-        }
+      <Flex wrap gap="small" style={{ width: "360px" }}>
+        {isLoadMore
+          ? permissions.map((permission) => (
+              <Tag key={permission.id} bordered={false}>
+                <LongText
+                  text={permission.display_name}
+                  centerText
+                  width={80}
+                />
+              </Tag>
+            ))
+          : permissions.slice(0, 3).map((permission) => (
+              <Tag key={permission.id} bordered={false}>
+                <LongText
+                  text={permission.display_name}
+                  centerText
+                  width={80}
+                />
+              </Tag>
+            ))}
+        {permissions.length > 3 ? (
+          !isLoadMore ? (
+            <Button
+              size="small"
+              type="primary"
+              ghost={true}
+              style={{ borderColor: "transparent" }}
+              icon={<EllipsisOutlined />}
+              onClick={loadMoreData}
+            />
+          ) : (
+            <Button
+              size="small"
+              type="primary"
+              ghost={true}
+              style={{ borderColor: "transparent" }}
+              icon={<CaretUpOutlined />}
+              onClick={hiddenData}
+            />
+          )
+        ) : null}
       </Flex>
     </ConfigProvider>
   );
 };
 
-export default tableTag;
+export default TableTag;
