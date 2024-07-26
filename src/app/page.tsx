@@ -14,7 +14,7 @@ export default function Home() {
     return router.push(PERMISSIONS);
   }
   if (status === "authenticated" && !session?.user?.isAdmin) {
-    return router.push("/payment");
+    return router.push("/landing-page");
   }
   return (
     <>
