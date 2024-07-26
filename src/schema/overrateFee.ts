@@ -14,7 +14,6 @@ const overrateFeeFormValuesSchema: ObjectSchema<OverrateFeeFormValues> = object(
       .min(0)
       .max(9999999999, "Threshold cannot exceed 9999999999"),
     price: number()
-      .integer("Please enter an integer")
       .required("Price is required")
       .min(0)
       .max(9999999999, "Price cannot exceed 9999999999"),
