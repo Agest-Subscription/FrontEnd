@@ -128,8 +128,6 @@ const Page: React.FC<Props> = () => {
     }
   };
 
-  
-
   return (
     <Flex vertical gap={24}>
       <Typography style={{ fontSize: 24, fontWeight: 600, color: "#2F80ED" }}>
@@ -153,7 +151,6 @@ const Page: React.FC<Props> = () => {
                   onClose: () => setOpenModal(false),
                 })
               }
-             
               onSave={handleSave}
             />
             <PopUp popupProps={modalProp} isOpen={openModal} />

@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Flex, Form, Spin, Typography } from "antd";
 
-import AddFeature from "../AddFeature";
 import PricingPlanDetails from "../PricingPlanDetails";
 import { useGenerateFields } from "../useGenerateFields";
 
@@ -16,13 +15,11 @@ import { popUpPropType } from "@/interfaces/popup";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
-import { Feature } from "@/interfaces/model/feature.type";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
   const goToPricingPlan = useGoToDashboardTab("pricing-plan");
   const [openModal, setOpenModal] = useState(false);
-  const [selectedRows, setSelectedRows] = useState<Feature[]>([]);
   const { mutate: addPricingPlan, isLoading: isAdding } = useAddPricingPlan();
   const methods = useForm<PricingPlanFormValues>({
     mode: "onBlur",
@@ -34,10 +31,6 @@ const Page: React.FC<Props> = () => {
     onConfirm: methods.handleSubmit(onSubmit),
     onClose: () => setOpenModal(false),
   });
-
-  function handleSaveFeature(selectedRows: Feature[]) {
-    setSelectedRows(selectedRows);
-  }
 
   function showModal(modalProp: popUpPropType) {
     setModalProp(modalProp);
@@ -98,11 +91,7 @@ const Page: React.FC<Props> = () => {
             layout="vertical"
             onFinish={methods.handleSubmit(onSubmit)}
           >
-            <PricingPlanDetails
-              onSave={handleSave}
-              selectedRows={selectedRows}
-              onSaveAddFeature={handleSaveFeature}
-            />
+            <PricingPlanDetails onSave={handleSave} />
             <PopUp popupProps={modalProp} isOpen={openModal} />
           </Form>
         </FormWrapperV2>

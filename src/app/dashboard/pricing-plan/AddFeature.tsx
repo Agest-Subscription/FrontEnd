@@ -1,9 +1,8 @@
 "use client";
-import type { Key } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Key, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import type { TableColumnsType } from "antd";
 import { Flex, Input, Modal, Spin, Table, Typography } from "antd";
+import type { TableColumnsType } from "antd";
 
 import ButtonV1 from "@/components/button/CustomButton";
 import { useGetInfiniteFeatures } from "@/hooks/feature";
@@ -13,19 +12,19 @@ import { capitalize } from "@/utils/string";
 
 type Props = {
   onCancel: () => void;
-  selectedRows?: Feature[];
   onSave: (selectedRows: Feature[]) => void;
   isModalOpen: boolean;
+  selectedRows?: Feature[];
 };
 
 const AddFeature: React.FC<Props> = ({
   onCancel,
-  selectedRows = [],
   onSave,
   isModalOpen,
+  selectedRows = [],
 }) => {
   const tableRef = useRef<HTMLDivElement>(null);
-  const { searchQuery, handleSearch } = useSearchSync();
+  const { searchQuery, handleSearch, setSearchQuery } = useSearchSync();
   const {
     data: featuresPage,
     fetchNextPage,
@@ -36,12 +35,13 @@ const AddFeature: React.FC<Props> = ({
     is_active: true,
     search: searchQuery,
   });
+
   const totalItemsRef = useRef<number | null>(null);
-  const [tempSelectedRowKeys, setTempSelectedRowKeys] = useState<Key[]>(
-    selectedRows.map((row) => row.id),
+  const [savedRowKeys, setSavedRowKeys] = useState<Key[]>(
+    selectedRows.map((row) => row.id)
   );
-  const [tempSelectedRows, setTempSelectedRows] =
-    useState<Feature[]>(selectedRows);
+  const [tempSelectedRows, setTempSelectedRows] = useState<Feature[]>(selectedRows);
+  const [tempSelectedRowKeys, setTempSelectedRowKeys] = useState<Key[]>(savedRowKeys);
 
   const columns: TableColumnsType<Feature> = [
     {
@@ -58,57 +58,70 @@ const AddFeature: React.FC<Props> = ({
     },
   ];
 
-  const dataSource =
-    featuresPage?.pages.flatMap((features) =>
-      features.data.data.map((feature) => ({
-        ...feature,
-        key: feature.id,
-      })),
-    ) ?? [];
+  const dataSource = useMemo(
+    () =>
+      featuresPage?.pages.flatMap((features) =>
+        features.data.data.map((feature) => ({
+          ...feature,
+          key: feature.id,
+        }))
+      ) ?? [],
+    [featuresPage]
+  );
 
   const rowSelection = {
+    preserveSelectedRowKeys: true,
     selectedRowKeys: tempSelectedRowKeys,
     onChange: (selectedKeys: Key[], selectedRows: Feature[]) => {
       setTempSelectedRowKeys(selectedKeys);
       setTempSelectedRows(selectedRows);
     },
+    getCheckboxProps: (record: Feature) => ({
+      disabled: savedRowKeys.includes(record.id),
+    }),
+    hideSelectAll: true,
   };
 
-  const handleScroll = useCallback(() => {
-    if (tableRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = tableRef.current;
-      if (scrollTop + clientHeight >= scrollHeight - 5) {
-        fetchNextPage();
-      }
+  useEffect(() => {
+    if (!isModalOpen) {
+      setTempSelectedRowKeys(selectedRows.map((item) => item.id));
+      setSavedRowKeys(selectedRows.map((item) => item.id));
     }
-  }, [fetchNextPage]);
+  }, [isModalOpen, selectedRows]);
 
   useEffect(() => {
-    if (tableRef.current) {
-      console.log("hahaha")
-      tableRef.current.addEventListener("scroll", handleScroll);
-    }
-    const node = tableRef.current;
-    return () => {
-      if (node) {
-        node.removeEventListener("scroll", handleScroll);
+    const handleScroll = () => {
+      if (tableRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = tableRef.current;
+        if (scrollTop + clientHeight >= scrollHeight - 5) {
+          fetchNextPage();
+        }
       }
     };
-  }, [handleScroll, tableRef]);
+    tableRef.current?.addEventListener("scroll", handleScroll);
+    return () => {
+      tableRef.current?.removeEventListener("scroll", handleScroll);
+    };
+  }, [fetchNextPage, isModalOpen]);
 
   const handleCancel = () => {
-    setTempSelectedRowKeys(selectedRows.map((row) => row.id));
-    setTempSelectedRows(selectedRows);
+    setTempSelectedRowKeys(savedRowKeys);
     onCancel();
   };
 
   const handleSave = () => {
+    setSavedRowKeys((prevKeys) => [...prevKeys, ...tempSelectedRowKeys]);
     onSave(tempSelectedRows);
   };
-  const handlePressEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const value = (e.target as HTMLInputElement).value;
-    handleSearch(value);
+
+  const handleReset = () => {
+    setSearchQuery("");
   };
+
+  const handlePressEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    setSearchQuery((e.target as HTMLInputElement).value);
+  };
+
   useEffect(() => {
     if (
       featuresPage &&
@@ -118,6 +131,7 @@ const AddFeature: React.FC<Props> = ({
       totalItemsRef.current = featuresPage.pages[0].data.total;
     }
   }, [featuresPage]);
+
   return (
     <Modal
       open={isModalOpen}
@@ -137,13 +151,15 @@ const AddFeature: React.FC<Props> = ({
             prefix={<SearchOutlined />}
             onPressEnter={handlePressEnter}
           />
-          <ButtonV1 title="Refresh" customSize="small" />
+          <ButtonV1 title="Refresh" customSize="small" onClick={handleReset} />
         </Flex>
         <Flex>
           <Typography
             style={{ fontSize: 14, fontWeight: 400, color: "#9095A1" }}
           >
-            {`You've selected ${tempSelectedRowKeys.length}/${totalItemsRef.current}`}
+            {`You've selected ${tempSelectedRowKeys.length}/${
+              totalItemsRef.current ?? 0
+            }`}
           </Typography>
         </Flex>
         <div
@@ -152,10 +168,7 @@ const AddFeature: React.FC<Props> = ({
         >
           <Spin spinning={isFetchingNextPage || isInitialLoading}>
             <Table
-              rowSelection={{
-                type: "checkbox",
-                ...rowSelection,
-              }}
+              rowSelection={{ type: "checkbox", ...rowSelection }}
               style={{ width: "100%" }}
               columns={columns}
               dataSource={dataSource}

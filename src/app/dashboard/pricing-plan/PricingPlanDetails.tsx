@@ -7,6 +7,7 @@ import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
 import { PricingPlanFormValues } from "@/interfaces/model/pricingplan.type";
 import AddFeature from "./AddFeature";
 import { Feature } from "@/interfaces/model/feature.type";
+import PricingPlanFeatures from "./PricingPlanFeature";
 
 interface DetailsProp {
   edit?: boolean;
@@ -14,7 +15,6 @@ interface DetailsProp {
   onDelete?: any;
   onSave: () => void;
   selectedRows?: Feature[];
-  onSaveAddFeature: (arr: Feature[]) => void;
 }
 
 const PricingPlanDetails: React.FC<DetailsProp> = ({
@@ -23,14 +23,20 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
   onDelete,
   selectedRows,
   onSave,
-  onSaveAddFeature,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedFeatures, setSelectedFeatures] = useState<Feature[]>([]);
+
   const router = useRouter();
   const { FormField } = useFormWrapperCtx<PricingPlanFormValues>();
   function handleSaveFeature(selectedRows: Feature[]) {
-    onSaveAddFeature(selectedRows);
+    setSelectedFeatures(selectedRows);
     setIsModalOpen(false);
+  }
+  function handleDeleteFeature(id: number | string) {
+    setSelectedFeatures(
+      selectedFeatures.filter((feature) => feature.id !== id),
+    );
   }
   return (
     <>
@@ -80,7 +86,14 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
             onClick={() => setIsModalOpen(true)}
           />
         </Flex>
+        {selectedFeatures.length > 0 && (
+          <PricingPlanFeatures
+            FeatureList={selectedFeatures}
+            deleteFeature={handleDeleteFeature}
+          />
+        )}
       </Flex>
+
       <Flex
         style={{ width: "100%" }}
         justify={`${edit ? "space-between" : "flex-end"}`}
@@ -104,8 +117,8 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
       <AddFeature
         isModalOpen={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
-        selectedRows={selectedRows}
         onSave={handleSaveFeature}
+        selectedRows={selectedFeatures}
       />
     </>
   );

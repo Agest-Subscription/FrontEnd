@@ -41,6 +41,7 @@ export const useGenerateFields = () => {
         type: "text",
         componentProps: {
           isRequired: true,
+          min: 0,
           type: "number",
         },
       },
