@@ -16,7 +16,7 @@ import { popUpPropType } from "@/interfaces/popup";
 import permissionFormValuesSchema from "@/schema/permission";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
-import { capitalize } from "@/utils/string";
+import { capitalize, trimString } from "@/utils/string";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
@@ -40,7 +40,8 @@ const Page: React.FC<Props> = () => {
     setOpenModal(true);
   }
   function onSubmit(data: PermissionFormValues) {
-    addPermission(data, {
+    const trimmed = trimString(data, ["name", "display_name"]);
+    addPermission(trimmed, {
       onSuccess: () => {
         showModal({
           popup_id: "successpopup",

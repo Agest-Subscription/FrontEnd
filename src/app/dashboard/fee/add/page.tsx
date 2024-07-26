@@ -10,11 +10,13 @@ import { useGenerateFields } from "../useGenerateFields";
 import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
 import PopUp from "@/components/popup/Popup";
 import { useAddFee } from "@/hooks/fee";
+import { CustomError } from "@/interfaces/base";
 import { FeeFormValues } from "@/interfaces/model/fee.type";
 import { popUpPropType } from "@/interfaces/popup";
 import feeFormValuesSchema from "@/schema/fee";
+import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
-import { capitalize } from "@/utils/string";
+import { capitalize, trimString } from "@/utils/string";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
@@ -67,7 +69,8 @@ const Page: React.FC<Props> = () => {
 
   function onSubmit(data: FeeFormValues) {
     const newData = formatPayload(data);
-    addFee(newData, {
+    const trimmed = trimString(newData, ["name"]);
+    addFee(trimmed, {
       onSuccess: () => {
         showModal({
           popup_id: "successpopup",
@@ -77,10 +80,10 @@ const Page: React.FC<Props> = () => {
           onClose: () => goToFee(),
         });
       },
-      onError: () => {
+      onError: (error: CustomError) => {
         showModal({
           popup_id: "fail",
-          popup_text: `${capitalize("Fee creation failed!")}`,
+          popup_text: `${capitalize(getErrorDetail(error) ?? "Fee creation failed!")}`,
           popup_type: "Fail",
           onConfirm: () => {},
           onClose: () => setOpenModal(false),

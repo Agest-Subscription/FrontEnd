@@ -1,4 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 import {
   addPermissionApi,
@@ -16,6 +22,27 @@ export const useGetListPermission = (params: PermissionFilterParams) => {
     queryFn: () => getListPermissionApi(params),
     select: ({ data }) => data,
   });
+};
+
+export const useGetInfinitePermission = (params: PermissionFilterParams) => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const query = useInfiniteQuery({
+    queryKey: ["PERMISSIONS", searchTerm, params],
+    queryFn: ({ pageParam = 1 }) =>
+      getListPermissionApi({
+        ...params,
+        page: pageParam,
+        search: searchTerm,
+      }),
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.data.data.length === 0) {
+        return undefined;
+      }
+      return pages.length + 1;
+    },
+  });
+  return { ...query, setSearchTerm };
 };
 
 export const useGetPermissionById = (id: string) => {

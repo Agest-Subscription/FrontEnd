@@ -10,10 +10,11 @@ const useSearchSync = () => {
   );
 
   const handleSearch = (value: string) => {
-    setSearchQuery(value);
+    const trimValue = value.trim();
+    setSearchQuery(trimValue);
     if (value) {
       const params = new URLSearchParams(searchParams);
-      params.set("search", value);
+      params.set("search", trimValue);
       router.replace(`${pathname}?${params.toString()}`);
     } else {
       router.replace(pathname);

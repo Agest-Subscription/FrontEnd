@@ -5,3 +5,15 @@ export type AuthenticationState = {
   accessToken?: string | null;
   refreshToken?: string;
 };
+
+export type AuthModal = {
+  id: number;
+  email: string;
+  is_admin: boolean;
+  authenticate: Authenticate;
+};
+
+export type Authenticate = {
+  access_token: string;
+  refresh_token: string;
+};

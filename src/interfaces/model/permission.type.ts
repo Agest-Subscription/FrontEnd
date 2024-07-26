@@ -14,7 +14,9 @@ export type PermissionTableData = Omit<Permission, "is_active"> & {
 
 export type PermissionResponseItem = Permission;
 
-export type PermissionFilterParams = FilterBase<PermissionResponseItem>;
+export type PermissionFilterParams = FilterBase<PermissionResponseItem> & {
+  is_active?: boolean;
+};
 
 export type PermissionFormValues = Omit<Permission, "id">;
 

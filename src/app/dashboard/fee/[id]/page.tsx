@@ -18,7 +18,7 @@ import { popUpPropType } from "@/interfaces/popup";
 import feeFormValuesSchema from "@/schema/fee";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
-import { capitalize } from "@/utils/string";
+import { capitalize, trimString } from "@/utils/string";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
@@ -73,8 +73,9 @@ const Page: React.FC<Props> = () => {
   }
   function onSubmit(data: FeeFormValues) {
     const newData = formatPayload(data);
+    const trimmed = trimString(newData, ["name"]);
     updateFee(
-      { id, ...newData },
+      { id, ...trimmed },
       {
         onSuccess: () => {
           showModal({
@@ -85,10 +86,10 @@ const Page: React.FC<Props> = () => {
             onClose: () => goToFee(),
           });
         },
-        onError: () => {
+        onError: (err: CustomError) => {
           showModal({
             popup_id: "fail",
-            popup_text: `${capitalize("Fee update failed!")}`,
+            popup_text: `${getErrorDetail(err) ?? "Fee update failed"}`,
             popup_type: "Fail",
             onConfirm: () => {},
             onClose: () => setOpenModal(false),
@@ -137,6 +138,7 @@ const Page: React.FC<Props> = () => {
       methods.setValue("name", Fee.name);
       methods.setValue("fee_type", Fee.fee_type);
       methods.setValue("fee_price", Fee.fee_price);
+      methods.setValue("description", Fee.description);
       methods.setValue("transaction_unit", Fee.transaction_unit);
       methods.setValue("is_overrate", Fee.is_overrate);
       methods.setValue("recurrence_cycle_count", Fee.recurrence_cycle_count);

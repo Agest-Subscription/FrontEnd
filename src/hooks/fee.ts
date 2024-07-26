@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 import {
   addFeeApi,
@@ -37,7 +42,7 @@ export const useAddFee = () => {
     onSuccess: () => {
       queryClient.invalidateQueries([FEES]);
     },
-    onError: (error) => {
+    onError: (error: CustomError) => {
       return error;
     },
   });
@@ -64,6 +69,20 @@ export const useDeleteFee = () => {
     },
     onError: (error: CustomError) => {
       return error;
+    },
+  });
+};
+
+export const useGetInfiniteFee = (params: FeeFilterParams) => {
+  return useInfiniteQuery({
+    queryKey: ["FEES", params],
+    queryFn: ({ pageParam = 1 }) =>
+      getListFeesApi({ ...params, page: pageParam }),
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.data.data.length === 0) {
+        return undefined;
+      }
+      return pages.length + 1;
     },
   });
 };

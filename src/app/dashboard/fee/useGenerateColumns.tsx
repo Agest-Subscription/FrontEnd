@@ -4,6 +4,7 @@ import { EditOutlined } from "@ant-design/icons";
 import { Checkbox } from "antd";
 import { ColumnType } from "antd/es/table";
 
+import LongText from "@/components/table/LongText";
 import { FEES } from "@/constants/routes";
 import { FeeTableData } from "@/interfaces/model/fee.type";
 
@@ -20,6 +21,9 @@ const useGenerateColumns = () => {
         title: "Name",
         dataIndex: "name",
         key: "name",
+        render: (value) => {
+          return <LongText text={value} />;
+        },
       },
       {
         title: "Type",
@@ -35,6 +39,9 @@ const useGenerateColumns = () => {
         title: "Transaction Unit",
         dataIndex: "transaction_unit",
         key: "transaction_unit",
+        render: (value) => {
+          return <LongText text={value} />;
+        },
       },
       {
         title: "Recurrence Type",
@@ -50,6 +57,10 @@ const useGenerateColumns = () => {
         title: "Description",
         dataIndex: "description",
         key: "description",
+
+        render: (value) => {
+          return <LongText text={value} />;
+        },
       },
       {
         title: "Active",
@@ -73,7 +84,6 @@ const useGenerateColumns = () => {
         title: "Action",
         dataIndex: "action",
         key: "action",
-        width: 150,
         align: "center",
         render: (_, record) => {
           return (

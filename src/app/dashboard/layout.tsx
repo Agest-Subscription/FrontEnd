@@ -1,24 +1,39 @@
 "use client";
-import React, { FC, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Flex, Layout, MenuProps, theme, Typography } from "antd";
+import { signOut } from "next-auth/react";
+import { Button, Flex, Layout, MenuProps, Spin, theme, Typography } from "antd";
 
 import MenuCustom from "@/components/Menu/MenuCustom";
 import {
   FEATURES,
-  FEE_OVERATE,
   FEES,
+  LANDING_PAGE,
+  OVERRATE_FEE,
   PERMISSIONS,
   PRICING_PlANS,
   SUBSCRIPTIONS,
   USERS,
 } from "@/constants/routes";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { getUserMe } from "@/redux/Me/slice";
 
 const { Content } = Layout;
 
 const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
+  const { dataMe } = useAppSelector((state) => state.getMeReducer);
+  const dispatch = useAppDispatch();
   const urlParams = usePathname();
+
+  const getMeApi = useCallback(() => {
+    const actionAsync = getUserMe();
+    dispatch(actionAsync);
+  }, [dispatch]);
+
+  useEffect(() => {
+    getMeApi();
+  }, [getMeApi]);
 
   const [current, setCurrent] = useState<string>(`${urlParams}`);
 
@@ -46,10 +61,10 @@ const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
     {
       label: (
         <>
-          <Link href={FEE_OVERATE}>Fee Overate</Link>
+          <Link href={OVERRATE_FEE}>Overrate Fee</Link>
         </>
       ),
-      key: FEE_OVERATE,
+      key: OVERRATE_FEE,
     },
     {
       label: (
@@ -75,6 +90,14 @@ const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
       ),
       key: USERS,
     },
+    {
+      label: (
+        <>
+          <Link href={LANDING_PAGE}>Landing Page</Link>
+        </>
+      ),
+      key: LANDING_PAGE,
+    },
   ];
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e.key);
@@ -88,15 +111,26 @@ const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
   return (
     <Layout style={{ minHeight: "100vh", padding: "24px" }}>
       <Flex vertical gap={24}>
-        <Typography
-          style={{
-            color: "#2F80ED",
-            fontSize: 32,
-            fontWeight: 400,
-          }}
-        >
-          Subscription
-        </Typography>
+        <Flex justify="space-between" align="center">
+          <Typography
+            style={{
+              color: "#2F80ED",
+              fontSize: 32,
+              fontWeight: 400,
+            }}
+          >
+            Subscription, Hi {dataMe?.email || <Spin spinning={true}></Spin>}
+          </Typography>
+
+          <Button
+            type="primary"
+            onClick={() => {
+              signOut();
+            }}
+          >
+            Sign Out
+          </Button>
+        </Flex>
         <Content>
           <MenuCustom
             mode="horizontal"

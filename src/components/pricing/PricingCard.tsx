@@ -1,13 +1,13 @@
 import React from "react";
-import { CheckCircleTwoTone } from "@ant-design/icons";
+import { CheckCircleOutlined } from "@ant-design/icons";
 import { Button, Flex, Typography } from "antd";
 
-import { PricingPlanLandingPageType } from "@/interfaces/PricingPlan";
+import { PricingPlan } from "@/interfaces/model/pricingplan.type";
 import { capitalize } from "@/utils/string";
 
 type Props = {
   isPrimary?: boolean;
-  PricingPlan: PricingPlanLandingPageType;
+  PricingPlan: PricingPlan;
 };
 
 const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
@@ -24,6 +24,8 @@ const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
     colorText: "#424856",
     buttonBackgroundColor: "#2F80ED",
     buttonTextColor: "white",
+    outerHeight: "500px",
+    outerWidth: "330px",
   };
 
   const secondaryStyles = {
@@ -39,6 +41,8 @@ const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
     colorText: "black",
     buttonBackgroundColor: "white",
     buttonTextColor: "#2F80ED",
+    outerHeight: "450px",
+    outerWidth: "300px",
   };
 
   const styles = isPrimary ? primaryStyles : secondaryStyles;
@@ -46,11 +50,12 @@ const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
   return (
     <Flex
       vertical
+      justify="space-between"
       style={{
         backgroundColor: styles.backgroundColor,
-        width: "fit-content",
+        width: styles.outerWidth,
         padding: styles.padding,
-        height: "fit-content",
+        height: styles.outerHeight,
         borderRadius: styles.borderRadius,
         border: styles.border,
         boxShadow: styles.boxShadow,
@@ -59,42 +64,49 @@ const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
         maxWidth: "350px",
       }}
     >
-      <Typography
-        style={{
-          fontSize: styles.fontSize,
-          fontWeight: 700,
-          color: styles.colorTitle,
-        }}
-      >
-        {PricingPlan.pricing_name}
-      </Typography>
-      <Typography style={{ fontSize: 16, fontWeight: 400 }}>
-        {PricingPlan.pricing_desc}
-      </Typography>
-      <Typography style={{ fontSize: 40, fontWeight: 700 }}>
-        ${PricingPlan.fee}
-        <sup style={{ fontSize: 14, fontWeight: 400 }}>/month</sup>
-      </Typography>
-      {PricingPlan.features.map((feature) => (
-        <Flex gap={8} key={feature.feature_id}>
-          <CheckCircleTwoTone twoToneColor="#52c41a" />
-          <Typography style={{ fontSize: 16, fontWeight: 400 }}>
-            {capitalize(feature.name)}
-          </Typography>
+      <Flex vertical>
+        <Typography
+          style={{
+            fontSize: styles.fontSize,
+            fontWeight: 700,
+            color: styles.colorTitle,
+          }}
+        >
+          {PricingPlan.name}
+        </Typography>
+        <Typography style={{ fontSize: 16, fontWeight: 400 }}>
+          {PricingPlan.description}
+        </Typography>
+        <Typography style={{ fontSize: 40, fontWeight: 700 }}>
+          ${PricingPlan.price}
+          <sup style={{ fontSize: 14, fontWeight: 400 }}>/month</sup>
+        </Typography>
+
+        <Flex vertical>
+          {PricingPlan.features.map((feature) => (
+            <Flex gap={8} key={feature.id}>
+              <CheckCircleOutlined style={{ color: "green" }} />
+              <Typography style={{ fontSize: 16, fontWeight: 400 }}>
+                {capitalize(feature.name)}
+              </Typography>
+            </Flex>
+          ))}
         </Flex>
-      ))}
-      <Button
-        style={{
-          backgroundColor: styles.buttonBackgroundColor,
-          color: styles.buttonTextColor,
-          marginTop: "5rem",
-          border: "1px solid #2F80ED",
-          padding: "24px 20px",
-          borderRadius: 4,
-        }}
-      >
-        Get Started
-      </Button>
+      </Flex>
+ 
+        <Button
+          style={{
+            backgroundColor: styles.buttonBackgroundColor,
+            color: styles.buttonTextColor,
+            marginTop: "5rem",
+            border: "1px solid #2F80ED",
+            padding: "24px 20px",
+            borderRadius: 4,
+          }}
+        >
+          Get Started
+        </Button>
+
     </Flex>
   );
 };
