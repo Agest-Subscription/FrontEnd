@@ -1,10 +1,10 @@
 import React from "react";
-import { useRouter } from "next/navigation";
 import { Col, Flex, Row } from "antd";
 
 import ButtonV1 from "@/components/button/CustomButton";
 import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
 import { PermissionFormValues } from "@/interfaces/model/permission.type";
+import { useGoToDashboardTab } from "@/utils/navigate";
 
 interface DetailsProp {
   edit?: boolean;
@@ -19,7 +19,7 @@ const PermissionDetails: React.FC<DetailsProp> = ({
   onDelete,
   onSave,
 }) => {
-  const router = useRouter();
+  const goToPermission = useGoToDashboardTab("permissions");
   const { FormField } = useFormWrapperCtx<PermissionFormValues>();
   return (
     <>
@@ -52,7 +52,7 @@ const PermissionDetails: React.FC<DetailsProp> = ({
           <ButtonV1
             title="Cancel"
             customType="cancel"
-            onClick={() => router.back()}
+            onClick={() => goToPermission}
           />
           <ButtonV1
             title="Save"
