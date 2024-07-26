@@ -29,7 +29,7 @@ export default getMeSlide.reducer;
 export const getUserMe = () => {
   return async (dispatch: AppDispatch) => {
     try {
-      const result = await axiosClient.get("/user/me");
+      const result = await axiosClient.get("/users/me");
       const content: UserMe = result.data;
 
       // Dispatch action with the fetched user data

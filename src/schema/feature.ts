@@ -15,7 +15,7 @@ const featureFormValuesSchema: ObjectSchema<FeatureFormValues> = object({
     .default(null)
     .required("Permission is required")
     .min(1, "Must have at least 1 permisson"),
-  is_active: boolean().required("Validity status is required").default(false),
+  is_active: boolean().default(false),
 });
 
 export default featureFormValuesSchema;

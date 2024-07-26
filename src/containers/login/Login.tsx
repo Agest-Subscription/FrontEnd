@@ -57,8 +57,7 @@ const LoginContainer = () => {
           return <Loader fullScreen spinning={true} />;
         }
       } else {
-        setError("Invalid password or email");
-        console.log(error);
+        setError(res?.error);
       }
     } catch (error: any) {
       setLoading(false);

@@ -5,7 +5,7 @@ import { Checkbox } from "antd";
 import { ColumnType } from "antd/es/table";
 
 import LongText from "@/components/table/LongText";
-import TableTag from "@/components/tag/tableTag";
+import TableTag from "@/components/tag/TableTag";
 import { FEATURES } from "@/constants/routes";
 import { FeatureTableData } from "@/interfaces/model/feature.type";
 
