@@ -27,7 +27,7 @@ const LoadingOverlay: FC<LoadingOverlayProps> = () => {
         width={200}
         height={200}
         loading="lazy"
-        alt="Federated Service Solutions Logo"
+        alt="Subscription Logo"
         preview={false}
       />
       <Typography
