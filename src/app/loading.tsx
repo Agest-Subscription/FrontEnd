@@ -1,9 +1,9 @@
-import Loader from "@/components/Loader/Loader";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
 const Loading = () => {
   return (
     <>
-      <Loader fullScreen spinning />
+      <LoadingOverlay />
     </>
   );
 };
