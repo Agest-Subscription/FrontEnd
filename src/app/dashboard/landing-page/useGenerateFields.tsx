@@ -2,37 +2,29 @@ import { useMemo } from "react";
 
 import { FieldsData } from "@/interfaces/form";
 import { LandingPageFormValues } from "@/interfaces/model/landingPage.type";
+import { capitalize } from "@/utils/string";
 
-export const useGenerateFields = () => {
-  const fields = useMemo<FieldsData<LandingPageFormValues>>(() => {
-    return {
-      name: {
-        label: "Name",
-        type: "text",
-        componentProps: {
-          isRequired: true,
+export const useGeneratePurchaseFields =
+  (): FieldsData<LandingPageFormValues> => {
+    return useMemo<FieldsData<LandingPageFormValues>>(
+      () => ({
+        "landing_page_items.[].period": {
+          label: capitalize(""),
+          type: "text",
         },
-      },
-      display_name: {
-        label: "Display Name",
-        type: "text",
-        componentProps: {
-          isRequired: true,
+        "landing_page_items.[].basic_plan_id": {
+          label: capitalize(""),
+          type: "text",
         },
-      },
-      description: {
-        label: "Description",
-        type: "textarea",
-        componentProps: {
-          style: { width: "100%" },
-          rows: 3,
+        "landing_page_items.[].pro_plan_id": {
+          label: capitalize(""),
+          type: "text",
         },
-      },
-      is_active: {
-        label: "Is Active",
-        type: "singleCheckbox",
-      },
-    };
-  }, []);
-  return fields;
-};
+        "landing_page_items.[].premium_plan_id": {
+          label: capitalize(""),
+          type: "text",
+        },
+      }),
+      [],
+    );
+  };

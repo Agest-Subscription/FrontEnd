@@ -27,22 +27,24 @@ const useGenerateColumns = () => {
         },
       },
       {
-        title: "Display Name",
-        dataIndex: "display_name",
-        key: "display_name",
-        width: 350,
-        render: (value) => {
-          return <LongText text={value} width={350} />;
-        },
+        title: "Start Date",
+        dataIndex: "start_date",
+        key: "start_date",
       },
       {
-        title: "Description",
-        dataIndex: "description",
-        key: "description",
-        width: 350,
-        render: (value) => {
-          return <LongText text={value} width={350} />;
-        },
+        title: "End Date",
+        dataIndex: "end_date",
+        key: "end_date",
+      },
+      {
+        title: "Fee",
+        dataIndex: "fee_price",
+        key: "fee_price",
+      },
+      {
+        title: "Period",
+        dataIndex: "period",
+        key: "period",
       },
       {
         title: "Action",
