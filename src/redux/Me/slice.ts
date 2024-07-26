@@ -1,3 +1,4 @@
+import { signOut } from "next-auth/react";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { AppDispatch } from "../store";
@@ -28,13 +29,14 @@ export default getMeSlide.reducer;
 export const getUserMe = () => {
   return async (dispatch: AppDispatch) => {
     try {
-      const result = await axiosClient.get("/user/me");
+      const result = await axiosClient.get("/users/me");
       const content: UserMe = result.data;
 
       // Dispatch action with the fetched user data
       dispatch(setUserMe(content));
     } catch (err) {
-      console.log("error api getMe redux", err);
+      console.error("error api getMe redux", err);
+      signOut();
     }
   };
 };

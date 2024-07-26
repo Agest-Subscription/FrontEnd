@@ -15,6 +15,7 @@ export const useGenerateFields = (initialSelectedFees?: IsOverrateFee) => {
     fetchNextPage,
     isFetchingNextPage,
     isInitialLoading,
+    setSearchTerm,
   } = useGetInfiniteIsOverrateFee({
     page_size: 10,
   });
@@ -40,7 +41,7 @@ export const useGenerateFields = (initialSelectedFees?: IsOverrateFee) => {
         type: "text",
         componentProps: {
           isRequired: true,
-          style: { width: "250px", height: "40px" },
+          style: { height: "40px" },
         },
       },
       fee_id: {
@@ -49,7 +50,15 @@ export const useGenerateFields = (initialSelectedFees?: IsOverrateFee) => {
         options: mergedFees,
         componentProps: {
           isRequired: true,
-          style: { width: "250px", height: "40px" },
+          showSearch: true,
+          filterOption: true,
+          optionFilterProp: "label",
+          onSearch: (searchTerm) => {
+            setSearchTerm(searchTerm);
+          },
+          onChange: () => setSearchTerm(""),
+          allowClear: true,
+          style: { height: "40px" },
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
             const target = event.target as HTMLDivElement;
             if (
@@ -73,7 +82,7 @@ export const useGenerateFields = (initialSelectedFees?: IsOverrateFee) => {
         type: "text",
         componentProps: {
           isRequired: true,
-          style: { width: "250px", height: "40px" },
+          style: { height: "40px" },
         },
       },
       price: {
@@ -81,7 +90,7 @@ export const useGenerateFields = (initialSelectedFees?: IsOverrateFee) => {
         type: "text",
         componentProps: {
           isRequired: true,
-          style: { width: "250px", height: "40px" },
+          style: { height: "40px" },
         },
       },
       description: {
@@ -99,6 +108,7 @@ export const useGenerateFields = (initialSelectedFees?: IsOverrateFee) => {
     initialSelectedFees,
     isFetchingNextPage,
     isInitialLoading,
+    setSearchTerm,
   ]);
   return fields;
 };

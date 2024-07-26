@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import Link from "next/link";
 import { EditOutlined } from "@ant-design/icons";
+import { Checkbox } from "antd";
 import { ColumnType } from "antd/es/table";
 
 import LongText from "@/components/table/LongText";
@@ -42,6 +43,16 @@ const useGenerateColumns = () => {
         width: 350,
         render: (value) => {
           return <LongText text={value} width={350} />;
+        },
+      },
+      {
+        title: "Active",
+        dataIndex: "is_active",
+        key: "is_active",
+        align: "center",
+        width: 150,
+        render: (is_active: boolean) => {
+          return <Checkbox checked={is_active}></Checkbox>;
         },
       },
       {

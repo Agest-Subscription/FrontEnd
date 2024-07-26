@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import useGenerateColumns from "./useGenerateColumns";
 
 import TableV1 from "@/components/table/TableV1";
-import { OVERRATE_FEE } from "@/constants/routes";
-import { useGetListOverrateFee } from "@/hooks/overrateFee";
+import { LANDING_PAGE } from "@/constants/routes";
+import { useGetListLandingPage } from "@/hooks/landingPage";
 import useSearchSync from "@/hooks/useSearchSync";
 import {
   DataSourceItem,
@@ -13,17 +13,17 @@ import {
   TableParams,
 } from "@/interfaces/base";
 import {
-  OverrateFeeFilterParams,
-  OverrateFeeTableData,
-} from "@/interfaces/model/overrateFee.type";
+  LandingPageFilterParams,
+  LandingPageTableData,
+} from "@/interfaces/model/landingPage.type";
 
 type Props = {};
 
-const OverrateFeeList: React.FC<Props> = () => {
+const LandingPageList: React.FC<Props> = () => {
   const router = useRouter();
   const { searchQuery, handleSearch } = useSearchSync();
   const [tableParams, setTableParams] = useState<
-    TableParams<OverrateFeeTableData>
+    TableParams<LandingPageTableData>
   >({
     pagination: {
       current: 1,
@@ -32,7 +32,7 @@ const OverrateFeeList: React.FC<Props> = () => {
     },
   });
 
-  const params = useMemo<OverrateFeeFilterParams>(
+  const params = useMemo<LandingPageFilterParams>(
     () => ({
       page: tableParams.pagination.current,
       page_size: tableParams.pagination?.pageSize,
@@ -41,15 +41,15 @@ const OverrateFeeList: React.FC<Props> = () => {
     [searchQuery, tableParams.pagination],
   );
 
-  const { data: OverrateFeeTableData, isFetching } =
-    useGetListOverrateFee(params);
+  const { data: LandingPageTableData, isFetching } =
+    useGetListLandingPage(params);
   const columns = useGenerateColumns();
 
   const handleTableChange = ({
     pagination,
     filters,
     sorter,
-  }: TableChangeParams<OverrateFeeTableData>) => {
+  }: TableChangeParams<LandingPageTableData>) => {
     if (Array.isArray(sorter)) return;
     setTableParams({
       pagination,
@@ -59,7 +59,7 @@ const OverrateFeeList: React.FC<Props> = () => {
   };
 
   useEffect(() => {
-    if (!OverrateFeeTableData) return;
+    if (!LandingPageTableData) return;
     setTableParams((prev) => {
       const current = prev.pagination.current || 1;
       const pageSize = prev.pagination.pageSize || 5;
@@ -67,33 +67,33 @@ const OverrateFeeList: React.FC<Props> = () => {
         ...prev,
         pagination: {
           ...prev.pagination,
-          total: OverrateFeeTableData?.total,
+          total: LandingPageTableData?.total,
           current:
             current > 1 &&
-            OverrateFeeTableData?.total === pageSize * (current - 1)
+            LandingPageTableData?.total === pageSize * (current - 1)
               ? current - 1
               : current,
         },
       };
     });
-  }, [OverrateFeeTableData]);
+  }, [LandingPageTableData]);
 
-  const dataSource = useMemo<DataSourceItem<OverrateFeeTableData>[]>(() => {
+  const dataSource = useMemo<DataSourceItem<LandingPageTableData>[]>(() => {
     return (
-      OverrateFeeTableData?.data.map((overrateFee, index) => ({
-        ...overrateFee,
-        key: overrateFee.id,
+      LandingPageTableData?.data.map((landingPage, index) => ({
+        ...landingPage,
+        key: landingPage.id,
         no: index + 1 + ((params.page ?? 1) - 1) * (params?.page_size ?? 5),
       })) ?? []
     );
-  }, [OverrateFeeTableData?.data, params.page, params?.page_size]);
+  }, [LandingPageTableData?.data, params.page, params?.page_size]);
 
   return (
     <div>
       <TableV1
         scroll={{ x: "max-content" }}
         loading={isFetching}
-        tableTitle="Overrate Fee"
+        tableTitle="landingpage"
         showSearchBar={true}
         columns={columns}
         dataSource={dataSource}
@@ -101,12 +101,13 @@ const OverrateFeeList: React.FC<Props> = () => {
           handleTableChange({ pagination, filters })
         }
         pagination={tableParams.pagination}
-        addItem={() => router.push(`${OVERRATE_FEE}/add`)}
+        addItem={() => router.push(`${LANDING_PAGE}/add`)}
         onSearch={handleSearch}
         searchValue={searchQuery}
+        addButtonLabel="Config"
       />
     </div>
   );
 };
 
-export default OverrateFeeList;
+export default LandingPageList;

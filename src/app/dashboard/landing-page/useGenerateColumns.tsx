@@ -1,67 +1,58 @@
 import React, { useMemo } from "react";
 import Link from "next/link";
 import { EditOutlined } from "@ant-design/icons";
-import { Checkbox } from "antd";
 import { ColumnType } from "antd/es/table";
 
 import LongText from "@/components/table/LongText";
-import TableTag from "@/components/tag/TableTag";
-import { FEATURES } from "@/constants/routes";
-import { FeatureTableData } from "@/interfaces/model/feature.type";
+import { LANDING_PAGE } from "@/constants/routes";
+import { LandingPageTableData } from "@/interfaces/model/landingPage.type";
 
 const useGenerateColumns = () => {
-  return useMemo<ColumnType<FeatureTableData>[]>(
+  return useMemo<ColumnType<LandingPageTableData>[]>(
     () => [
       {
         title: "No",
         dataIndex: "no",
         key: "no",
+        align: "center",
+        width: 100,
       },
       {
         title: "Name",
         dataIndex: "name",
         key: "name",
-        width: 250,
+        width: 350,
         render: (value) => {
-          return <LongText text={value} width={250} />;
+          return <LongText text={value} width={350} />;
         },
       },
       {
-        title: "Permission",
-        dataIndex: "permissions",
-        key: "permissions",
-        width: 250,
-        render: (_, record) => {
-          return <TableTag permissions={record.permissions}></TableTag>;
+        title: "Display Name",
+        dataIndex: "display_name",
+        key: "display_name",
+        width: 350,
+        render: (value) => {
+          return <LongText text={value} width={350} />;
         },
       },
       {
         title: "Description",
         dataIndex: "description",
         key: "description",
-        width: 450,
+        width: 350,
         render: (value) => {
-          return <LongText text={value} width={450} />;
-        },
-      },
-      {
-        title: "Active",
-        dataIndex: "is_active",
-        key: "is_active",
-        align: "center" as const,
-        render: (_, record) => {
-          return <Checkbox checked={record.is_active}></Checkbox>;
+          return <LongText text={value} width={350} />;
         },
       },
       {
         title: "Action",
         dataIndex: "action",
         key: "action",
+        align: "center",
         width: 150,
-        align: "center" as const,
         render: (_, record) => {
           return (
-            <Link href={`${FEATURES}/${record.id}`}>
+            <Link href={`${LANDING_PAGE}/${record.id}`}>
               <EditOutlined size={100} />
             </Link>
           );

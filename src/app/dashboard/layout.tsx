@@ -6,10 +6,10 @@ import { signOut } from "next-auth/react";
 import { Button, Flex, Layout, MenuProps, Spin, theme, Typography } from "antd";
 
 import MenuCustom from "@/components/Menu/MenuCustom";
-import { axiosClient } from "@/config/axios/client";
 import {
   FEATURES,
   FEES,
+  LANDING_PAGE,
   OVERRATE_FEE,
   PERMISSIONS,
   PRICING_PlANS,
@@ -90,6 +90,14 @@ const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
       ),
       key: USERS,
     },
+    {
+      label: (
+        <>
+          <Link href={LANDING_PAGE}>Landing Page</Link>
+        </>
+      ),
+      key: LANDING_PAGE,
+    },
   ];
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e.key);
@@ -117,7 +125,6 @@ const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
           <Button
             type="primary"
             onClick={() => {
-              axiosClient.delete("/auth/logout");
               signOut();
             }}
           >
