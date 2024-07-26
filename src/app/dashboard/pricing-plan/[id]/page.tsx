@@ -77,7 +77,7 @@ const Page: React.FC<Props> = () => {
         onSuccess: () =>
           showModal({
             popup_id: "successpopup",
-            popup_text: capitalize("Pricing plan updated successfully!"),
+            popup_text: capitalize("Pricing plan is updated successfully!"),
             popup_type: "Success",
             onConfirm: () => {},
             onClose: () => goToPricingPlan(),
@@ -120,7 +120,7 @@ const Page: React.FC<Props> = () => {
     if (isValid) {
       showModal({
         popup_id: "update",
-        popup_text: `${capitalize("Are you sure you want to update this pricing plan?")}`,
+        popup_text: `${capitalize("Are you sure to update this pricing plan?")}`,
         popup_type: "Confirm",
         onConfirm: methods.handleSubmit(handleSubmit),
         onClose: () => setOpenModal(false),
@@ -145,7 +145,7 @@ const Page: React.FC<Props> = () => {
               onDelete={() =>
                 showModal({
                   popup_id: "delete",
-                  popup_text: `${capitalize("Are you sure you want to delete this pricing plan?")}`,
+                  popup_text: `${capitalize("Are you sure to delete this pricing plan?")}`,
                   popup_type: "Confirm",
                   onConfirm: handleDelete,
                   onClose: () => setOpenModal(false),
