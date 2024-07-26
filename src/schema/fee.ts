@@ -17,7 +17,7 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
   fee_type: string<FeeType>().required("Fee type is required"),
   fee_price: number()
     .integer("Please enter an integer")
-    .min(0)
+    .min(0, "Price cannot be smaller than 0")
     .required("Fee price is a required fields")
     .max(9999999999, "Price cannot exceed 9999999999"),
   is_active: boolean().default(false),
@@ -36,7 +36,7 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
       then: (schema) => schema.required("Recurrence type is required"),
     }),
   recurrence_cycle_count: number()
-    .integer("Please enter an integer")
+    .integer("Please enter a number")
     .nullable()
     .default(null)
     .when("fee_type", {

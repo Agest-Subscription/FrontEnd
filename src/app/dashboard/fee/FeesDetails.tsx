@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { UseFormReturn } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { Col, Flex, Row } from "antd";
 
 import ButtonV1 from "@/components/button/CustomButton";
 import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
 import { FeeFormValues } from "@/interfaces/model/fee.type";
+import { useGoToDashboardTab } from "@/utils/navigate";
 
 interface DetailsProp {
   edit?: boolean;
@@ -22,7 +22,7 @@ const PermissionDetails: React.FC<DetailsProp> = ({
   onSave,
   methods,
 }) => {
-  const router = useRouter();
+  const goToFee = useGoToDashboardTab("fee");
   const { FormField } = useFormWrapperCtx<FeeFormValues>();
   const fee_type = methods.watch("fee_type");
   useEffect(() => {
@@ -83,7 +83,7 @@ const PermissionDetails: React.FC<DetailsProp> = ({
           <ButtonV1
             title="Cancel"
             customType="cancel"
-            onClick={() => router.back()}
+            onClick={() => goToFee()}
           />
           <ButtonV1
             title="Save"

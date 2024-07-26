@@ -42,10 +42,11 @@ export const useGenerateFields = () => {
         componentProps: {
           isRequired: true,
           type: "number",
+          min: 0,
         },
       },
       recurrence_type: {
-        label: "Reccurence Type",
+        label: "Recurrence type",
         type: "select",
         options: enumToSelectOptions(RecurrenceTypeEnum),
         componentProps: {
@@ -54,11 +55,12 @@ export const useGenerateFields = () => {
         },
       },
       recurrence_cycle_count: {
-        label: "Reccurence cycle count",
+        label: "Recurrence cycle count",
         type: "text",
         componentProps: {
           isRequired: true,
           type: "number",
+          min: 1,
         },
       },
       transaction_unit: {

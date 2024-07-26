@@ -172,7 +172,7 @@ const Page: React.FC<Props> = () => {
               onDelete={() =>
                 showModal({
                   popup_id: "delete",
-                  popup_text: `${capitalize("Are you sure you want to delete this fee?")}`,
+                  popup_text: `${capitalize("Are you sure to delete this fee?")}`,
                   popup_type: "Confirm",
                   onConfirm: handleDelete,
                   onClose: () => setOpenModal(false),

@@ -1,10 +1,10 @@
 import React from "react";
-import { useRouter } from "next/navigation";
 import { Flex } from "antd";
 
 import ButtonV1 from "@/components/button/CustomButton";
 import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
 import { FeatureFormValues } from "@/interfaces/model/feature.type";
+import { useGoToDashboardTab } from "@/utils/navigate";
 
 interface DetailsProp {
   edit?: boolean;
@@ -19,7 +19,7 @@ const FeatureDetails: React.FC<DetailsProp> = ({
   onDelete,
   onSave,
 }) => {
-  const router = useRouter();
+  const goToFeature = useGoToDashboardTab("features");
   const { FormField } = useFormWrapperCtx<FeatureFormValues>();
   return (
     <>
@@ -48,7 +48,7 @@ const FeatureDetails: React.FC<DetailsProp> = ({
           <ButtonV1
             title="Cancel"
             customType="cancel"
-            onClick={() => router.back()}
+            onClick={() => goToFeature()}
           />
           <ButtonV1
             title="Save"
