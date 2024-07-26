@@ -61,7 +61,6 @@ export const useGenerateFields = () => {
           isRequired: true,
           type: "number",
           min: 1,
-          inputMode: "numeric",
         },
       },
       transaction_unit: {
