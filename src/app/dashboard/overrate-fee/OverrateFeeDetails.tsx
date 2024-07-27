@@ -1,10 +1,10 @@
 import React from "react";
-import { useRouter } from "next/navigation";
 import { Col, Flex, Row } from "antd";
 
 import ButtonV1 from "@/components/button/CustomButton";
 import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
 import { OverrateFeeFormValues } from "@/interfaces/model/overrateFee.type";
+import { useGoToDashboardTab } from "@/utils/navigate";
 
 interface DetailsProp {
   edit?: boolean;
@@ -19,7 +19,7 @@ const OverrateFeeDetails: React.FC<DetailsProp> = ({
   onDelete,
   onSave,
 }) => {
-  const router = useRouter();
+  const goToOverrateFee = useGoToDashboardTab("overrate-fee");
   const { FormField } = useFormWrapperCtx<OverrateFeeFormValues>();
   return (
     <>
@@ -57,7 +57,7 @@ const OverrateFeeDetails: React.FC<DetailsProp> = ({
           <ButtonV1
             title="Cancel"
             customType="cancel"
-            onClick={() => router.back()}
+            onClick={() => goToOverrateFee()}
           />
           <ButtonV1
             title="Save"
