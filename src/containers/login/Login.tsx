@@ -10,6 +10,7 @@ import Loader from "@/components/Loader/Loader";
 import LoadingBtn from "@/components/LoadingBtn/Loading";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import { LoginModel } from "@/interfaces/login";
+import { passwordPattern } from "@/utils/RexPattern";
 
 const StyledFormContainer = styled.div`
   position: absolute;
@@ -90,6 +91,7 @@ const LoginContainer = () => {
 
           <Form.Item
             name="email"
+            validateTrigger="onSubmit"
             rules={[
               {
                 required: true,
@@ -110,10 +112,16 @@ const LoginContainer = () => {
 
           <Form.Item
             name="password"
+            validateTrigger="onSubmit"
             rules={[
               {
                 required: true,
                 message: "Password is required",
+              },
+              {
+                pattern: passwordPattern,
+                message:
+                  "Invalid password at least 8 characters long and one special character",
               },
             ]}
           >
