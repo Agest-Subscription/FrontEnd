@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Col, Flex, Row } from "antd";
-
 import ButtonV1 from "@/components/button/CustomButton";
 import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
 import { PricingPlanFormValues } from "@/interfaces/model/pricingplan.type";
 import AddFeature from "./AddFeature";
 import { Feature } from "@/interfaces/model/feature.type";
 import PricingPlanFeatures from "./PricingPlanFeature";
+import { PricingPlanFeaturesType } from "@/interfaces/model/pricingplan.type";
 
 interface DetailsProp {
   edit?: boolean;
   disableSaveBtn?: boolean;
   onDelete?: any;
-  onSave: () => void;
+  onSave: (dataSource: PricingPlanFeaturesType[]) => void;
   selectedRows?: Feature[];
 }
 
@@ -26,18 +26,31 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFeatures, setSelectedFeatures] = useState<Feature[]>([]);
+  const [dataSource, setDataSource] = useState<PricingPlanFeaturesType[]>([]);
 
   const router = useRouter();
   const { FormField } = useFormWrapperCtx<PricingPlanFormValues>();
+
   function handleSaveFeature(selectedRows: Feature[]) {
     setSelectedFeatures(selectedRows);
     setIsModalOpen(false);
   }
+
   function handleDeleteFeature(id: number | string) {
     setSelectedFeatures(
       selectedFeatures.filter((feature) => feature.id !== id),
     );
   }
+
+  const handleSavePricingPlan = () => {
+    console.log(dataSource);
+    onSave(dataSource); // Pass the dataSource to the onSave callback
+  };
+
+  const deleteAllFeatures = () => {
+    setSelectedFeatures([]);
+    setDataSource([]);
+  };
   return (
     <>
       <Flex
@@ -50,7 +63,7 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
             <FormField name="name" />
           </Col>
           <Col span={6}>
-            <FormField name="recurrence_fee_name" />
+            <FormField name="recurrence_fee_id" />
           </Col>
           <Col span={6}>
             <FormField name="start_date" />
@@ -68,7 +81,6 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
           <Col span={6}>
             <Flex vertical gap={8}>
               <FormField name="is_free_trial" />
-
               <FormField name="is_active" />
             </Flex>
           </Col>
@@ -90,6 +102,9 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
           <PricingPlanFeatures
             FeatureList={selectedFeatures}
             deleteFeature={handleDeleteFeature}
+            dataSource={dataSource}
+            setDataSource={setDataSource}
+            deleteAllFeatures={deleteAllFeatures}
           />
         )}
       </Flex>
@@ -109,7 +124,7 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
           />
           <ButtonV1
             title="Save"
-            onClick={onSave}
+            onClick={handleSavePricingPlan}
             customDisabled={disableSaveBtn}
           />
         </Flex>

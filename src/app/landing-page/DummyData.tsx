@@ -32,7 +32,7 @@ export const DummyData: PricingPlan[] = [
     free_trial_period: null,
     free_trial_period_count: null,
     is_active: false,
-    recurrence_fee_name: "Monthly", // Include this if required by the type
+    recurrence_fee_id: "Monthly", // Include this if required by the type
   },
   {
     id: "2",
@@ -83,7 +83,7 @@ export const DummyData: PricingPlan[] = [
     free_trial_period: null,
     free_trial_period_count: null,
     is_active: false,
-    recurrence_fee_name: "Monthly", // Include this if required by the type
+    recurrence_fee_id: "Monthly", // Include this if required by the type
   },
   {
     id: "3",
@@ -134,7 +134,7 @@ export const DummyData: PricingPlan[] = [
     free_trial_period: null,
     free_trial_period_count: null,
     is_active: false,
-    recurrence_fee_name: "Monthly",
+    recurrence_fee_id: "Monthly",
   },
   {
     id: "4",
@@ -167,7 +167,7 @@ export const DummyData: PricingPlan[] = [
     free_trial_period: null,
     free_trial_period_count: null,
     is_active: false,
-    recurrence_fee_name: "Weekly", // Include this if required by the type
+    recurrence_fee_id: "Weekly", // Include this if required by the type
   },
   {
     id: "5",
@@ -218,7 +218,7 @@ export const DummyData: PricingPlan[] = [
     free_trial_period: null,
     free_trial_period_count: null,
     is_active: false,
-    recurrence_fee_name: "Weekly", // Include this if required by the type
+    recurrence_fee_id: "Weekly", // Include this if required by the type
   },
   {
     id: "6",
@@ -269,7 +269,7 @@ export const DummyData: PricingPlan[] = [
     free_trial_period: null,
     free_trial_period_count: null,
     is_active: false,
-    recurrence_fee_name: "Weekly",
+    recurrence_fee_id: "Weekly",
   },
 
   {
@@ -303,7 +303,7 @@ export const DummyData: PricingPlan[] = [
     free_trial_period: null,
     free_trial_period_count: null,
     is_active: false,
-    recurrence_fee_name: "Daily", // Include this if required by the type
+    recurrence_fee_id: "Daily", // Include this if required by the type
   },
   {
     id: "8",
@@ -354,7 +354,7 @@ export const DummyData: PricingPlan[] = [
     free_trial_period: null,
     free_trial_period_count: null,
     is_active: false,
-    recurrence_fee_name: "Daily", // Include this if required by the type
+    recurrence_fee_id: "Daily", // Include this if required by the type
   },
   {
     id: "9",
@@ -405,6 +405,6 @@ export const DummyData: PricingPlan[] = [
     free_trial_period: null,
     free_trial_period_count: null,
     is_active: false,
-    recurrence_fee_name: "Yearly",
+    recurrence_fee_id: "Yearly",
   },
 ];

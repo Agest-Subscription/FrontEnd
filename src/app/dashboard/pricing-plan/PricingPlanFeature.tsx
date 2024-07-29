@@ -1,22 +1,31 @@
-"use client";
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Checkbox, Flex, Input, Select, Table, Typography } from "antd";
 import { ColumnType } from "antd/es/table";
+
 import { useGetInfiniteFee } from "@/hooks/fee";
 import { Feature } from "@/interfaces/model/feature.type";
-import { Fee } from "@/interfaces/model/fee.type";
+import { OverrateFee } from "@/interfaces/model/overrateFee.type";
+import { PricingPlanFeaturesType } from "@/interfaces/model/pricingplan.type";
 import { capitalize } from "@/utils/string";
 
 type Props = {
   FeatureList: Feature[];
   deleteFeature: (id: number | string) => void;
+  dataSource: PricingPlanFeaturesType[];
+  setDataSource: React.Dispatch<
+    React.SetStateAction<PricingPlanFeaturesType[]>
+  >;
+  deleteAllFeatures: () => void;
 };
 
 const PricingPlanFeatures: React.FC<Props> = ({
   FeatureList,
   deleteFeature,
+  dataSource,
+  setDataSource,
+  deleteAllFeatures,
 }) => {
   const {
     data: feesPage,
@@ -39,11 +48,6 @@ const PricingPlanFeatures: React.FC<Props> = ({
     );
   }, [feesPage]);
 
-  const [dataSource, setDataSource] = useState<PricingPlanFeatures[]>([]);
-  const [existingFeatureNames, setExistingFeatureNames] = useState<Set<string>>(
-    new Set(),
-  );
-
   useEffect(() => {
     // Create a Set to track existing feature names
     const newExistingFeatureNames = new Set(
@@ -62,11 +66,12 @@ const PricingPlanFeatures: React.FC<Props> = ({
     if (newExistingFeatureNames.size === 0) {
       setDataSource(
         FeatureList.map((feature, index) => ({
-          id: feature.id,
+          id: Number(feature.id),
+          key: Number(feature.id),
           no: index + 1,
           name: feature.name,
           description: feature.description,
-          fee_type: null,
+          fee: null,
           price: null,
           new_price: null,
           overrate: null,
@@ -78,11 +83,12 @@ const PricingPlanFeatures: React.FC<Props> = ({
         setDataSource((prevDataSource) => [
           ...prevDataSource,
           ...newFeatures.map((feature, index) => ({
-            id: feature.id,
+            key: Number(feature.id),
+            id: Number(feature.id),
             no: prevDataSource.length + index + 1,
             name: feature.name,
             description: feature.description,
-            fee_type: null,
+            fee: null,
             price: null,
             new_price: null,
             overrate: null,
@@ -90,23 +96,14 @@ const PricingPlanFeatures: React.FC<Props> = ({
         ]);
       }
     }
-    setExistingFeatureNames(newExistingFeatureNames);
-  }, [FeatureList, dataSource]);
+  }, [FeatureList, dataSource, setDataSource]);
 
-  const updateFeeType = (
-    value: string | number,
-    record: PricingPlanFeatures,
-  ) => {
+  const onChangeNewPrice = (value: string, record: PricingPlanFeaturesType) => {
     const newDataSource = dataSource.map((item) => {
       if (item.no === record.no) {
-        const selectedFee = mappedFeePages.find(
-          (fee) => fee.value === value,
-        )?.fee;
         return {
           ...item,
-          fee_type: selectedFee || null, // Ensure fee_type is either Fee or null
-          price: selectedFee?.fee_price || null,
-          overrate: selectedFee?.is_overrate || null,
+          new_price: Number(value),
         };
       }
       return item;
@@ -114,15 +111,64 @@ const PricingPlanFeatures: React.FC<Props> = ({
     setDataSource(newDataSource);
   };
 
-  const handleDelete = (record: PricingPlanFeatures) => {
-    deleteFeature(record.id);
-    const newDataSource = dataSource.filter((item) => item.id !== record.id);
+  const onChangeNewPriceOverrateFee = (value: string, record: OverrateFee) => {
+    const newDataSource = dataSource.map((item) => {
+      if (item.fee?.id === record.fee_id) {
+        return {
+          ...item,
+          children: item.children?.map((child) =>
+            child.id === record.id
+              ? { ...child, new_price: Number(value) }
+              : child,
+          ),
+        };
+      }
+      return item;
+    });
     setDataSource(newDataSource);
-    setExistingFeatureNames(new Set(newDataSource.map((item) => item.name)));
   };
 
-  const columns = useMemo<ColumnType<PricingPlanFeatures>[]>(
-    () => [
+  const columns = useMemo<ColumnType<PricingPlanFeaturesType>[]>(() => {
+    const updateFeeType = (
+      value: number | string,
+      record: PricingPlanFeaturesType,
+    ) => {
+      const newDataSource = dataSource.map((item) => {
+        if (item.no === record.no) {
+          const selectedFee = mappedFeePages.find(
+            (fee) => fee.value === value,
+          )?.fee;
+          return {
+            ...item,
+            fee: selectedFee || null, // Ensure fee is either Fee or null
+            price: selectedFee?.fee_price || null,
+            overrate: selectedFee?.is_overrate || null,
+            children: selectedFee?.is_overrate ? dummyOverrateFee : null,
+          };
+        }
+        return item;
+      });
+      setDataSource(newDataSource);
+    };
+
+    const handleDelete = (record: PricingPlanFeaturesType) => {
+      deleteFeature(record.id);
+      const newDataSource = dataSource
+        .filter((item) => item.no !== record.no)
+        .map((item) => {
+          if (item.no > record.no) {
+            return {
+              ...item,
+              no: item.no - 1,
+            };
+          }
+          return item;
+        });
+
+      setDataSource(newDataSource);
+    };
+
+    return [
       {
         title: "No",
         dataIndex: "no",
@@ -137,27 +183,23 @@ const PricingPlanFeatures: React.FC<Props> = ({
       },
       {
         title: "Fee type",
-        dataIndex: "fee_type",
+        dataIndex: "fee",
         width: "150px",
         render: (_, record) => {
           return (
-            <Select
-              options={mappedFeePages}
-              onChange={(value) => updateFeeType(value, record)}
-              style={{ width: "150px" }}
-            />
+            record.no && (
+              <Select
+                options={mappedFeePages}
+                onChange={(value) => updateFeeType(value, record)}
+                style={{ width: "150px" }}
+              />
+            )
           );
         },
       },
       {
         title: "Threshold",
         dataIndex: "threshold",
-      },
-      {
-        title: "New Threshold",
-        dataIndex: "new threshold",
-        width: 150,
-        render: () => <Input />,
       },
       {
         title: "Price",
@@ -168,15 +210,34 @@ const PricingPlanFeatures: React.FC<Props> = ({
         title: "New Price",
         dataIndex: "new_price",
         width: 150,
-        render: () => <Input />,
+        render: (_, record) => {
+          if (record.no) {
+            return record.fee ? (
+              <Input
+                onChange={(event) =>
+                  onChangeNewPrice(event.target.value, record)
+                }
+              />
+            ) : (
+              ""
+            );
+          } else {
+            return (
+              <Input
+                onChange={(event) =>
+                  onChangeNewPriceOverrateFee(event.target.value, record as any)
+                }
+              />
+            );
+          }
+        },
       },
       {
         title: "Overrate",
         dataIndex: "overrate",
         align: "center",
-        render: (is_overrate: boolean) => {
-          return <Checkbox checked={is_overrate}></Checkbox>;
-        },
+        render: (is_overrate, record) =>
+          record.fee ? <Checkbox checked={is_overrate}></Checkbox> : "",
       },
       {
         title: "Action",
@@ -188,20 +249,31 @@ const PricingPlanFeatures: React.FC<Props> = ({
           return <DeleteOutlined onClick={() => handleDelete(record)} />;
         },
       },
-    ],
-    [handleDelete, mappedFeePages, updateFeeType],
-  );
+    ];
+  }, [dataSource, setDataSource, mappedFeePages, deleteFeature]);
 
-  type PricingPlanFeatures = {
-    id: string | number;
-    no: number;
-    name: string;
-    description: string | null;
-    fee_type: Fee | null;
-    price: number | null;
-    new_price: number | null;
-    overrate: boolean | null;
-  };
+  const dummyOverrateFee = [
+    {
+      id: "1",
+      fee_id: 3,
+      name: "Service Fee",
+      fee_name: "Service Charge",
+      threshold: 100,
+      price: 10.5,
+      description: "Fee for general service",
+      transaction_unit: "USD",
+    },
+    {
+      id: "2",
+      fee_id: 3,
+      name: "Processing Fee",
+      fee_name: "Processing Charge",
+      threshold: 200,
+      price: 15.75,
+      description: null,
+      transaction_unit: "USD",
+    },
+  ];
 
   return (
     <Flex
@@ -217,7 +289,7 @@ const PricingPlanFeatures: React.FC<Props> = ({
         <Typography style={{ fontSize: 18, fontWeight: 700, color: "#2F80ED" }}>
           {capitalize("list of features")}
         </Typography>
-        <Link href="#" style={{ color: "black" }}>
+        <Link href="#" style={{ color: "black" }} onClick={deleteAllFeatures}>
           <DeleteOutlined style={{ fontSize: 24 }} />
         </Link>
       </Flex>

@@ -14,7 +14,7 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
     .nullable()
     .default(null)
     .max(255, "Description cannot exceed 255 characters"),
-  fee_type: string<FeeType>().required("Fee type is required"),
+  fee: string<FeeType>().required("Fee type is required"),
   fee_price: number()
     .integer("Please enter an integer")
     .min(0, "Price cannot be smaller than 0")
@@ -24,14 +24,14 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
   is_overrate: boolean()
     .nullable()
     .default(null)
-    .when("fee_type", {
+    .when("fee", {
       is: "transaction",
       then: (schema) => schema.nullable().default(false),
     }),
   recurrence_type: string<RecurrenceType>()
     .nullable()
     .default(null)
-    .when("fee_type", {
+    .when("fee", {
       is: "recurrence",
       then: (schema) => schema.required("Recurrence type is required"),
     }),
@@ -39,7 +39,7 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
     .integer("Please enter a number")
     .nullable()
     .default(null)
-    .when("fee_type", {
+    .when("fee", {
       is: "recurrence",
       then: (schema) =>
         schema
@@ -50,7 +50,7 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
   transaction_unit: string()
     .nullable()
     .default(null)
-    .when("fee_type", {
+    .when("fee", {
       is: "transaction",
       then: (schema) =>
         schema

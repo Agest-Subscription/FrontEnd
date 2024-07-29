@@ -5,9 +5,9 @@ import { EnumStruct } from "@/interfaces/enum";
 export type FeeType = "onetime" | "transaction" | "recurrence";
 export type RecurrenceType = "daily" | "weekly" | "monthly" | "yearly";
 export type Fee = {
-  id: string;
+  id: number;
   name: string;
-  fee_type: FeeType;
+  fee: FeeType;
   is_overrate: boolean | null;
   recurrence_type: RecurrenceType | null;
   recurrence_cycle_count: number | null;

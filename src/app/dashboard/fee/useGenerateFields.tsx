@@ -19,7 +19,7 @@ export const useGenerateFields = () => {
           style: { width: "100%" },
         },
       },
-      fee_type: {
+      fee: {
         label: "Fee Type",
         type: "select",
         options: enumToSelectOptions(FeeTypeEnum),
@@ -43,7 +43,6 @@ export const useGenerateFields = () => {
           isRequired: true,
           min: 0,
           type: "number",
-          min: 0,
         },
       },
       recurrence_type: {

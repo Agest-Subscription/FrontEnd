@@ -24,12 +24,12 @@ const PermissionDetails: React.FC<DetailsProp> = ({
 }) => {
   const goToFee = useGoToDashboardTab("fee");
   const { FormField } = useFormWrapperCtx<FeeFormValues>();
-  const fee_type = methods.watch("fee_type");
+  const fee = methods.watch("fee");
   useEffect(() => {
-    if (fee_type === "transaction" && !edit) {
+    if (fee === "transaction" && !edit) {
       methods.setValue("is_overrate", false);
     }
-  }, [edit, fee_type, methods]);
+  }, [edit, fee, methods]);
   return (
     <>
       <Flex
@@ -42,12 +42,12 @@ const PermissionDetails: React.FC<DetailsProp> = ({
             <FormField name="name" />
           </Col>
           <Col span={4}>
-            <FormField name="fee_type" />
+            <FormField name="fee" />
           </Col>
           <Col span={4}>
             <FormField name="fee_price" />
           </Col>
-          {fee_type === "transaction" && (
+          {fee === "transaction" && (
             <Col span={4}>
               <FormField name="transaction_unit" />
             </Col>
@@ -58,7 +58,7 @@ const PermissionDetails: React.FC<DetailsProp> = ({
             <FormField name="description" />
           </Col>
         </Row>
-        {fee_type === "recurrence" && (
+        {fee === "recurrence" && (
           <Row gutter={16}>
             <Col span={4}>
               <FormField name="recurrence_type" />
@@ -70,7 +70,7 @@ const PermissionDetails: React.FC<DetailsProp> = ({
         )}
 
         <FormField name="is_active" />
-        {fee_type === "transaction" && <FormField name="is_overrate" />}
+        {fee === "transaction" && <FormField name="is_overrate" />}
       </Flex>
       <Flex
         style={{ width: "100%" }}

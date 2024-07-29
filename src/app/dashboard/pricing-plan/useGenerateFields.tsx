@@ -18,7 +18,7 @@ export const useGenerateFields = (start_date: string) => {
           isRequired: true,
         },
       },
-      recurrence_fee_name: {
+      recurrence_fee_id: {
         label: "Recurrent fee name",
         type: "text",
         componentProps: {},
