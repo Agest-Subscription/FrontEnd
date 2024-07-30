@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Flex, Form, Spin, Typography } from "antd";
 
-import AddFeature from "../AddFeature";
 import PricingPlanDetails from "../PricingPlanDetails";
 import { useGenerateFields } from "../useGenerateFields";
 

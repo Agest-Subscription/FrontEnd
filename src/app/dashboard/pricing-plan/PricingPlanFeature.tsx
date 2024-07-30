@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import Link from "next/link";
 import { DeleteOutlined } from "@ant-design/icons";
-import { Checkbox, Flex, Input, Select, Table, Typography } from "antd";
+import { Checkbox, Flex, Input, Select, Spin, Table, Typography } from "antd";
 import { ColumnType } from "antd/es/table";
+import debounce from "lodash/debounce";
 
 import { useGetInfiniteFee } from "@/hooks/fee";
 import { Feature } from "@/interfaces/model/feature.type";
@@ -32,6 +33,7 @@ const PricingPlanFeatures: React.FC<Props> = ({
     fetchNextPage,
     isFetchingNextPage,
     isInitialLoading,
+    setSearchTerm,
   } = useGetInfiniteFee({
     page_size: 10,
   });
@@ -66,8 +68,8 @@ const PricingPlanFeatures: React.FC<Props> = ({
     if (newExistingFeatureNames.size === 0) {
       setDataSource(
         FeatureList.map((feature, index) => ({
-          id: Number(feature.id),
-          key: Number(feature.id),
+          id: feature.id,
+          key: feature.id,
           no: index + 1,
           name: feature.name,
           description: feature.description,
@@ -83,8 +85,8 @@ const PricingPlanFeatures: React.FC<Props> = ({
         setDataSource((prevDataSource) => [
           ...prevDataSource,
           ...newFeatures.map((feature, index) => ({
-            key: Number(feature.id),
-            id: Number(feature.id),
+            key: feature.id,
+            id: feature.id,
             no: prevDataSource.length + index + 1,
             name: feature.name,
             description: feature.description,
@@ -98,41 +100,12 @@ const PricingPlanFeatures: React.FC<Props> = ({
     }
   }, [FeatureList, dataSource, setDataSource]);
 
-  const onChangeNewPrice = (value: string, record: PricingPlanFeaturesType) => {
-    const newDataSource = dataSource.map((item) => {
-      if (item.no === record.no) {
-        return {
-          ...item,
-          new_price: Number(value),
-        };
-      }
-      return item;
-    });
-    setDataSource(newDataSource);
-  };
-
-  const onChangeNewPriceOverrateFee = (value: string, record: OverrateFee) => {
-    const newDataSource = dataSource.map((item) => {
-      if (item.fee?.id === record.fee_id) {
-        return {
-          ...item,
-          children: item.children?.map((child) =>
-            child.id === record.id
-              ? { ...child, new_price: Number(value) }
-              : child,
-          ),
-        };
-      }
-      return item;
-    });
-    setDataSource(newDataSource);
-  };
-
   const columns = useMemo<ColumnType<PricingPlanFeaturesType>[]>(() => {
     const updateFeeType = (
       value: number | string,
       record: PricingPlanFeaturesType,
     ) => {
+      setSearchTerm("");
       const newDataSource = dataSource.map((item) => {
         if (item.no === record.no) {
           const selectedFee = mappedFeePages.find(
@@ -150,7 +123,63 @@ const PricingPlanFeatures: React.FC<Props> = ({
       });
       setDataSource(newDataSource);
     };
+    const onChangeNewPrice = (
+      value: string,
+      record: PricingPlanFeaturesType,
+    ) => {
+      const newDataSource = dataSource.map((item) => {
+        if (item.no === record.no) {
+          return {
+            ...item,
+            new_price: Number(value),
+          };
+        }
+        return item;
+      });
+      setDataSource(newDataSource);
+    };
 
+    const onChangeNewPriceOverrateFee = (
+      value: string,
+      record: OverrateFee,
+    ) => {
+      const newDataSource = dataSource.map((item) => {
+        if (item.fee?.id === record.fee_id) {
+          return {
+            ...item,
+            children: item.children?.map((child) =>
+              child.id === record.id
+                ? { ...child, new_price: Number(value) }
+                : child,
+            ),
+          };
+        }
+        return item;
+      });
+      setDataSource(newDataSource);
+    };
+    const dummyOverrateFee = [
+      {
+        id: "1",
+        fee_id: "3",
+        name: "Service Fee",
+        fee_name: "Service Charge",
+        threshold: 100,
+        price: 10.5,
+        description: "Fee for general service",
+        transaction_unit: "USD",
+      },
+      {
+        id: "2",
+        fee_id: "3",
+        name: "Processing Fee",
+        fee_name: "Processing Charge",
+        threshold: 200,
+        price: 15.75,
+        description: null,
+        transaction_unit: "USD",
+      },
+    ];
     const handleDelete = (record: PricingPlanFeaturesType) => {
       deleteFeature(record.id);
       const newDataSource = dataSource
@@ -166,6 +195,17 @@ const PricingPlanFeatures: React.FC<Props> = ({
         });
 
       setDataSource(newDataSource);
+    };
+
+    const onScroll = async (event: React.UIEvent<HTMLDivElement>) => {
+      const target = event.target as HTMLDivElement;
+      if (
+        !isFetchingNextPage &&
+        target.scrollTop + target.offsetHeight === target.scrollHeight
+      ) {
+        target.scrollTo(0, target.scrollHeight);
+        fetchNextPage();
+      }
     };
 
     return [
@@ -192,6 +232,16 @@ const PricingPlanFeatures: React.FC<Props> = ({
                 options={mappedFeePages}
                 onChange={(value) => updateFeeType(value, record)}
                 style={{ width: "150px" }}
+                onPopupScroll={onScroll}
+                showSearch
+                optionFilterProp="label"
+                onSearch={debounce((value) => setSearchTerm(value), 500)}
+                loading={isFetchingNextPage || isInitialLoading}
+                dropdownRender={(menu) => (
+                  <Spin spinning={isFetchingNextPage || isInitialLoading}>
+                    {menu}
+                  </Spin>
+                )}
               />
             )
           );
@@ -245,35 +295,20 @@ const PricingPlanFeatures: React.FC<Props> = ({
         key: "action",
         align: "center",
         width: 150,
-        render: (_, record) => {
-          return <DeleteOutlined onClick={() => handleDelete(record)} />;
-        },
+        render: (_, record) =>
+          record.no && <DeleteOutlined onClick={() => handleDelete(record)} />,
       },
     ];
-  }, [dataSource, setDataSource, mappedFeePages, deleteFeature]);
-
-  const dummyOverrateFee = [
-    {
-      id: "1",
-      fee_id: 3,
-      name: "Service Fee",
-      fee_name: "Service Charge",
-      threshold: 100,
-      price: 10.5,
-      description: "Fee for general service",
-      transaction_unit: "USD",
-    },
-    {
-      id: "2",
-      fee_id: 3,
-      name: "Processing Fee",
-      fee_name: "Processing Charge",
-      threshold: 200,
-      price: 15.75,
-      description: null,
-      transaction_unit: "USD",
-    },
-  ];
+  }, [
+    setSearchTerm,
+    dataSource,
+    setDataSource,
+    mappedFeePages,
+    deleteFeature,
+    isFetchingNextPage,
+    fetchNextPage,
+    isInitialLoading,
+  ]);
 
   return (
     <Flex

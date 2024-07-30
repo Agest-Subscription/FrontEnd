@@ -1,10 +1,11 @@
 "use client";
-import { Key, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Key, useEffect, useMemo, useRef, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { Flex, Input, Modal, Spin, Table, Typography } from "antd";
 import type { TableColumnsType } from "antd";
+import { Flex, Input, Modal, Spin, Table, Typography } from "antd";
 
 import ButtonV1 from "@/components/button/CustomButton";
+import TableTag from "@/components/tag/TableTag";
 import { useGetInfiniteFeatures } from "@/hooks/feature";
 import useSearchSync from "@/hooks/useSearchSync";
 import { Feature } from "@/interfaces/model/feature.type";
@@ -24,7 +25,7 @@ const AddFeature: React.FC<Props> = ({
   selectedRows = [],
 }) => {
   const tableRef = useRef<HTMLDivElement>(null);
-  const { searchQuery, handleSearch, setSearchQuery } = useSearchSync();
+  const { searchQuery, handleSearch: _, setSearchQuery } = useSearchSync();
   const {
     data: featuresPage,
     fetchNextPage,
@@ -38,10 +39,12 @@ const AddFeature: React.FC<Props> = ({
 
   const totalItemsRef = useRef<number | null>(null);
   const [savedRowKeys, setSavedRowKeys] = useState<Key[]>(
-    selectedRows.map((row) => row.id)
+    selectedRows.map((row) => row.id),
   );
-  const [tempSelectedRows, setTempSelectedRows] = useState<Feature[]>(selectedRows);
-  const [tempSelectedRowKeys, setTempSelectedRowKeys] = useState<Key[]>(savedRowKeys);
+  const [tempSelectedRows, setTempSelectedRows] =
+    useState<Feature[]>(selectedRows);
+  const [tempSelectedRowKeys, setTempSelectedRowKeys] =
+    useState<Key[]>(savedRowKeys);
 
   const columns: TableColumnsType<Feature> = [
     {
@@ -49,12 +52,16 @@ const AddFeature: React.FC<Props> = ({
       dataIndex: "name",
       key: "name",
       width: "25%",
+      align: "center",
     },
     {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
-      width: "40%",
+      title: "Permission",
+      dataIndex: "permissions",
+      key: "permissions",
+      width: "65%",
+      render: (_, record) => {
+        return <TableTag permissions={record.permissions}></TableTag>;
+      },
     },
   ];
 
@@ -64,9 +71,9 @@ const AddFeature: React.FC<Props> = ({
         features.data.data.map((feature) => ({
           ...feature,
           key: feature.id,
-        }))
+        })),
       ) ?? [],
-    [featuresPage]
+    [featuresPage],
   );
 
   const rowSelection = {
@@ -100,6 +107,7 @@ const AddFeature: React.FC<Props> = ({
     };
     tableRef.current?.addEventListener("scroll", handleScroll);
     return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       tableRef.current?.removeEventListener("scroll", handleScroll);
     };
   }, [fetchNextPage, isModalOpen]);
@@ -164,12 +172,13 @@ const AddFeature: React.FC<Props> = ({
         </Flex>
         <div
           ref={tableRef}
-          style={{ height: 360, overflow: "auto", width: "50%" }}
+          style={{ height: 360, overflow: "auto", width: "75%" }}
         >
           <Spin spinning={isFetchingNextPage || isInitialLoading}>
             <Table
               rowSelection={{ type: "checkbox", ...rowSelection }}
               style={{ width: "100%" }}
+              scroll={{ x: "max-content" }}
               columns={columns}
               dataSource={dataSource}
               pagination={false}

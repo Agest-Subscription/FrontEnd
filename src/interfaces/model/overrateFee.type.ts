@@ -2,7 +2,7 @@ import { FilterBase } from "../base";
 
 export type OverrateFee = {
   id: string;
-  fee_id: number;
+  fee_id: string;
   name: string;
   fee_name: string;
   threshold: number;

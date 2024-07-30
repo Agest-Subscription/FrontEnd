@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Col, Flex, Row } from "antd";
+
+import AddFeature from "./AddFeature";
+import PricingPlanFeatures from "./PricingPlanFeature";
+
 import ButtonV1 from "@/components/button/CustomButton";
 import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
-import { PricingPlanFormValues } from "@/interfaces/model/pricingplan.type";
-import AddFeature from "./AddFeature";
 import { Feature } from "@/interfaces/model/feature.type";
-import PricingPlanFeatures from "./PricingPlanFeature";
+import { PricingPlanFormValues } from "@/interfaces/model/pricingplan.type";
 import { PricingPlanFeaturesType } from "@/interfaces/model/pricingplan.type";
 
 interface DetailsProp {
@@ -43,7 +45,6 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
   }
 
   const handleSavePricingPlan = () => {
-    console.log(dataSource);
     onSave(dataSource); // Pass the dataSource to the onSave callback
   };
 
@@ -80,7 +81,7 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
         <Row gutter={24}>
           <Col span={6}>
             <Flex vertical gap={8}>
-              <FormField name="is_free_trial" />
+              <FormField name="has_free_trial" />
               <FormField name="is_active" />
             </Flex>
           </Col>

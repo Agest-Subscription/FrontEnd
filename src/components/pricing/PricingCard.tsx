@@ -84,29 +84,28 @@ const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
 
         <Flex vertical>
           {PricingPlan.features.map((feature) => (
-            <Flex gap={8} key={feature.id}>
+            <Flex gap={8} key={feature.feature.id}>
               <CheckCircleOutlined style={{ color: "green" }} />
               <Typography style={{ fontSize: 16, fontWeight: 400 }}>
-                {capitalize(feature.name)}
+                {capitalize(feature.feature.name)}
               </Typography>
             </Flex>
           ))}
         </Flex>
       </Flex>
- 
-        <Button
-          style={{
-            backgroundColor: styles.buttonBackgroundColor,
-            color: styles.buttonTextColor,
-            marginTop: "5rem",
-            border: "1px solid #2F80ED",
-            padding: "24px 20px",
-            borderRadius: 4,
-          }}
-        >
-          Get Started
-        </Button>
 
+      <Button
+        style={{
+          backgroundColor: styles.buttonBackgroundColor,
+          color: styles.buttonTextColor,
+          marginTop: "5rem",
+          border: "1px solid #2F80ED",
+          padding: "24px 20px",
+          borderRadius: 4,
+        }}
+      >
+        Get Started
+      </Button>
     </Flex>
   );
 };

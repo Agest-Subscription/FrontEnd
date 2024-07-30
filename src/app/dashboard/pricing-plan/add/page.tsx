@@ -81,7 +81,12 @@ const Page: React.FC<Props> = () => {
       features: featureList.map((item) => ({
         feature_id: item.id,
         new_price: item.new_price,
-        fee_id: item.fee?.id ?? null,
+        fee_id: item.fee?.id ?? data.recurrence_fee_id,
+        feature_plan_fee_new_overrate:
+          item.children?.map((fee) => ({
+            fee_overrate_id: fee.id,
+            new_overrate_price: fee.new_price ?? null,
+          })) ?? [],
       })),
     };
   };

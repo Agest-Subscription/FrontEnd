@@ -55,13 +55,14 @@ export const useGenerateFields = (start_date: string) => {
         type: "text",
         componentProps: {
           type: "number",
+          min: 0,
         },
       },
       is_active: {
         label: "Is active",
         type: "singleCheckbox",
       },
-      is_free_trial: {
+      has_free_trial: {
         label: "Has free trial",
         type: "singleCheckbox",
       },

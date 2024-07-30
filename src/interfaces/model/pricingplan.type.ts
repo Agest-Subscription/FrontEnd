@@ -1,23 +1,24 @@
 import { FilterBase } from "../base";
 import { EnumStruct } from "../enum";
+import { Feature } from "./feature.type";
 import { Fee } from "./fee.type";
 import { OverrateFee } from "./overrateFee.type";
 
-export type FreeTrialPeriod = "daily" | "weekly" | "monthly";
+export type FreeTrialPeriod = "day" | "week" | "month";
 
 export type PricingPlan = {
-  id: number;
+  id: string;
   name: string;
   start_date: string;
   end_date: string;
   price: number;
   description: string | null;
-  is_free_trial: boolean;
+  has_free_trial: boolean;
   free_trial_period: FreeTrialPeriod | null;
   free_trial_period_count: number | null;
   recurrence_fee_id: string | null;
   is_active: boolean;
-  features: FeatureListPayload[];
+  features: PricingPlanFeatureList[];
 };
 
 export type PricingPlanTableData = PricingPlan & {
@@ -28,42 +29,60 @@ export type PricingPlanLandingPage = PricingPlan;
 
 export type PricingPlanFilterParams = FilterBase<PricingPlanTableData>;
 
-export type PricingPlanFormValues = Omit<PricingPlan, "id" | "price">;
+export type PricingPlanFormValues = Omit<
+  PricingPlan,
+  "id" | "price" | "features"
+>;
 
 export type PricingPlanResponseItem = PricingPlan;
 
-export type AddPricingPlanPayload = PricingPlanFormValues;
+export type AddPricingPlanPayload = PricingPlanFormValues & {
+  features: FeatureListPayload[];
+};
 
 export type FeatureListPayload = {
-  id?: number;
-  feature_id: number;
+  id?: string;
+  feature_id: string;
   new_price: number | null;
-  fee_id: number | null;
-  overrate_fee?: {
-    id: number;
-    new_price: number;
+  fee_id: string | null;
+  feature_plan_fee_new_overrate?: {
+    fee_overrate_id: string;
+    new_overrate_price?: number | null;
   }[];
+};
+
+export type PricingPlanFeatureList = {
+  feature: Feature;
+  new_price: number | null;
+  fee: Fee | null;
+  feature_plan_fee_new_overrate: {
+    fee_overrate: OverrateFee;
+    new_overrate_price: number | null;
+  } | null;
 };
 
 export type UpdatePricingPlanPayload = PricingPlan;
 
 export const FreeTrialPeriodEnum = Object.freeze({
-  daily: {
-    label: "Daily",
-    value: "daily",
+  day: {
+    label: "Day",
+    value: "day",
   },
-  weekly: {
-    label: "Weekly",
-    value: "weekly",
+  week: {
+    label: "Week",
+    value: "week",
   },
-  monthly: {
-    label: "Monthly",
-    value: "monthly",
+  month: {
+    label: "Month",
+    value: "month",
   },
 }) satisfies EnumStruct<FreeTrialPeriod>;
+export type OverrateFeeWithNewPrice = OverrateFee & {
+  new_price?: number | null;
+};
 
 export type PricingPlanFeaturesType = {
-  id: number;
+  id: string;
   no: number;
   name: string;
   description: string | null;
@@ -71,9 +90,5 @@ export type PricingPlanFeaturesType = {
   price: number | null;
   new_price: number | null;
   overrate: boolean | null;
-  children?:
-    | (OverrateFee[] & {
-        new_price?: number | null;
-      })
-    | null;
+  children?: OverrateFeeWithNewPrice[] | null;
 };
