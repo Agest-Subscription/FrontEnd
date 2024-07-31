@@ -62,7 +62,7 @@ const Page: React.FC<Props> = () => {
       methods.setValue("fee_id", OverrateFee.fee_id);
       methods.setValue("threshold", OverrateFee.threshold);
       methods.setValue("price", OverrateFee.price);
-      methods.setValue("description", OverrateFee.description);
+      // methods.setValue("description", OverrateFee.description);
     }
   }, [OverrateFee, methods]);
 

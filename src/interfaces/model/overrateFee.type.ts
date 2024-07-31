@@ -8,7 +8,7 @@ export type OverrateFee = {
   // fee_name: string;
   threshold: number | null;
   price: number | null;
-  description: string | null;
+  // description: string | null;
   // transaction_unit: string;
 };
 

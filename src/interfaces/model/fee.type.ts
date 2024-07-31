@@ -12,7 +12,7 @@ export type Fee = {
   //is_overrate: boolean | null;
   recurrence_type: RecurrenceType | null;
   recurrence_cycle_count: number | null;
-  fee_price: number | null;
+  price: number | null;
   transaction_unit: string | null;
   description: string | null;
   is_active: boolean;

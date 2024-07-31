@@ -45,7 +45,7 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
     .nullable()
     .default(null)
     .max(255, "Description cannot exceed 255 characters"),
-  fee_price: number()
+  price: number()
     .integer("Please enter an integer")
     .min(0, "Price cannot be smaller than 0")
     .nullable()

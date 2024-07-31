@@ -42,9 +42,9 @@ const OverrateFeeDetails: React.FC<DetailsProp> = ({
             <FormField name="price" />
           </Col>
         </Row>
-        <Col span={6}>
+        {/* <Col span={6}>
           <FormField name="description" />
-        </Col>
+        </Col> */}
       </Flex>
       <Flex
         style={{ width: "100%" }}

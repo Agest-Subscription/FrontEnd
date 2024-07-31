@@ -33,8 +33,8 @@ const useGenerateColumns = () => {
       },
       {
         title: "Fee",
-        dataIndex: "fee_price",
-        key: "fee_price",
+        dataIndex: "price",
+        key: "price",
       },
       {
         title: "Transaction Unit",

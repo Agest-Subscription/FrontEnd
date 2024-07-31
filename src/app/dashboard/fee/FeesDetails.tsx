@@ -129,7 +129,7 @@ export default function FeeDetails({
           </Col>
           {fee_type !== "transaction" && (
             <Col span={4}>
-              <FormField name="fee_price" />
+              <FormField name="price" />
             </Col>
           )}
           {fee_type === "transaction" && (

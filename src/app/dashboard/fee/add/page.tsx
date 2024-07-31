@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
+import { isBoolean, omitBy } from "lodash";
 
 import FeesDetails from "../FeesDetails";
 import { useGenerateFields } from "../useGenerateFields";
@@ -55,7 +56,7 @@ const Page: React.FC<Props> = () => {
         // is_overrate: null,
         recurrence_cycle_count: null,
         recurrence_type: null,
-        overrate_fees: null,
+        overrate_fees: null || [],
       };
     }
     if (data.fee_type === "recurrence") {
@@ -63,7 +64,7 @@ const Page: React.FC<Props> = () => {
         ...data,
         transaction_unit: null,
         // is_overrate: null,
-        overrate_fees: null,
+        overrate_fees: null || [],
       };
     }
     return data; // or handle other fee_type cases if necessary

@@ -44,14 +44,14 @@ const useGenerateColumns = () => {
         dataIndex: "price",
         key: "price",
       },
-      {
-        title: "Description",
-        dataIndex: "description",
-        key: "description",
-        render: (value) => {
-          return <LongText text={value} width={250} />;
-        },
-      },
+      // {
+      //   title: "Description",
+      //   dataIndex: "description",
+      //   key: "description",
+      //   render: (value) => {
+      //     return <LongText text={value} width={250} />;
+      //   },
+      // },
       {
         title: "Transaction Unit",
         dataIndex: "transaction_unit",
