@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 
 import useGenerateColumns from "./useGenerateColumns";
 
+import PopUp from "@/components/popup/Popup";
 import TableV1 from "@/components/table/TableV1";
-import { PERMISSIONS } from "@/constants/routes";
-import { useGetListPermission } from "@/hooks/permission";
+import { useAddPermission, useGetListPermission } from "@/hooks/permission";
 import useSearchSync from "@/hooks/useSearchSync";
 import {
+  CustomError,
   DataSourceItem,
   TableChangeParams,
   TableParams,
@@ -16,12 +16,25 @@ import {
   PermissionFilterParams,
   PermissionTableData,
 } from "@/interfaces/model/permission.type";
+import { popUpPropType } from "@/interfaces/popup";
+import { getErrorDetail } from "@/utils/error";
+import { capitalize } from "@/utils/string";
 
 type Props = {};
 
 const PermissionList: React.FC<Props> = () => {
-  const router = useRouter();
+  const { mutate: addPermission, isLoading: isAdding } = useAddPermission();
   const { searchQuery, handleSearch } = useSearchSync();
+  const [openModal, setOpenModal] = useState(false);
+  const [modalProp, setModalProp] = useState<popUpPropType>({
+    popup_id: "successpopup",
+    popup_text: `${capitalize("Are you sure to add new permissions to this table?")}`,
+    popup_type: "Confirm",
+    onConfirm: () => onAddPermissons(),
+    onClose: () => setOpenModal(false),
+  });
+  const [addPermissionModalProp] = useState<popUpPropType>(modalProp);
+
   const [tableParams, setTableParams] = useState<
     TableParams<PermissionTableData>
   >({
@@ -31,6 +44,32 @@ const PermissionList: React.FC<Props> = () => {
       showSizeChanger: false,
     },
   });
+  function showModal(modalProp: popUpPropType, open = true) {
+    setModalProp(modalProp);
+    setOpenModal(open);
+  }
+  function onAddPermissons() {
+    addPermission(undefined, {
+      onSuccess: () => {
+        showModal({
+          popup_id: "successpopup",
+          popup_text: `${capitalize("This permission table is successfully updated.")}`,
+          popup_type: "Success",
+          onConfirm: () => setModalProp(addPermissionModalProp),
+          onClose: () => showModal(addPermissionModalProp, false),
+        });
+      },
+      onError: (err: CustomError) => {
+        showModal({
+          popup_id: "fail",
+          popup_text: `${getErrorDetail(err) ?? "The system cannot update this permission table!"}`,
+          popup_type: "Fail",
+          onConfirm: () => setModalProp(addPermissionModalProp),
+          onClose: () => showModal(addPermissionModalProp, false),
+        });
+      },
+    });
+  }
 
   const params = useMemo<PermissionFilterParams>(
     () => ({
@@ -92,7 +131,7 @@ const PermissionList: React.FC<Props> = () => {
     <div>
       <TableV1
         scroll={{ x: "max-content" }}
-        loading={isFetching}
+        loading={isFetching || isAdding}
         tableTitle="permission"
         showSearchBar={true}
         columns={columns}
@@ -101,10 +140,11 @@ const PermissionList: React.FC<Props> = () => {
           handleTableChange({ pagination, filters })
         }
         pagination={tableParams.pagination}
-        addItem={() => router.push(`${PERMISSIONS}/add`)}
+        addItem={() => showModal(modalProp)}
         onSearch={handleSearch}
         searchValue={searchQuery}
       />
+      <PopUp popupProps={modalProp} isOpen={openModal} />
     </div>
   );
 };
