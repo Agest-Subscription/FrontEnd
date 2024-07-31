@@ -1,12 +1,43 @@
-import { boolean, number, object, ObjectSchema, string } from "yup";
+import { array, boolean, number, object, ObjectSchema, string } from "yup";
 
 import {
   FeeFormValues,
   FeeType,
+  OverateFeeArrItems,
   RecurrenceType,
 } from "@/interfaces/model/fee.type";
 
 const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
+  fee_type: string<FeeType>().required("Fee type is required"),
+
+  overrate_fee_items: array<OverateFeeArrItems>(
+    object<OverateFeeArrItems>().shape({
+      isTransaction: boolean().default(false),
+      price: number()
+        .nullable()
+        .integer()
+        .min(0, "Price cannot be smaller than 0")
+        .when("isTransaction", {
+          is: true,
+          then: (schema) => schema.required("Price cannot be null"),
+        }),
+
+      threshold: number()
+        .nullable()
+        .integer()
+        .min(0, "Price cannot be smaller than 0")
+        .when("isTransaction", {
+          is: true,
+          then: (schema) => schema.required("Threshold cannot be null"),
+        }),
+    }),
+  )
+    .nullable()
+    .default(null)
+    .when("fee_type", {
+      is: "transaction",
+      then: (schema) => schema.required(),
+    }),
   name: string()
     .required("Name is required")
     .max(100, "Name cannot exceed 100 characters"),
@@ -14,7 +45,6 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
     .nullable()
     .default(null)
     .max(255, "Description cannot exceed 255 characters"),
-  fee_type: string<FeeType>().required("Fee type is required"),
   fee_price: number()
     .integer("Please enter an integer")
     .min(0, "Price cannot be smaller than 0")

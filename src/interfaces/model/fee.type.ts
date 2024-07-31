@@ -1,4 +1,5 @@
 import { FilterBase } from "../base";
+import { OverrateFee } from "./overrateFee.type";
 
 import { EnumStruct } from "@/interfaces/enum";
 
@@ -21,9 +22,15 @@ export type FeeTableData = Fee & {
   no: number;
 };
 
+export type OverateFeeArrItems = Pick<OverrateFee, "price" | "threshold"> & {
+  isTransaction?: boolean;
+};
+
 export type FeeFilterParams = FilterBase<FeeTableData>;
 
-export type FeeFormValues = Omit<Fee, "id">;
+export type FeeFormValues = Omit<Fee, "id"> & {
+  overrate_fee_items: OverateFeeArrItems[] | null;
+};
 
 export type FeeResponseItem = Fee;
 

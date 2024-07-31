@@ -29,9 +29,9 @@ const OverrateFeeDetails: React.FC<DetailsProp> = ({
         style={{ border: "1px solid #BDC1CA", padding: "16px" }}
       >
         <Row gutter={16}>
-          <Col span={4}>
+          {/* <Col span={4}>
             <FormField name="name" />
-          </Col>
+          </Col> */}
           <Col span={4}>
             <FormField name="fee_id" />
           </Col>

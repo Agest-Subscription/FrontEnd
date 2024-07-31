@@ -1,7 +1,7 @@
 .ant-menu {
     font-weight: 700 !important;
     background: #b9e5ff !important;
-    justify-content: space-around !important;
+    justify-content: space-between !important;
     text-align: center !important;
     &:before {
         content: "" !important;

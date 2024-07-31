@@ -1,28 +1,27 @@
 import { FilterBase } from "../base";
+import { Fee } from "./fee.type";
 
 export type OverrateFee = {
-  id: string;
-  fee_id: string;
-  name: string;
-  fee_name: string;
-  threshold: number;
-  price: number;
+  id: string | null;
+  fee_id: string | null;
+  // name: string;
+  // fee_name: string;
+  threshold: number | null;
+  price: number | null;
   description: string | null;
-  transaction_unit: string;
+  // transaction_unit: string;
 };
 
 export type OverrateFeeTableData = OverrateFee & {
   no: number;
+  // fee_name: Pick<Fee, "name">;
 };
 
-export type OverrateFeeResponseItem = OverrateFee;
+export type OverrateFeeResponseItem = OverrateFee & Pick<Fee, "name">;
 
 export type OverrateFeeFilterParams = FilterBase<OverrateFeeResponseItem>;
 
-export type OverrateFeeFormValues = Omit<
-  OverrateFee,
-  "id" | "transaction_unit" | "fee_name"
->;
+export type OverrateFeeFormValues = Omit<OverrateFee, "id"> & Pick<Fee, "name">;
 
 export type AddOverrateFeePayload = OverrateFeeFormValues;
 

@@ -18,22 +18,22 @@ const useGenerateColumns = () => {
         fixed: "left",
       },
 
-      {
-        title: "Name",
-        dataIndex: "name",
-        key: "name",
-        render: (value) => {
-          return <LongText text={value} width={250} />;
-        },
-      },
-      {
-        title: "Fee Name",
-        dataIndex: "fee_name",
-        key: "fee_name",
-        render: (value) => {
-          return <LongText text={value} width={250} />;
-        },
-      },
+      // {
+      //   title: "Name",
+      //   dataIndex: "name",
+      //   key: "name",
+      //   render: (value) => {
+      //     return <LongText text={value} width={250} />;
+      //   },
+      // },
+      // {
+      //   title: "Fee Name",
+      //   dataIndex: "fee_name",
+      //   key: "fee_name",
+      //   render: (value) => {
+      //     return <LongText text={value} width={250} />;
+      //   },
+      // },
       {
         title: "Threshold",
         dataIndex: "threshold",
