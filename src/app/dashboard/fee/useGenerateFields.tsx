@@ -74,7 +74,7 @@ export const useGenerateFields = (): FieldsData<FeeFormValues> => {
         label: "Is Active",
         type: "singleCheckbox",
       },
-      "overrate_fee_items.[].price": {
+      "overrate_fees.[].price": {
         label: "Price ($)",
         type: "text",
         componentProps: {
@@ -83,7 +83,7 @@ export const useGenerateFields = (): FieldsData<FeeFormValues> => {
           min: 1,
         },
       },
-      "overrate_fee_items.[].threshold": {
+      "overrate_fees.[].threshold": {
         label: "Threshold",
         type: "text",
         componentProps: {
@@ -92,10 +92,6 @@ export const useGenerateFields = (): FieldsData<FeeFormValues> => {
           min: 1,
         },
       },
-      // is_overrate: {
-      //   label: "Overrate Fee",
-      //   type: "singleCheckbox",
-      // },
     }),
     [],
   );

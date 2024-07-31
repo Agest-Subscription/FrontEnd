@@ -9,10 +9,10 @@ export type Fee = {
   id: string;
   name: string;
   fee_type: FeeType;
-  is_overrate: boolean | null;
+  //is_overrate: boolean | null;
   recurrence_type: RecurrenceType | null;
   recurrence_cycle_count: number | null;
-  fee_price: number;
+  fee_price: number | null;
   transaction_unit: string | null;
   description: string | null;
   is_active: boolean;
@@ -29,7 +29,7 @@ export type OverateFeeArrItems = Pick<OverrateFee, "price" | "threshold"> & {
 export type FeeFilterParams = FilterBase<FeeTableData>;
 
 export type FeeFormValues = Omit<Fee, "id"> & {
-  overrate_fee_items: OverateFeeArrItems[] | null;
+  overrate_fees: OverateFeeArrItems[] | null;
 };
 
 export type FeeResponseItem = Fee;

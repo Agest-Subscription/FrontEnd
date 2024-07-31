@@ -10,7 +10,7 @@ import {
 const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
   fee_type: string<FeeType>().required("Fee type is required"),
 
-  overrate_fee_items: array<OverateFeeArrItems>(
+  overrate_fees: array<OverateFeeArrItems>(
     object<OverateFeeArrItems>().shape({
       isTransaction: boolean().default(false),
       price: number()
@@ -48,16 +48,21 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
   fee_price: number()
     .integer("Please enter an integer")
     .min(0, "Price cannot be smaller than 0")
-    .required("Fee price is a required fields")
-    .max(9999999999, "Price cannot exceed 9999999999"),
-  is_active: boolean().default(false),
-  is_overrate: boolean()
     .nullable()
     .default(null)
+    .max(9999999999, "Price cannot exceed 9999999999")
     .when("fee_type", {
-      is: "transaction",
-      then: (schema) => schema.nullable().default(false),
+      is: "onetime",
+      then: (schema) => schema.required("Fee price is a required fields"),
     }),
+  is_active: boolean().default(false),
+  // is_overrate: boolean()
+  //   .nullable()
+  //   .default(null)
+  //   .when("fee_type", {
+  //     is: "transaction",
+  //     then: (schema) => schema.nullable().default(false),
+  //   }),
   recurrence_type: string<RecurrenceType>()
     .nullable()
     .default(null)

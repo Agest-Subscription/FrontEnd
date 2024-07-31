@@ -53,7 +53,7 @@ const Page: React.FC<Props> = () => {
       return {
         ...data,
         transaction_unit: null,
-        is_overrate: null,
+        // is_overrate: null,
         recurrence_cycle_count: null,
         recurrence_type: null,
       };
@@ -62,7 +62,7 @@ const Page: React.FC<Props> = () => {
       return {
         ...data,
         transaction_unit: null,
-        is_overrate: null,
+        // is_overrate: null,
       };
     }
     return data; // or handle other fee_type cases if necessary
@@ -140,7 +140,7 @@ const Page: React.FC<Props> = () => {
       methods.setValue("fee_price", Fee.fee_price);
       methods.setValue("description", Fee.description);
       methods.setValue("transaction_unit", Fee.transaction_unit);
-      methods.setValue("is_overrate", Fee.is_overrate);
+      // methods.setValue("is_overrate", Fee.is_overrate);
       methods.setValue("recurrence_cycle_count", Fee.recurrence_cycle_count);
       methods.setValue("recurrence_type", Fee.recurrence_type);
       methods.setValue("is_active", Fee.is_active);

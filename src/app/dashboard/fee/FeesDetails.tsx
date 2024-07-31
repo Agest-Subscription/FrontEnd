@@ -34,7 +34,7 @@ const OverrateFeeItemField: FC<OverateFeeItemProps> = ({
       <Flex gap={24} align="center" key={index}>
         <Col>
           <FormField
-            name={"overrate_fee_items.[].price"}
+            name={"overrate_fees.[].price"}
             index={[index]}
             key={index + "price"}
           />
@@ -42,7 +42,7 @@ const OverrateFeeItemField: FC<OverateFeeItemProps> = ({
 
         <Col>
           <FormField
-            name={"overrate_fee_items.[].threshold"}
+            name={"overrate_fees.[].threshold"}
             index={[index]}
             key={index + "threshold"}
           />
@@ -82,7 +82,7 @@ export default function FeeDetails({
 
   const { fields, append, remove } = useFieldArray({
     control: methodsArr.control,
-    name: "overrate_fee_items",
+    name: "overrate_fees",
   });
   const newOverrateFeeItemsArray = React.useMemo(
     () => ({

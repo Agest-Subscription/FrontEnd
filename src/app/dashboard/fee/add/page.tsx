@@ -52,18 +52,18 @@ const Page: React.FC<Props> = () => {
       return {
         ...data,
         transaction_unit: null,
-        is_overrate: null,
+        // is_overrate: null,
         recurrence_cycle_count: null,
         recurrence_type: null,
-        overrate_fee_items: null,
+        overrate_fees: null,
       };
     }
     if (data.fee_type === "recurrence") {
       return {
         ...data,
         transaction_unit: null,
-        is_overrate: null,
-        overrate_fee_items: null,
+        // is_overrate: null,
+        overrate_fees: null,
       };
     }
     return data; // or handle other fee_type cases if necessary
