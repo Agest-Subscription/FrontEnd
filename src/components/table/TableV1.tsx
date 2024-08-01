@@ -14,6 +14,7 @@ interface CustomTableProps<T> extends TableProps<T> {
   onSearch?: (value: string) => void;
   searchValue?: string;
   showSearchBar?: boolean;
+  showButton?: boolean;
   addButtonLabel?: string;
 }
 const { Search } = Input;
@@ -24,6 +25,7 @@ const TableV1 = <T extends Record<string, any>>({
   addItem,
   tableTitle,
   showSearchBar = false,
+  showButton = true,
   onSearch,
   searchValue = "",
   addButtonLabel = "Add New",
@@ -35,9 +37,11 @@ const TableV1 = <T extends Record<string, any>>({
         <Typography style={{ fontSize: 24, fontWeight: 600, color: "#2F80ED" }}>
           {capitalize(tableTitle ?? "")}
         </Typography>
-        <ButtonV1 onClick={addItem} customSize="small">
-          {addButtonLabel}
-        </ButtonV1>
+        {showButton && (
+          <ButtonV1 onClick={addItem} customSize="small">
+            {addButtonLabel}
+          </ButtonV1>
+        )}
       </Flex>
       {showSearchBar && (
         <Flex justify="end">

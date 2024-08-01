@@ -1,43 +1,40 @@
 import { FilterBase } from "../base";
 
-export type LandingPage = {
+export type Fee = {
+  id: string;
+  price: number;
+};
+
+export type PricingPlan = {
   id: string;
   name: string;
   start_date: string;
-  end_date: string | null;
-  fee_price: number;
-  period: string;
-  basic_plan_id: string | null;
-  pro_plan_id: string | null;
-  premium_plan_id: string | null;
+  end_date: string;
+  recurrence_fee: Fee;
+  recurrence_period: string;
 };
 
-export type LandingPageTableData = Omit<
-  LandingPage,
-  "basic_plan_id" | "pro_plan_id" | "premium_plan_id"
-> & {
+export type LandingPage = {
+  id: string;
+  pricing_plan: PricingPlan;
+  priority: "basic" | "pro" | "premium";
+};
+
+export type LandingPageTableData = LandingPage & {
   no: number;
 };
 
-export type LandingPageResponseItem = Omit<
-  LandingPage,
-  "basic_plan_id" | "pro_plan_id" | "premium_plan_id"
->;
+export type LandingPageResponseItem = LandingPage;
 
 export type LandingPageFilterParams = FilterBase<LandingPageResponseItem>;
 
-export type UpdateLandingPagePayload = LandingPage;
-
-export type LandingPageItemArray = Pick<
-  LandingPage,
-  "period" | "basic_plan_id" | "pro_plan_id" | "premium_plan_id"
->;
-
-export type LandingPageFormValues = Omit<
-  LandingPage,
-  "period" | "basic_plan_id" | "pro_plan_id" | "premium_plan_id"
-> & {
-  landing_page_items: LandingPageItemArray[];
+export type LandingPageItem = {
+  period: string;
+  basic_plan_id: string | "";
+  pro_plan_id: string | "";
+  premium_plan_id: string | "";
 };
 
-export type AddLandingPagePayload = LandingPageFormValues
+export type LandingPageFormValues = { landing_page_items: LandingPageItem[] };
+
+export type AddLandingPagePayload = LandingPageFormValues;

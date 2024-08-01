@@ -1,22 +1,27 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
 
-import LandingPageDetails from "../LandingPageDetails";
+import LandingPagesDetails from "../LandingPageDetails";
 import { useGenerateFields } from "../useGenerateFields";
 
+import NotFound from "@/app/not-found";
 import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
 import PopUp from "@/components/popup/Popup";
-import { useAddLandingPage } from "@/hooks/landingPage";
+import { useAddLandingPage, useGetListLandingPage } from "@/hooks/landingPage";
 import { CustomError } from "@/interfaces/base";
-import { LandingPageFormValues } from "@/interfaces/model/landingPage.type";
+import {
+  LandingPage,
+  LandingPageFormValues,
+  LandingPageItem,
+} from "@/interfaces/model/landingPage.type";
 import { popUpPropType } from "@/interfaces/popup";
-import landingPageFormValuesSchema from "@/schema/landingPage";
+import landingpageFormValuesSchema from "@/schema/landingPage";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
-import { capitalize, trimString } from "@/utils/string";
+import { capitalize } from "@/utils/string";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
@@ -25,23 +30,66 @@ const Page: React.FC<Props> = () => {
   const { mutate: addLandingPage, isLoading: isAdding } = useAddLandingPage();
   const methods = useForm<LandingPageFormValues>({
     mode: "onBlur",
-    resolver: yupResolver(landingPageFormValuesSchema),
+    resolver: yupResolver(landingpageFormValuesSchema),
   });
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "successpopup",
-    popup_text: `${capitalize("Are you sure to create a new landing page?")}`,
+    popup_text: `${capitalize("Are you sure to create a new Landing Page?")}`,
     popup_type: "Confirm",
     onConfirm: methods.handleSubmit(onSubmit),
     onClose: () => setOpenModal(false),
   });
 
+  const transformResponse = (data: LandingPage[]): LandingPageItem[] => {
+    const grouped: { [key: string]: LandingPageItem } = {};
+
+    data.forEach((item) => {
+      const period = item?.pricing_plan.recurrence_period;
+      if (!grouped[period]) {
+        grouped[period] = {
+          period,
+          basic_plan_id: "",
+          pro_plan_id: "",
+          premium_plan_id: "",
+        };
+      }
+
+      if (item.priority === "basic") {
+        grouped[period].basic_plan_id = item.pricing_plan.id.toString();
+      } else if (item.priority === "pro") {
+        grouped[period].pro_plan_id = item.pricing_plan.id.toString();
+      } else if (item.priority === "premium") {
+        grouped[period].premium_plan_id = item.pricing_plan.id.toString();
+      }
+    });
+
+    return Object.values(grouped);
+  };
+
+  const params = {
+    page_size: 12,
+  };
+
+  const { data: LandingPage, isError } = useGetListLandingPage(params);
+  const initialPricingPlans = LandingPage?.data.map(
+    (item) => item.pricing_plan,
+  );
+  const fields = useGenerateFields(initialPricingPlans);
+
+  useEffect(() => {
+    if (LandingPage) {
+      const transformData = transformResponse(LandingPage?.data ?? []);
+      methods.setValue("landing_page_items", transformData);
+    }
+  }, [LandingPage, methods]);
+
   function showModal(modalProp: popUpPropType) {
     setModalProp(modalProp);
     setOpenModal(true);
   }
+
   function onSubmit(data: LandingPageFormValues) {
-    const trimmed = trimString(data, ["name", "display_name"]);
-    addLandingPage(trimmed, {
+    addLandingPage(data, {
       onSuccess: () => {
         showModal({
           popup_id: "successpopup",
@@ -51,10 +99,10 @@ const Page: React.FC<Props> = () => {
           onClose: () => goToLandingPage(),
         });
       },
-      onError: (err: CustomError) => {
+      onError: (error: CustomError) => {
         showModal({
           popup_id: "fail",
-          popup_text: `${getErrorDetail(err) ?? "Landing Page Creation failed"}`,
+          popup_text: `${capitalize(getErrorDetail(error) ?? "Landing Page creation failed!")}`,
           popup_type: "Fail",
           onConfirm: () => {},
           onClose: () => setOpenModal(false),
@@ -63,20 +111,22 @@ const Page: React.FC<Props> = () => {
     });
   }
 
-  const fields = useGenerateFields();
-
   const handleSave = async () => {
     const isValid = await methods.trigger();
     if (isValid) {
       showModal({
         popup_id: "confirm",
-        popup_text: `${capitalize("Are you sure to create a new landing page?")}`,
+        popup_text: `${capitalize("Are you sure to create a new Landing Page?")}`,
         popup_type: "Confirm",
         onConfirm: methods.handleSubmit(onSubmit),
         onClose: () => setOpenModal(false),
       });
     }
   };
+
+  if (isError) {
+    return <NotFound previousPage="features" />;
+  }
 
   return (
     <Flex vertical gap={24}>
@@ -94,7 +144,7 @@ const Page: React.FC<Props> = () => {
             layout="vertical"
             onFinish={methods.handleSubmit(onSubmit)}
           >
-            <LandingPageDetails onSave={handleSave} />
+            <LandingPagesDetails onSave={handleSave} />
             <PopUp popupProps={modalProp} isOpen={openModal} />
           </Form>
         </FormWrapperV2>

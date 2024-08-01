@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import useGenerateColumns from "./useGenerateColumns";
 
 import TableV1 from "@/components/table/TableV1";
-import { PRICING_PlANS } from "@/constants/routes";
+import { PRICING_PLANS } from "@/constants/routes";
 import { useGetListPricingPlans } from "@/hooks/pricingPlan";
 import useSearchSync from "@/hooks/useSearchSync";
 import {
@@ -100,7 +100,7 @@ const PermissionList: React.FC<Props> = () => {
           handleTableChange({ pagination, filters })
         }
         pagination={tableParams.pagination}
-        addItem={() => router.push(`${PRICING_PlANS}/add`)}
+        addItem={() => router.push(`${PRICING_PLANS}/add`)}
         onSearch={handleSearch}
         searchValue={searchQuery}
       />
