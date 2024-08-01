@@ -1,7 +1,6 @@
 import { axiosClient } from "@/config/axios/client";
 import { GetListResponse } from "@/interfaces/base";
 import {
-  AddPermissionPayload,
   PermissionFilterParams,
   PermissionResponseItem,
   UpdatePermissionPayload,
@@ -20,8 +19,8 @@ export const getPermissionByIdApi = (id: string) => {
   return axiosClient.get<PermissionResponseItem>(`permissions/${id}`);
 };
 
-export const addPermissionApi = (data: AddPermissionPayload) => {
-  return axiosClient.post("permissions", data);
+export const addPermissionApi = () => {
+  return axiosClient.post("permissions");
 };
 
 export const updatePermissionApi = (data: UpdatePermissionPayload) => {

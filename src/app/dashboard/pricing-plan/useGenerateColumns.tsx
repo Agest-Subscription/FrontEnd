@@ -52,8 +52,8 @@ const useGenerateColumns = () => {
       },
       {
         title: "Free trial",
-        dataIndex: "is_free_trial",
-        key: "is_free_trial",
+        dataIndex: "has_free_trial",
+        key: "has_free_trial",
         align: "center",
         render: (is_overrate: boolean) => {
           return <Checkbox checked={is_overrate}></Checkbox>;

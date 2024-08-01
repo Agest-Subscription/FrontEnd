@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   useInfiniteQuery,
   useMutation,
@@ -74,10 +75,11 @@ export const useDeleteFee = () => {
 };
 
 export const useGetInfiniteFee = (params: FeeFilterParams) => {
-  return useInfiniteQuery({
-    queryKey: ["FEES", params],
+  const [searchTerm, setSearchTerm] = useState("");
+  const query = useInfiniteQuery({
+    queryKey: ["FEES", params, searchTerm],
     queryFn: ({ pageParam = 1 }) =>
-      getListFeesApi({ ...params, page: pageParam }),
+      getListFeesApi({ ...params, search: searchTerm, page: pageParam }),
     getNextPageParam: (lastPage, pages) => {
       if (lastPage.data.data.length === 0) {
         return undefined;
@@ -85,4 +87,5 @@ export const useGetInfiniteFee = (params: FeeFilterParams) => {
       return pages.length + 1;
     },
   });
+  return { ...query, setSearchTerm };
 };

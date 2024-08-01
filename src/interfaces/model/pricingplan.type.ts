@@ -1,8 +1,38 @@
 import { FilterBase } from "../base";
 import { EnumStruct } from "../enum";
 import { Feature } from "./feature.type";
+import { Fee } from "./fee.type";
+import { OverrateFee } from "./overrateFee.type";
 
-export type FreeTrialPeriod = "daily" | "weekly" | "monthly";
+export type FreeTrialPeriod = "day" | "week" | "month";
+
+export const FreeTrialPeriodEnum = Object.freeze({
+  day: { label: "Day", value: "day" },
+  week: { label: "Week", value: "week" },
+  month: { label: "Month", value: "month" },
+}) satisfies EnumStruct<FreeTrialPeriod>;
+
+export type OverrateFeeWithNewPrice = OverrateFee & {
+  new_price?: number | null;
+};
+
+export type FeaturePlanFee = {
+  id: number;
+  feature: Feature;
+  new_price: number;
+  fee: Fee;
+  overrate_fee_associations: {
+    overrate_fee: OverrateFee;
+    new_overrate_price: number;
+  }[];
+};
+
+export type PricingPlanFeature = {
+  feature: Feature;
+  new_price: number | null;
+  fee: Fee | null;
+  feature_plan_fee_new_overrate: OverrateFeeWithNewPrice[] | null;
+};
 
 export type PricingPlan = {
   id: string;
@@ -11,12 +41,20 @@ export type PricingPlan = {
   end_date: string;
   price: number;
   description: string | null;
-  features: Feature[];
-  is_free_trial: boolean;
+  has_free_trial: boolean;
   free_trial_period: FreeTrialPeriod | null;
   free_trial_period_count: number | null;
-  recurrence_fee_name: string | null;
+  recurrence_fee_id: string | null;
   is_active: boolean;
+  features: PricingPlanFeature[];
+};
+
+export type PricingPlanResponseItem = Omit<
+  PricingPlan,
+  "features" | "recurrence_fee_id"
+> & {
+  feature_plan_fees: FeaturePlanFee[];
+  recurrence_fee: Fee;
 };
 
 export type PricingPlanTableData = PricingPlan & {
@@ -34,23 +72,50 @@ export type PricingPlanFormValues = Omit<
   "id" | "price" | "features"
 >;
 
-export type PricingPlanResponseItem = PricingPlan;
+export type FeatureListPayload = {
+  id?: string;
+  feature_id: string;
+  new_price: number | null;
+  fee_id: string | null;
+  feature_plan_fee_new_overrate?: OverrateFeeWithNewPrice[] | null;
+};
 
-export type AddPricingPlanPayload = PricingPlanFormValues;
+export type AddPricingPlanPayload = PricingPlanFormValues & {
+  features: FeatureListPayload[];
+};
 
-export type UpdatePricingPlanPayload = PricingPlan;
+export type FeaturePlanFeeUpdate = {
+  feature_id: string;
+  fee_id: string | null;
+  new_price: number | null;
+  overrate_fee_associations: UpdatePricingPlanOverrateFee[] | null;
+};
 
-export const FreeTrialPeriodEnum = Object.freeze({
-  daily: {
-    label: "Daily",
-    value: "daily",
-  },
-  weekly: {
-    label: "Weekly",
-    value: "weekly",
-  },
-  monthly: {
-    label: "Monthly",
-    value: "monthly",
-  },
-}) satisfies EnumStruct<FreeTrialPeriod>;
+export type UpdatePricingPlanOverrateFee = {
+  overrate_fee: {
+    id: string;
+    threshold: number;
+    price: number;
+  };
+  new_overrate_price: number | null;
+};
+export type UpdatePricingPlanPayload = PricingPlanFormValues & {
+  id: string;
+  feature_plan_fees: {
+    add: FeaturePlanFeeUpdate[];
+    update: FeaturePlanFeeUpdate[];
+    delete: number[] | null;
+  };
+};
+
+export type PricingPlanFeaturesType = {
+  feature_plan_fee_id?: number | null;
+  id: string;
+  no: number;
+  name: string;
+  description: string | null;
+  fee?: Fee | null;
+  price: number | null;
+  new_price: number | null;
+  children?: OverrateFeeWithNewPrice[] | null;
+};
