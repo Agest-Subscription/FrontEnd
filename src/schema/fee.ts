@@ -1,10 +1,11 @@
-import { boolean, number, object, ObjectSchema, string } from "yup";
+import { array, boolean, number, object, ObjectSchema, string } from "yup";
 
 import {
   FeeFormValues,
   FeeType,
   RecurrenceType,
 } from "@/interfaces/model/fee.type";
+import { OverrateFee } from "@/interfaces/model/overrateFee.type";
 
 const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
   name: string()
@@ -15,7 +16,7 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
     .default(null)
     .max(255, "Description cannot exceed 255 characters"),
   fee: string<FeeType>().required("Fee type is required"),
-  fee_price: number()
+  price: number()
     .integer("Please enter an integer")
     .min(0, "Price cannot be smaller than 0")
     .required("Fee price is a required fields")
@@ -57,6 +58,7 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
           .required("Transaction unit is required")
           .max(100, "Transaction Unit cannot be greater than 100 characters"),
     }),
+  overrate_fees: array<OverrateFee>().nullable(),
 });
 
 export default feeFormValuesSchema;

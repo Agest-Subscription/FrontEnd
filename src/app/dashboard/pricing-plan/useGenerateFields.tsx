@@ -1,6 +1,8 @@
 import { useMemo } from "react";
+import { Spin } from "antd";
 import dayjs from "dayjs";
 
+import { useGetInfiniteFee } from "@/hooks/fee";
 import { FieldsData } from "@/interfaces/form";
 import {
   FreeTrialPeriodEnum,
@@ -9,6 +11,28 @@ import {
 import { enumToSelectOptions } from "@/utils/enum";
 
 export const useGenerateFields = (start_date: string) => {
+  const {
+    data: feePages,
+    fetchNextPage,
+    isFetchingNextPage,
+    isInitialLoading,
+    setSearchTerm,
+  } = useGetInfiniteFee({
+    page_size: 10,
+    is_active: true,
+    is_recurrence: true,
+  });
+  const mappedFeePages = useMemo(() => {
+    if (!feePages) return [];
+
+    return feePages.pages.flatMap((page) =>
+      page.data.data.map((fee) => ({
+        value: fee.id,
+        label: fee.name,
+        fee: { ...fee },
+      })),
+    );
+  }, [feePages]);
   const fields = useMemo<FieldsData<PricingPlanFormValues>>(() => {
     return {
       name: {
@@ -19,9 +43,37 @@ export const useGenerateFields = (start_date: string) => {
         },
       },
       recurrence_fee_id: {
-        label: "Recurrent fee name",
-        type: "text",
-        componentProps: {},
+        label: "Recurrence fee name",
+        type: "select",
+        options: mappedFeePages,
+        componentProps: {
+          isRequired: true,
+          filterOption: true,
+          optionFilterProp: "label",
+          onSearch: (searchTerm) => {
+            setSearchTerm(searchTerm);
+          },
+          onChange: () => setSearchTerm(""),
+          allowClear: true,
+          style: { width: "250px" },
+          maxTagCount: "responsive",
+          onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
+            const target = event.target as HTMLDivElement;
+            if (
+              !isFetchingNextPage &&
+              target.scrollTop + target.offsetHeight === target.scrollHeight
+            ) {
+              target.scrollTo(0, target.scrollHeight);
+
+              fetchNextPage();
+            }
+          },
+          dropdownRender: (menu) => (
+            <Spin spinning={isFetchingNextPage || isInitialLoading}>
+              {menu}
+            </Spin>
+          ),
+        },
       },
       start_date: {
         label: "Start date",
@@ -67,6 +119,13 @@ export const useGenerateFields = (start_date: string) => {
         type: "singleCheckbox",
       },
     };
-  }, [start_date]);
+  }, [
+    fetchNextPage,
+    isFetchingNextPage,
+    isInitialLoading,
+    mappedFeePages,
+    setSearchTerm,
+    start_date,
+  ]);
   return fields;
 };

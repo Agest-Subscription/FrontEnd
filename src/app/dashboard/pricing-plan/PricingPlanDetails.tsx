@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { Col, Flex, Row } from "antd";
 
 import AddFeature from "./AddFeature";
@@ -8,31 +7,57 @@ import PricingPlanFeatures from "./PricingPlanFeature";
 import ButtonV1 from "@/components/button/CustomButton";
 import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
 import { Feature } from "@/interfaces/model/feature.type";
-import { PricingPlanFormValues } from "@/interfaces/model/pricingplan.type";
+import {
+  FeaturePlanFee,
+  PricingPlanFormValues,
+} from "@/interfaces/model/pricingplan.type";
 import { PricingPlanFeaturesType } from "@/interfaces/model/pricingplan.type";
+import { useGoToDashboardTab } from "@/utils/navigate";
 
 interface DetailsProp {
   edit?: boolean;
   disableSaveBtn?: boolean;
   onDelete?: any;
   onSave: (dataSource: PricingPlanFeaturesType[]) => void;
-  selectedRows?: Feature[];
+  selectedRows?: FeaturePlanFee[];
 }
 
 const PricingPlanDetails: React.FC<DetailsProp> = ({
   edit = false,
   disableSaveBtn = false,
   onDelete,
-  selectedRows,
+  selectedRows = [],
   onSave,
 }) => {
+  const goToPricingPlan = useGoToDashboardTab("pricing-plan");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFeatures, setSelectedFeatures] = useState<Feature[]>([]);
   const [dataSource, setDataSource] = useState<PricingPlanFeaturesType[]>([]);
 
-  const router = useRouter();
   const { FormField } = useFormWrapperCtx<PricingPlanFormValues>();
 
+  useEffect(() => {
+    if (edit) {
+      setSelectedFeatures(selectedRows.map((item) => item.feature));
+      setDataSource(
+        selectedRows.map((item, index) => ({
+          feature_plan_fee_id: item.id,
+          key: item.id,
+          id: item.feature.id,
+          no: index + 1,
+          name: item.feature.name,
+          price: item.fee.price,
+          description: item.feature.description,
+          fee: item.fee,
+          new_price: item.new_price,
+          children: item.overrate_fee_associations.map((data) => ({
+            ...data.overrate_fee,
+            new_price: data.new_overrate_price,
+          })),
+        })),
+      );
+    }
+  }, [edit, selectedRows]);
   function handleSaveFeature(selectedRows: Feature[]) {
     setSelectedFeatures(selectedRows);
     setIsModalOpen(false);
@@ -121,7 +146,7 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
           <ButtonV1
             title="Cancel"
             customType="cancel"
-            onClick={() => router.back()}
+            onClick={goToPricingPlan}
           />
           <ButtonV1
             title="Save"

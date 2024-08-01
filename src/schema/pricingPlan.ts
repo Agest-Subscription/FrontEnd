@@ -49,7 +49,9 @@ const pricingplanFormValuesSchema: ObjectSchema<PricingPlanFormValues> = object(
             .min(1, "Free trial cycle count cannot be smaller than 1"),
       }),
     features: array<FeatureListPayload>().min(0).default([]),
-    recurrence_fee_id: string().nullable().default(null),
+    recurrence_fee_id: string()
+      .required("Recurrence Fee is required")
+      .default(null),
   },
 );
 

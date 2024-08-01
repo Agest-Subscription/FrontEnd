@@ -17,7 +17,7 @@ export const getListPricingPlansApi = (params: PricingPlanFilterParams) => {
 };
 
 export const getPricingPlanbyIdApi = (id: string) => {
-  return axiosClient.get<PricingPlanResponseItem>(`pricingplans/${id}`);
+  return axiosClient.get<PricingPlanResponseItem>(`pricing-plans/${id}`);
 };
 
 export const addPricingPlanApi = (data: AddPricingPlanPayload) => {

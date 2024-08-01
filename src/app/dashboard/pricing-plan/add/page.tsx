@@ -43,6 +43,7 @@ const Page: React.FC<Props> = () => {
     setModalProp(modalProp);
     setOpenModal(true);
   }
+
   function onSubmit(
     data: PricingPlanFormValues,
     featureList: PricingPlanFeaturesType[] = [],
@@ -72,6 +73,7 @@ const Page: React.FC<Props> = () => {
   const start_date = methods.watch("start_date");
 
   const fields = useGenerateFields(start_date);
+
   const formatPayload = (
     data: PricingPlanFormValues,
     featureList: PricingPlanFeaturesType[],
@@ -84,12 +86,14 @@ const Page: React.FC<Props> = () => {
         fee_id: item.fee?.id ?? data.recurrence_fee_id,
         feature_plan_fee_new_overrate:
           item.children?.map((fee) => ({
+            ...fee,
             fee_overrate_id: fee.id,
             new_overrate_price: fee.new_price ?? null,
-          })) ?? [],
+          })) ?? null,
       })),
     };
   };
+
   const handleSave = async (featureList: PricingPlanFeaturesType[]) => {
     const isValid = await methods.trigger();
     if (isValid) {

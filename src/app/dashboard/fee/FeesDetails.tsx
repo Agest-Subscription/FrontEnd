@@ -45,7 +45,7 @@ const PermissionDetails: React.FC<DetailsProp> = ({
             <FormField name="fee" />
           </Col>
           <Col span={4}>
-            <FormField name="fee_price" />
+            <FormField name="price" />
           </Col>
           {fee === "transaction" && (
             <Col span={4}>

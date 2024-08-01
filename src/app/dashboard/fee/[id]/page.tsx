@@ -137,7 +137,7 @@ const Page: React.FC<Props> = () => {
     if (Fee) {
       methods.setValue("name", Fee.name);
       methods.setValue("fee", Fee.fee);
-      methods.setValue("fee_price", Fee.fee_price);
+      methods.setValue("price", Fee.price);
       methods.setValue("description", Fee.description);
       methods.setValue("transaction_unit", Fee.transaction_unit);
       methods.setValue("is_overrate", Fee.is_overrate);

@@ -1,14 +1,17 @@
 import React, { useEffect, useMemo } from "react";
 import Link from "next/link";
 import { DeleteOutlined } from "@ant-design/icons";
-import { Checkbox, Flex, Input, Select, Spin, Table, Typography } from "antd";
+import { Flex, Input, Select, Spin, Table, Typography } from "antd";
 import { ColumnType } from "antd/es/table";
 import debounce from "lodash/debounce";
 
 import { useGetInfiniteFee } from "@/hooks/fee";
 import { Feature } from "@/interfaces/model/feature.type";
 import { OverrateFee } from "@/interfaces/model/overrateFee.type";
-import { PricingPlanFeaturesType } from "@/interfaces/model/pricingplan.type";
+import {
+  OverrateFeeWithNewPrice,
+  PricingPlanFeaturesType,
+} from "@/interfaces/model/pricingplan.type";
 import { capitalize } from "@/utils/string";
 
 type Props = {
@@ -36,6 +39,8 @@ const PricingPlanFeatures: React.FC<Props> = ({
     setSearchTerm,
   } = useGetInfiniteFee({
     page_size: 10,
+    is_recurrence: false,
+    is_active: true,
   });
 
   const mappedFeePages = useMemo(() => {
@@ -100,6 +105,14 @@ const PricingPlanFeatures: React.FC<Props> = ({
     }
   }, [FeatureList, dataSource, setDataSource]);
 
+  function mapOverrateFee(overrateFees: OverrateFee[], fee_id: string) {
+    return overrateFees.map((fee) => ({
+      ...fee,
+      new_price: null,
+      fee_id: fee_id,
+    }));
+  }
+
   const columns = useMemo<ColumnType<PricingPlanFeaturesType>[]>(() => {
     const updateFeeType = (
       value: number | string,
@@ -114,9 +127,10 @@ const PricingPlanFeatures: React.FC<Props> = ({
           return {
             ...item,
             fee: selectedFee || null, // Ensure fee is either Fee or null
-            price: selectedFee?.fee_price || null,
-            overrate: selectedFee?.is_overrate || null,
-            children: selectedFee?.is_overrate ? dummyOverrateFee : null,
+            price: selectedFee?.price || null,
+            children: selectedFee?.overrate_fees?.length
+              ? mapOverrateFee(selectedFee.overrate_fees, selectedFee.id)
+              : null,
           };
         }
         return item;
@@ -141,7 +155,7 @@ const PricingPlanFeatures: React.FC<Props> = ({
 
     const onChangeNewPriceOverrateFee = (
       value: string,
-      record: OverrateFee,
+      record: OverrateFeeWithNewPrice,
     ) => {
       const newDataSource = dataSource.map((item) => {
         if (item.fee?.id === record.fee_id) {
@@ -158,28 +172,6 @@ const PricingPlanFeatures: React.FC<Props> = ({
       });
       setDataSource(newDataSource);
     };
-    const dummyOverrateFee = [
-      {
-        id: "1",
-        fee_id: "3",
-        name: "Service Fee",
-        fee_name: "Service Charge",
-        threshold: 100,
-        price: 10.5,
-        description: "Fee for general service",
-        transaction_unit: "USD",
-      },
-      {
-        id: "2",
-        fee_id: "3",
-        name: "Processing Fee",
-        fee_name: "Processing Charge",
-        threshold: 200,
-        price: 15.75,
-        description: null,
-        transaction_unit: "USD",
-      },
-    ];
     const handleDelete = (record: PricingPlanFeaturesType) => {
       deleteFeature(record.id);
       const newDataSource = dataSource
@@ -212,6 +204,7 @@ const PricingPlanFeatures: React.FC<Props> = ({
       {
         title: "No",
         dataIndex: "no",
+        align: "center",
       },
       {
         title: "Name",
@@ -229,6 +222,7 @@ const PricingPlanFeatures: React.FC<Props> = ({
           return (
             record.no && (
               <Select
+                value={record.fee?.id ?? null}
                 options={mappedFeePages}
                 onChange={(value) => updateFeeType(value, record)}
                 style={{ width: "150px" }}
@@ -254,16 +248,15 @@ const PricingPlanFeatures: React.FC<Props> = ({
       {
         title: "Price",
         dataIndex: "price",
-        width: 200,
       },
       {
         title: "New Price",
         dataIndex: "new_price",
-        width: 150,
         render: (_, record) => {
           if (record.no) {
             return record.fee ? (
               <Input
+                value={record.new_price ?? ""}
                 onChange={(event) =>
                   onChangeNewPrice(event.target.value, record)
                 }
@@ -274,6 +267,7 @@ const PricingPlanFeatures: React.FC<Props> = ({
           } else {
             return (
               <Input
+                defaultValue={record.new_price ?? ""}
                 onChange={(event) =>
                   onChangeNewPriceOverrateFee(event.target.value, record as any)
                 }
@@ -283,18 +277,10 @@ const PricingPlanFeatures: React.FC<Props> = ({
         },
       },
       {
-        title: "Overrate",
-        dataIndex: "overrate",
-        align: "center",
-        render: (is_overrate, record) =>
-          record.fee ? <Checkbox checked={is_overrate}></Checkbox> : "",
-      },
-      {
         title: "Action",
         dataIndex: "action",
         key: "action",
         align: "center",
-        width: 150,
         render: (_, record) =>
           record.no && <DeleteOutlined onClick={() => handleDelete(record)} />,
       },
