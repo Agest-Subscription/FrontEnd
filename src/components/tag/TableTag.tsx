@@ -35,7 +35,7 @@ const TableTag = ({ permissions }: Props) => {
         },
       }}
     >
-      <Flex wrap gap="small" style={{ width: "360px" }}>
+      <Flex wrap gap="small" style={{ width: "100%" }}>
         {isLoadMore
           ? permissions.map((permission) => (
               <Tag key={permission.id} bordered={false}>
@@ -51,7 +51,7 @@ const TableTag = ({ permissions }: Props) => {
                 <LongText
                   text={permission.display_name}
                   centerText
-                  width={80}
+                  width={150}
                 />
               </Tag>
             ))}

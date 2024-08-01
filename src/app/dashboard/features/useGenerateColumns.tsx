@@ -16,6 +16,7 @@ const useGenerateColumns = () => {
         title: "No",
         dataIndex: "no",
         key: "no",
+        align: "center",
       },
       {
         title: "Name",
@@ -30,7 +31,7 @@ const useGenerateColumns = () => {
         title: "Permission",
         dataIndex: "permissions",
         key: "permissions",
-        width: 250,
+        width: "35%",
         render: (_, record) => {
           return <TableTag permissions={record.permissions}></TableTag>;
         },

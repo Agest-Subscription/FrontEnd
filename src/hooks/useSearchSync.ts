@@ -25,7 +25,7 @@ const useSearchSync = () => {
     setSearchQuery(searchParams.get("search") || "");
   }, [searchParams]);
 
-  return { searchQuery, handleSearch };
+  return { searchQuery, handleSearch, setSearchQuery };
 };
 
 export default useSearchSync;
