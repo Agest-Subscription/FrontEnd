@@ -35,14 +35,14 @@ const pricingplanFormValuesSchema: ObjectSchema<PricingPlanFormValues> = object(
       .nullable()
       .default(null)
       .when("has_free_trial", {
-        is: "true",
+        is: true,
         then: (schema) => schema.required("Free trial period type is required"),
       }),
     free_trial_period_count: number()
       .nullable()
       .default(null)
       .when("has_free_trial", {
-        is: "true",
+        is: true,
         then: (schema) =>
           schema
             .required("Free trial cycle count is required")
