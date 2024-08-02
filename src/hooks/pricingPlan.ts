@@ -1,4 +1,10 @@
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 import {
   addPricingPlanApi,
@@ -10,7 +16,6 @@ import {
 import { PRICING_PLAN, PRICING_PLANS } from "@/constants/query";
 import { CustomError } from "@/interfaces/base";
 import { PricingPlanFilterParams } from "@/interfaces/model/pricingplan.type";
-import { useState } from "react";
 
 export const useGetListPricingPlans = (params: PricingPlanFilterParams) => {
   return useQuery({

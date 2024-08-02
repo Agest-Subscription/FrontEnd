@@ -1,7 +1,7 @@
 import React from "react";
 import { Flex } from "antd";
 
-import AddMultipleItems from "./AddMultipleItems";
+import LandingPageForm from "./LandingPageForm";
 
 import ButtonV1 from "@/components/button/CustomButton";
 import { useGoToDashboardTab } from "@/utils/navigate";
@@ -25,7 +25,7 @@ const LandingPageDetails: React.FC<DetailsProp> = ({
         gap={24}
         style={{ border: "1px solid #BDC1CA", padding: "16px" }}
       >
-        <AddMultipleItems />
+        <LandingPageForm onSave={onSave} />
       </Flex>
       <Flex
         style={{ width: "100%" }}

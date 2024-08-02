@@ -53,18 +53,22 @@ export function trimString<T>(data: T, fields: TrimmedFields<T>[]): T {
 }
 
 export function formatDuration(duration: string): string {
-  const pluralMap: { [key: string]: string } = {
-    DAY: "days",
-    WEEK: "weeks",
-    MONTH: "months",
-    YEAR: "years",
-  };
+  if (duration) {
+    const pluralMap: { [key: string]: string } = {
+      DAY: "days",
+      WEEK: "weeks",
+      MONTH: "months",
+      YEAR: "years",
+    };
 
-  const [numberStr, unit] = duration.split(" ");
+    const [numberStr, unit] = duration.split(" ");
 
-  const number = parseInt(numberStr, 10);
+    const number = parseInt(numberStr, 10);
 
-  const formattedUnit = number === 1 ? unit.toLowerCase() : pluralMap[unit];
+    const formattedUnit = number === 1 ? unit.toLowerCase() : pluralMap[unit];
 
-  return `${number} ${formattedUnit}`;
+    return `${number} ${formattedUnit}`;
+  }
+
+  return "";
 }

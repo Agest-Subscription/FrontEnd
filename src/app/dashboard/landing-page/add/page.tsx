@@ -1,16 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import React, { useState } from "react";
 import { Flex, Form, Spin, Typography } from "antd";
 
 import LandingPagesDetails from "../LandingPageDetails";
-import { useGenerateFields } from "../useGenerateFields";
 
-import NotFound from "@/app/not-found";
-import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
 import PopUp from "@/components/popup/Popup";
-import { useAddLandingPage, useGetListLandingPage } from "@/hooks/landingPage";
+import { useAddLandingPage } from "@/hooks/landingPage";
 import { CustomError } from "@/interfaces/base";
 import {
   LandingPage,
@@ -28,15 +23,18 @@ const Page: React.FC<Props> = () => {
   const goToLandingPage = useGoToDashboardTab("landing-page");
   const [openModal, setOpenModal] = useState(false);
   const { mutate: addLandingPage, isLoading: isAdding } = useAddLandingPage();
-  const methods = useForm<LandingPageFormValues>({
-    mode: "onBlur",
-    resolver: yupResolver(landingpageFormValuesSchema),
-  });
+
+  const handleSubmit = (onSubmit: any) => {
+    return () => {
+      setOpenModal(true);
+    };
+  };
+
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "successpopup",
     popup_text: `${capitalize("Are you sure to create a new Landing Page?")}`,
     popup_type: "Confirm",
-    onConfirm: methods.handleSubmit(onSubmit),
+    onConfirm: handleSubmit(onSubmit),
     onClose: () => setOpenModal(false),
   });
 
@@ -44,10 +42,10 @@ const Page: React.FC<Props> = () => {
     const grouped: { [key: string]: LandingPageItem } = {};
 
     data.forEach((item) => {
-      const period = item?.pricing_plan.recurrence_period;
-      if (!grouped[period]) {
-        grouped[period] = {
-          period,
+      const recurrence_period = item?.pricing_plan.recurrence_period;
+      if (!grouped[recurrence_period]) {
+        grouped[recurrence_period] = {
+          recurrence_period,
           basic_plan_id: "",
           pro_plan_id: "",
           premium_plan_id: "",
@@ -55,33 +53,19 @@ const Page: React.FC<Props> = () => {
       }
 
       if (item.priority === "basic") {
-        grouped[period].basic_plan_id = item.pricing_plan.id.toString();
+        grouped[recurrence_period].basic_plan_id =
+          item.pricing_plan.id.toString();
       } else if (item.priority === "pro") {
-        grouped[period].pro_plan_id = item.pricing_plan.id.toString();
+        grouped[recurrence_period].pro_plan_id =
+          item.pricing_plan.id.toString();
       } else if (item.priority === "premium") {
-        grouped[period].premium_plan_id = item.pricing_plan.id.toString();
+        grouped[recurrence_period].premium_plan_id =
+          item.pricing_plan.id.toString();
       }
     });
 
     return Object.values(grouped);
   };
-
-  const params = {
-    page_size: 12,
-  };
-
-  const { data: LandingPage, isError } = useGetListLandingPage(params);
-  const initialPricingPlans = LandingPage?.data.map(
-    (item) => item.pricing_plan,
-  );
-  const fields = useGenerateFields(initialPricingPlans);
-
-  useEffect(() => {
-    if (LandingPage) {
-      const transformData = transformResponse(LandingPage?.data ?? []);
-      methods.setValue("landing_page_items", transformData);
-    }
-  }, [LandingPage, methods]);
 
   function showModal(modalProp: popUpPropType) {
     setModalProp(modalProp);
@@ -112,21 +96,8 @@ const Page: React.FC<Props> = () => {
   }
 
   const handleSave = async () => {
-    const isValid = await methods.trigger();
-    if (isValid) {
-      showModal({
-        popup_id: "confirm",
-        popup_text: `${capitalize("Are you sure to create a new Landing Page?")}`,
-        popup_type: "Confirm",
-        onConfirm: methods.handleSubmit(onSubmit),
-        onClose: () => setOpenModal(false),
-      });
-    }
+    onSubmit;
   };
-
-  if (isError) {
-    return <NotFound previousPage="features" />;
-  }
 
   return (
     <Flex vertical gap={24}>
@@ -134,20 +105,18 @@ const Page: React.FC<Props> = () => {
         {capitalize("Landing Page Creation")}
       </Typography>
       <Spin spinning={isAdding}>
-        <FormWrapperV2 methods={methods} fields={fields}>
-          <Form
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "20px",
-            }}
-            layout="vertical"
-            onFinish={methods.handleSubmit(onSubmit)}
-          >
-            <LandingPagesDetails onSave={handleSave} />
-            <PopUp popupProps={modalProp} isOpen={openModal} />
-          </Form>
-        </FormWrapperV2>
+        <Form
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+          }}
+          layout="vertical"
+          onFinish={handleSubmit(onSubmit)}
+        >
+          <LandingPagesDetails onSave={handleSave} />
+          <PopUp popupProps={modalProp} isOpen={openModal} />
+        </Form>
       </Spin>
     </Flex>
   );

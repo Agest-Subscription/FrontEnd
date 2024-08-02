@@ -45,14 +45,12 @@ export type PricingPlan = {
   free_trial_period: FreeTrialPeriod | null;
   free_trial_period_count: number | null;
   recurrence_fee_id: string | null;
+  recurrence_period: string;
   is_active: boolean;
   features: PricingPlanFeature[];
 };
 
-export type PricingPlanResponseItem = Omit<
-  PricingPlan,
-  "features" | "recurrence_fee_id"
-> & {
+export type PricingPlanResponseItem = Omit<PricingPlan, "features"> & {
   feature_plan_fees: FeaturePlanFee[];
   recurrence_fee: Fee;
 };
