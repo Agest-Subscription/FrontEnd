@@ -21,10 +21,12 @@ export type FeaturePlanFee = {
   feature: Feature;
   new_price: number;
   fee: Fee;
-  overrate_fee_associations: {
-    overrate_fee: OverrateFee;
-    new_overrate_price: number;
-  }[];
+  overrate_fee_associations: OverrateFeeAssociation[];
+};
+
+export type OverrateFeeAssociation = {
+  overrate_fee: OverrateFee;
+  new_overrate_price: number;
 };
 
 export type PricingPlanFeature = {
@@ -57,8 +59,12 @@ export type PricingPlanResponseItem = Omit<
   recurrence_fee: Fee;
 };
 
-export type PricingPlanTableData = PricingPlan & {
+export type PricingPlanTableData = Omit<
+  PricingPlan,
+  "recurrence_fee_id" | "features"
+> & {
   no: number;
+  features: Feature[] | null;
 };
 
 export type PricingPlanLandingPage = PricingPlan;

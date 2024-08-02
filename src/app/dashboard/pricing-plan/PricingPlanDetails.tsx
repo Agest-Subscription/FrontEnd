@@ -9,6 +9,7 @@ import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
 import { Feature } from "@/interfaces/model/feature.type";
 import {
   FeaturePlanFee,
+  OverrateFeeAssociation,
   PricingPlanFormValues,
 } from "@/interfaces/model/pricingplan.type";
 import { PricingPlanFeaturesType } from "@/interfaces/model/pricingplan.type";
@@ -20,6 +21,7 @@ interface DetailsProp {
   onDelete?: any;
   onSave: (dataSource: PricingPlanFeaturesType[]) => void;
   selectedRows?: FeaturePlanFee[];
+  has_free_trial?: boolean;
 }
 
 const PricingPlanDetails: React.FC<DetailsProp> = ({
@@ -28,6 +30,7 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
   onDelete,
   selectedRows = [],
   onSave,
+  has_free_trial = false,
 }) => {
   const goToPricingPlan = useGoToDashboardTab("pricing-plan");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -50,14 +53,20 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
           description: item.feature.description,
           fee: item.fee,
           new_price: item.new_price,
-          children: item.overrate_fee_associations.map((data) => ({
-            ...data.overrate_fee,
-            new_price: data.new_overrate_price,
-          })),
+          children: mapOverrateFee(item.overrate_fee_associations),
         })),
       );
     }
   }, [edit, selectedRows]);
+
+  function mapOverrateFee(overrateFeeList: OverrateFeeAssociation[]) {
+    if (overrateFeeList.length === 0) return null;
+    return overrateFeeList.map((data) => ({
+      ...data.overrate_fee,
+      new_price: data.new_overrate_price,
+    }));
+  }
+
   function handleSaveFeature(selectedRows: Feature[]) {
     setSelectedFeatures(selectedRows);
     setIsModalOpen(false);
@@ -110,12 +119,16 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
               <FormField name="is_active" />
             </Flex>
           </Col>
-          <Col span={6}>
-            <FormField name="free_trial_period" />
-          </Col>
-          <Col span={6}>
-            <FormField name="free_trial_period_count" />
-          </Col>
+          {has_free_trial && (
+            <>
+              <Col span={6}>
+                <FormField name="free_trial_period" />
+              </Col>
+              <Col span={6}>
+                <FormField name="free_trial_period_count" />
+              </Col>
+            </>
+          )}
         </Row>
         <Flex justify="end">
           <ButtonV1

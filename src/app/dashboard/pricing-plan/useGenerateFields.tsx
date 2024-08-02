@@ -55,7 +55,7 @@ export const useGenerateFields = (start_date: string) => {
           },
           onChange: () => setSearchTerm(""),
           allowClear: true,
-          style: { width: "250px" },
+          style: { width: "250px", height: "40px" },
           maxTagCount: "responsive",
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
             const target = event.target as HTMLDivElement;
@@ -87,7 +87,7 @@ export const useGenerateFields = (start_date: string) => {
         type: "datepicker",
         componentProps: {
           isRequired: true,
-          minDate: dayjs(start_date),
+          minDate: dayjs(start_date).add(1, "day"),
         },
       },
       description: {
@@ -101,11 +101,21 @@ export const useGenerateFields = (start_date: string) => {
         label: "Free trial period",
         type: "select",
         options: enumToSelectOptions(FreeTrialPeriodEnum),
+        componentProps: {
+          isRequired: true,
+          style: {
+            height: "40px",
+          },
+        },
       },
       free_trial_period_count: {
         label: "Free trial cycle count",
         type: "text",
         componentProps: {
+          isRequired: true,
+          style: {
+            height: "40px",
+          },
           type: "number",
           min: 0,
         },

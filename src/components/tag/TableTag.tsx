@@ -8,9 +8,10 @@ import { Permission } from "@/interfaces/model/permission.type";
 
 type Props = {
   permissions: Permission[];
+  width?: string;
 };
 
-const TableTag = ({ permissions }: Props) => {
+const TableTag = ({ permissions, width = "80px" }: Props) => {
   const [isLoadMore, setIsLoadMore] = useState(false);
 
   const loadMoreData = () => {
@@ -42,7 +43,7 @@ const TableTag = ({ permissions }: Props) => {
                 <LongText
                   text={permission.display_name}
                   centerText
-                  width={80}
+                  width={width}
                 />
               </Tag>
             ))
@@ -51,7 +52,7 @@ const TableTag = ({ permissions }: Props) => {
                 <LongText
                   text={permission.display_name}
                   centerText
-                  width={150}
+                  width={width}
                 />
               </Tag>
             ))}
