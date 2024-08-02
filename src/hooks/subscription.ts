@@ -16,8 +16,10 @@ import { SUBSCRIPTION, SUBSCRIPTIONS } from "@/constants/query";
 import { CustomError } from "@/interfaces/base";
 import { SubscriptionFilterParams } from "@/interfaces/model/subscription.type";
 import { getListUserApi } from "@/api/user";
+import { getListPricingPlansApi } from "@/api/pricingPlan";
 import { useState } from "react";
 import { UserFilterParams } from "@/interfaces/model/user";
+import { PricingPlanFilterParams } from "@/interfaces/model/pricingplan.type";
 export const useGetListSubscription = (params: SubscriptionFilterParams) => {
   return useQuery({
     queryKey: [SUBSCRIPTIONS, params],
@@ -45,6 +47,27 @@ export const useGetInfiniteUser = (params: UserFilterParams) => {
     queryKey: ["USERS", searchTerm, params],
     queryFn: ({ pageParam = 1 }) =>
       getListUserApi({
+        ...params,
+        page: pageParam,
+        search: searchTerm,
+      }),
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.data.data.length === 0) {
+        return undefined;
+      }
+      return pages.length + 1;
+    },
+  });
+  return { ...query, setSearchTerm };
+};
+
+export const useGetInfinitePricingPlan = (params: PricingPlanFilterParams) => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const query = useInfiniteQuery({
+    queryKey: ["PRICING_PLANS", searchTerm, params],
+    queryFn: ({ pageParam = 1 }) =>
+      getListPricingPlansApi({
         ...params,
         page: pageParam,
         search: searchTerm,
