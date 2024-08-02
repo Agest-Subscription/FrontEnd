@@ -88,7 +88,7 @@ const PermissionList: React.FC<Props> = () => {
       })) ?? []
     );
   }, [PricingPlanTableData?.data, params.page, params?.page_size]);
-
+  console.log("123",PricingPlanTableData)
   return (
     <div>
       <TableV1

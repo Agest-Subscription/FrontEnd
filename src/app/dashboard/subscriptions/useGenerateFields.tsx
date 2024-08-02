@@ -4,9 +4,10 @@ import { Spin } from "antd";
 import { useGetInfiniteUser, useGetInfinitePricingPlan } from "@/hooks/subscription";
 import { SubscriptionFormValues } from "@/interfaces/model/subscription.type";
 import { UseFormReturn } from "react-hook-form";
-
+import dayjs from "dayjs";
 
 export const useGenerateFields = (methods: UseFormReturn<SubscriptionFormValues, any, undefined>) => {
+  const today = new Date();
   const {
     data: usersPage,
     fetchNextPage: fetchNextUserPage,
@@ -18,16 +19,16 @@ export const useGenerateFields = (methods: UseFormReturn<SubscriptionFormValues,
     is_active: true,
   });
 
-  const {
-    data: pricingPlansPage,
-    fetchNextPage: fetchNextPricingPlanPage,
-    isFetchingNextPage: isFetchingNextPricingPlanPage,
-    isInitialLoading: isInitialLoadingPricingPlans,
-    setSearchTerm: setPricingPlanSearchTerm,
-  } = useGetInfinitePricingPlan({
-    page_size: 10,
-    is_active: true,
-  });
+  // const {
+  //   data: pricingPlansPage,
+  //   fetchNextPage: fetchNextPricingPlanPage,
+  //   isFetchingNextPage: isFetchingNextPricingPlanPage,
+  //   isInitialLoading: isInitialLoadingPricingPlans,
+  //   setSearchTerm: setPricingPlanSearchTerm,
+  // } = useGetInfinitePricingPlan({
+  //   page_size: 10,
+  //   is_active: true,
+  // });
 
   const fields = useMemo<FieldsData<SubscriptionFormValues>>(() => {
     const mappedEmails = usersPage?.pages.flatMap(page =>
@@ -37,12 +38,42 @@ export const useGenerateFields = (methods: UseFormReturn<SubscriptionFormValues,
       }))
     ) ?? [];
 
-    const mappedPricingPlans = pricingPlansPage?.pages.flatMap(page =>
-      page.data.data.map(pricingPlan => ({
-        value: pricingPlan.id,
-        label: pricingPlan.name,
-      }))
-    ) ?? [];
+    // const mappedPricingPlans = pricingPlansPage?.pages.flatMap(page =>
+    //   page.data.data.map(pricingPlan => ({
+    //     value: pricingPlan.id,
+    //     label: pricingPlan.name,
+    //   }))
+    // ) ?? [];
+
+
+    // componentProps: {
+    //   isRequired: true,
+    //   filterOption: true,
+    //   optionFilterProp: "label",
+    //   onSearch: (searchTerm) => {
+    //     setPricingPlanSearchTerm(searchTerm);
+    //   },
+    //   onChange: () => {
+    //     setPricingPlanSearchTerm("");
+    //   },
+    //   allowClear: true,
+    //   onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
+    //     const target = event.target as HTMLDivElement;
+    //     if (
+    //       !isFetchingNextPricingPlanPage &&
+    //       target.scrollTop + target.offsetHeight === target.scrollHeight
+    //     ) {
+    //       target.scrollTo(0, target.scrollHeight);
+
+    //       fetchNextPricingPlanPage();
+    //     }
+    //   },
+    //   dropdownRender: (menu) => (
+    //     <Spin spinning={isFetchingNextPricingPlanPage || isInitialLoadingPricingPlans}>
+    //       {menu}
+    //     </Spin>
+    //   ),
+    // },
     
     return {
       user_id: {
@@ -89,41 +120,17 @@ export const useGenerateFields = (methods: UseFormReturn<SubscriptionFormValues,
       pricing_plan_id: {
         label: "Pricing plan",
         type: "select",
-        options: mappedPricingPlans,
-        componentProps: {
-          isRequired: true,
-          filterOption: true,
-          optionFilterProp: "label",
-          onSearch: (searchTerm) => {
-            setPricingPlanSearchTerm(searchTerm);
-          },
-          onChange: () => {
-            setPricingPlanSearchTerm("");
-          },
-          allowClear: true,
-          onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
-            const target = event.target as HTMLDivElement;
-            if (
-              !isFetchingNextPricingPlanPage &&
-              target.scrollTop + target.offsetHeight === target.scrollHeight
-            ) {
-              target.scrollTo(0, target.scrollHeight);
-
-              fetchNextPricingPlanPage();
-            }
-          },
-          dropdownRender: (menu) => (
-            <Spin spinning={isFetchingNextPricingPlanPage || isInitialLoadingPricingPlans}>
-              {menu}
-            </Spin>
-          ),
-        },
+        options: [{
+          value: "1",
+          label: "Test",
+        }],
       },
       start_date: {
         label: "Start date",
-        type: "text",
+        type: "datepicker",
         componentProps: {
           isRequired: true,
+          minDate: dayjs(today),
         },
       },
       due_date_free_trial: {
@@ -148,15 +155,15 @@ export const useGenerateFields = (methods: UseFormReturn<SubscriptionFormValues,
       },
     };
   }, [usersPage?.pages,
-    pricingPlansPage?.pages,
-    isFetchingNextPricingPlanPage,
+    //pricingPlansPage?.pages,
+    //isFetchingNextPricingPlanPage,
     isFetchingNextUserPage,
-    isInitialLoadingPricingPlans,
+    //isInitialLoadingPricingPlans,
     isInitialLoadingUsers,
     setUserSearchTerm,
-    setPricingPlanSearchTerm,
+    //setPricingPlanSearchTerm,
     fetchNextUserPage,
-    fetchNextPricingPlanPage,
+    //fetchNextPricingPlanPage,
   ]);
 
   return fields;
