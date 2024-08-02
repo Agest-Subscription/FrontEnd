@@ -60,7 +60,9 @@ const AddFeature: React.FC<Props> = ({
       key: "permissions",
       width: "65%",
       render: (_, record) => {
-        return <TableTag permissions={record.permissions}></TableTag>;
+        return (
+          <TableTag permissions={record.permissions} width="150px"></TableTag>
+        );
       },
     },
   ];
