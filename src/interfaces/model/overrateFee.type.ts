@@ -2,7 +2,7 @@ import { FilterBase } from "../base";
 import { Fee } from "./fee.type";
 
 export type OverrateFee = {
-  id: string | null;
+  id: string;
   fee_id: string | null;
   // name: string;
   // fee_name: string;

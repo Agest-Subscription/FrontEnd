@@ -1,7 +1,6 @@
 import { FilterBase } from "../base";
+import { EnumStruct } from "../enum";
 import { OverrateFee } from "./overrateFee.type";
-
-import { EnumStruct } from "@/interfaces/enum";
 
 export type FeeType = "onetime" | "transaction" | "recurrence";
 export type RecurrenceType = "day" | "week" | "month" | "year";
@@ -16,6 +15,7 @@ export type Fee = {
   transaction_unit: string | null;
   description: string | null;
   is_active: boolean;
+  overrate_fees?: OverrateFee[] | null;
 };
 
 export type FeeTableData = Fee & {
@@ -31,7 +31,10 @@ export type OverrateFeeOmitTransaction = Omit<
   OverateFeeArrItems,
   "isTransaction"
 >;
-export type FeeFilterParams = FilterBase<FeeTableData>;
+export type FeeFilterParams = FilterBase<FeeTableData> & {
+  is_active?: boolean;
+  is_recurrence?: boolean;
+};
 
 export type FeeFormValues = Omit<Fee, "id"> & {
   overrate_fees?: OverateFeeArrItems[] | null;

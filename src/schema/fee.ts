@@ -6,6 +6,7 @@ import {
   OverateFeeArrItems,
   RecurrenceType,
 } from "@/interfaces/model/fee.type";
+import { OverrateFee } from "@/interfaces/model/overrateFee.type";
 
 const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
   fee_type: string<FeeType>().required("Fee type is required"),
@@ -68,7 +69,7 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
   recurrence_type: string<RecurrenceType>()
     .nullable()
     .default(null)
-    .when("fee_type", {
+    .when("fee", {
       is: "recurrence",
       then: (schema) => schema.required("Recurrence type is required"),
     }),
@@ -76,7 +77,7 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
     .integer("Please enter a number")
     .nullable()
     .default(null)
-    .when("fee_type", {
+    .when("fee", {
       is: "recurrence",
       then: (schema) =>
         schema
@@ -87,7 +88,7 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
   transaction_unit: string()
     .nullable()
     .default(null)
-    .when("fee_type", {
+    .when("fee", {
       is: "transaction",
       then: (schema) =>
         schema

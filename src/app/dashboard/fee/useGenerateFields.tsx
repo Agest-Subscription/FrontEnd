@@ -19,7 +19,7 @@ export const useGenerateFields = (): FieldsData<FeeFormValues> => {
           style: { width: "100%" },
         },
       },
-      fee_type: {
+      fee: {
         label: "Fee Type",
         type: "select",
         options: enumToSelectOptions(FeeTypeEnum),
@@ -41,8 +41,8 @@ export const useGenerateFields = (): FieldsData<FeeFormValues> => {
         type: "text",
         componentProps: {
           isRequired: true,
-          type: "number",
           min: 0,
+          type: "number",
         },
       },
       recurrence_type: {

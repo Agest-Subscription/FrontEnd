@@ -62,7 +62,7 @@ const PricingCarousel = ({ PricingList, pricingPeriod }: Props) => {
 
   useEffect(() => {
     const filterList = PricingList.filter(
-      (plan) => plan.recurrence_fee_name === pricingPeriod,
+      (plan) => plan.recurrence_fee_id === pricingPeriod,
     );
     setMapPeriod(filterList);
     setAnimate(true);

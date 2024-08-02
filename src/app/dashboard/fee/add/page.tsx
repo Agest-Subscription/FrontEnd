@@ -73,7 +73,7 @@ const Page: React.FC<Props> = () => {
         overrate_fees: null,
       };
     }
-    return data; // or handle other fee_type cases if necessary
+    return data; // or handle other fee cases if necessary
   }
 
   function onSubmit(data: FeeFormValues) {
