@@ -36,7 +36,7 @@ export const useGenerateFields = () => {
           style: { width: "100%" },
         },
       },
-      fee_price: {
+      price: {
         label: "Price ($)",
         type: "text",
         componentProps: {

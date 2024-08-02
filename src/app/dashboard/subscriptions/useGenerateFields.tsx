@@ -1,53 +1,42 @@
 import { useMemo } from "react";
-import { Spin } from "antd";
-
-import { useGetInfinitePermission } from "@/hooks/permission";
 import { FieldsData } from "@/interfaces/form";
-import { FeatureFormValues } from "@/interfaces/model/feature.type";
-import { Permission } from "@/interfaces/model/permission.type";
-import { mergeAndMapInfiniteData } from "@/utils/infiniteFetch";
+import { Spin } from "antd";
+import { useGetInfiniteUser } from "@/hooks/subscription";
+import { SubscriptionFormValues } from "@/interfaces/model/subscription.type";
 
-export const useGenerateFields = (
-  initialSelectedPermissions?: Permission[],
-) => {
+
+export const useGenerateFields = () => {
   const {
-    data: permissionsPage,
+    data: usersPage,
     fetchNextPage,
     isFetchingNextPage,
     isInitialLoading,
     setSearchTerm,
-  } = useGetInfinitePermission({
+  } = useGetInfiniteUser({
     page_size: 10,
     is_active: true,
   });
-  const fields = useMemo<FieldsData<FeatureFormValues>>(() => {
-    const mappedPermissionsPages =
-      permissionsPage?.pages.map((page) => ({
-        data: page.data.data.map((permission) => ({
-          valueKey: permission.id,
-          labelKey: permission.display_name,
-        })),
-      })) ?? [];
 
-    const mergedPermissions =
-      mergeAndMapInfiniteData<Permission>(
-        initialSelectedPermissions ?? [],
-        "id",
-        "display_name",
-        mappedPermissionsPages,
-      ) ?? [];
+  const fields = useMemo<FieldsData<SubscriptionFormValues>>(() => {
+    const mappedEmails = usersPage?.pages.flatMap(page =>
+      page.data.data.map(user => ({
+        value: user.id,
+        label: user.email,
+      }))
+    ) ?? [];
+
     return {
-      name: {
-        label: "Name",
+      user_id: {
+        label: "User ID",
         type: "text",
         componentProps: {
           isRequired: true,
         },
       },
-      permissions: {
-        label: "Permission",
+      email: {
+        label: "Email",
         type: "select",
-        options: mergedPermissions,
+        options: mappedEmails,
         componentProps: {
           mode: "multiple",
           isRequired: true,
@@ -76,25 +65,15 @@ export const useGenerateFields = (
           ),
         },
       },
-      description: {
-        label: "Description",
-        type: "textarea",
-        componentProps: {
-          rows: 3,
-        },
-      },
-      is_active: {
+      is_cancelled: {
         label: "Is Active",
         type: "singleCheckbox",
       },
     };
-  }, [
-    permissionsPage?.pages,
-    initialSelectedPermissions,
+  }, [usersPage?.pages,
     setSearchTerm,
     isFetchingNextPage,
     fetchNextPage,
-    isInitialLoading,
-  ]);
+    isInitialLoading,]);
   return fields;
 };

@@ -14,6 +14,11 @@ export const PRICING_PLANS = "pricing-plans";
 export const PRICING_PLAN = "pricing-plan";
 
 export const USER_ME = "user-me";
+export const USER = "user";
+export const USERS = "users";
 
 export const LANDING_PAGES = "landing-pages";
 export const LANDING_PAGE = "landing-page";
+
+export const SUBSCRIPTION = "subscription";
+export const SUBSCRIPTIONS = "subscriptions";

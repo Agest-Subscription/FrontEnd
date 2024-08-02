@@ -3,7 +3,7 @@ import { Col, Flex, Row } from "antd";
 
 import ButtonV1 from "@/components/button/CustomButton";
 import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
-import { FeatureFormValues } from "@/interfaces/model/feature.type";
+import { UserFormValues } from "@/interfaces/model/user";
 import { useGoToDashboardTab } from "@/utils/navigate";
 
 interface DetailsProp {
@@ -13,14 +13,14 @@ interface DetailsProp {
   onSave: any;
 }
 
-const FeatureDetails: React.FC<DetailsProp> = ({
+const UserDetails: React.FC<DetailsProp> = ({
   edit = false,
   disableSaveBtn = false,
   onDelete,
   onSave,
 }) => {
-  const goToFeature = useGoToDashboardTab("features");
-  const { FormField } = useFormWrapperCtx<FeatureFormValues>();
+  const goToUser = useGoToDashboardTab("users");
+  const { FormField } = useFormWrapperCtx<UserFormValues>();
   return (
     <>
       <Flex
@@ -30,18 +30,10 @@ const FeatureDetails: React.FC<DetailsProp> = ({
       >
         <Row gutter={24}>
           <Col span={6}>
-            <FormField name="name" />
-          </Col>
-          <Col span={6}>
-            <FormField name="permissions" />
+            <FormField name="email" />
           </Col>
         </Row>
-        <Row gutter={24}>
-          <Col span={6}>
-            <FormField name="description" />
-          </Col>
-        </Row>
-        
+        <FormField name="is_admin" />
         <FormField name="is_active" />
       </Flex>
       <Flex
@@ -55,7 +47,7 @@ const FeatureDetails: React.FC<DetailsProp> = ({
           <ButtonV1
             title="Cancel"
             customType="cancel"
-            onClick={() => goToFeature()}
+            onClick={() => goToUser()}
           />
           <ButtonV1
             title="Save"
@@ -68,4 +60,4 @@ const FeatureDetails: React.FC<DetailsProp> = ({
   );
 };
 
-export default FeatureDetails;
+export default UserDetails;

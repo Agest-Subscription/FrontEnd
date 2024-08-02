@@ -82,7 +82,7 @@ const Page: React.FC<Props> = () => {
             popup_id: "successpopup",
             popup_text: `${capitalize("This Fee is successfully updated!")}`,
             popup_type: "Success",
-            onConfirm: () => {},
+            onConfirm: () => { },
             onClose: () => goToFee(),
           });
         },
@@ -91,7 +91,7 @@ const Page: React.FC<Props> = () => {
             popup_id: "fail",
             popup_text: `${getErrorDetail(err) ?? "Fee update failed"}`,
             popup_type: "Fail",
-            onConfirm: () => {},
+            onConfirm: () => { },
             onClose: () => setOpenModal(false),
           });
         },
@@ -119,7 +119,7 @@ const Page: React.FC<Props> = () => {
           popup_id: "successpopup",
           popup_text: capitalize("This Fee is successfully deleted!"),
           popup_type: "Success",
-          onConfirm: () => {},
+          onConfirm: () => { },
           onClose: () => goToFee(),
         }),
       onError: (err: CustomError) =>
@@ -127,7 +127,7 @@ const Page: React.FC<Props> = () => {
           popup_id: "fail",
           popup_text: `${getErrorDetail(err) ?? "Fee delete failed"}`,
           popup_type: "Fail",
-          onConfirm: () => {},
+          onConfirm: () => { },
           onClose: () => setOpenModal(false),
         }),
     });
@@ -137,7 +137,7 @@ const Page: React.FC<Props> = () => {
     if (Fee) {
       methods.setValue("name", Fee.name);
       methods.setValue("fee_type", Fee.fee_type);
-      methods.setValue("fee_price", Fee.fee_price);
+      methods.setValue("price", Fee.price);
       methods.setValue("description", Fee.description);
       methods.setValue("transaction_unit", Fee.transaction_unit);
       methods.setValue("is_overrate", Fee.is_overrate);

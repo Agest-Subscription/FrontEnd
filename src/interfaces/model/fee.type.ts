@@ -3,7 +3,7 @@ import { FilterBase } from "../base";
 import { EnumStruct } from "@/interfaces/enum";
 
 export type FeeType = "onetime" | "transaction" | "recurrence";
-export type RecurrenceType = "daily" | "weekly" | "monthly" | "yearly";
+export type RecurrenceType = "day" | "week" | "month" | "year";
 export type Fee = {
   id: string;
   name: string;
@@ -11,7 +11,7 @@ export type Fee = {
   is_overrate: boolean | null;
   recurrence_type: RecurrenceType | null;
   recurrence_cycle_count: number | null;
-  fee_price: number;
+  price: number;
   transaction_unit: string | null;
   description: string | null;
   is_active: boolean;
@@ -48,19 +48,19 @@ export const FeeTypeEnum = Object.freeze({
 
 export const RecurrenceTypeEnum = Object.freeze({
   daily: {
-    label: "Daily",
-    value: "daily",
+    label: "Day",
+    value: "day",
   },
   weekly: {
-    label: "Weekly",
-    value: "weekly",
+    label: "Week",
+    value: "week",
   },
   monthly: {
-    label: "Monthly",
-    value: "monthly",
+    label: "Month",
+    value: "month",
   },
   yearly: {
-    label: "Yearly",
-    value: "yearly",
+    label: "Year",
+    value: "year",
   },
 }) satisfies EnumStruct<RecurrenceType>;
