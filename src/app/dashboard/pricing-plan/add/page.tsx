@@ -31,6 +31,7 @@ const Page: React.FC<Props> = () => {
     mode: "onBlur",
     resolver: yupResolver(pricingplanFormValuesSchema),
   });
+  const has_free_trial = methods.watch("has_free_trial");
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "successpopup",
     popup_text: `${capitalize("Are you sure to create a new PricingPlan?")}`,
@@ -122,7 +123,10 @@ const Page: React.FC<Props> = () => {
             }}
             layout="vertical"
           >
-            <PricingPlanDetails onSave={handleSave} />
+            <PricingPlanDetails
+              onSave={handleSave}
+              has_free_trial={has_free_trial}
+            />
             <PopUp popupProps={modalProp} isOpen={openModal} />
           </Form>
         </FormWrapperV2>
