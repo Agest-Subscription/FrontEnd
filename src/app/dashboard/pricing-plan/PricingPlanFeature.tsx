@@ -141,6 +141,7 @@ const PricingPlanFeatures: React.FC<Props> = ({
       value: string,
       record: PricingPlanFeaturesType,
     ) => {
+      if (isNaN(Number(value))) return;
       const newDataSource = dataSource.map((item) => {
         if (item.no === record.no) {
           return {
@@ -157,6 +158,7 @@ const PricingPlanFeatures: React.FC<Props> = ({
       value: string,
       record: OverrateFeeWithNewPrice,
     ) => {
+      if (isNaN(Number(value))) return;
       const newDataSource = dataSource.map((item) => {
         if (item.fee?.id === record.fee_id) {
           return {
@@ -252,6 +254,7 @@ const PricingPlanFeatures: React.FC<Props> = ({
       {
         title: "New Price",
         dataIndex: "new_price",
+        width: 150,
         render: (_, record) => {
           if (record.no) {
             return record.fee ? (
@@ -267,7 +270,7 @@ const PricingPlanFeatures: React.FC<Props> = ({
           } else {
             return (
               <Input
-                defaultValue={record.new_price ?? ""}
+                value={record.new_price ?? ""}
                 onChange={(event) =>
                   onChangeNewPriceOverrateFee(event.target.value, record as any)
                 }
