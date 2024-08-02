@@ -41,14 +41,14 @@ const Page: React.FC<Props> = () => {
   }
 
   function formatPayload(data: FeeFormValues) {
-    if (data.fee_type === "transaction") {
+    if (data.fee === "transaction") {
       return {
         ...data,
         recurrence_cycle_count: null,
         recurrence_type: null,
       };
     }
-    if (data.fee_type === "onetime") {
+    if (data.fee === "onetime") {
       return {
         ...data,
         transaction_unit: null,
@@ -57,14 +57,14 @@ const Page: React.FC<Props> = () => {
         recurrence_type: null,
       };
     }
-    if (data.fee_type === "recurrence") {
+    if (data.fee === "recurrence") {
       return {
         ...data,
         transaction_unit: null,
         is_overrate: null,
       };
     }
-    return data; // or handle other fee_type cases if necessary
+    return data; // or handle other fee cases if necessary
   }
 
   function onSubmit(data: FeeFormValues) {

@@ -1,20 +1,31 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { Key, useEffect, useMemo, useRef, useState } from "react";
+import { SearchOutlined } from "@ant-design/icons";
 import type { TableColumnsType } from "antd";
-import { Flex, Spin, Table, Typography } from "antd";
-import Search from "antd/es/input/Search";
+import { Flex, Input, Modal, Spin, Table, Typography } from "antd";
 
 import ButtonV1 from "@/components/button/CustomButton";
+import TableTag from "@/components/tag/TableTag";
 import { useGetInfiniteFeatures } from "@/hooks/feature";
-import { FeatureTableData } from "@/interfaces/model/feature.type";
+import useSearchSync from "@/hooks/useSearchSync";
+import { Feature } from "@/interfaces/model/feature.type";
 import { capitalize } from "@/utils/string";
 
 type Props = {
-  handleCancel?: () => void;
+  onCancel: () => void;
+  onSave: (selectedRows: Feature[]) => void;
+  isModalOpen: boolean;
+  selectedRows?: Feature[];
 };
 
-const AddFeature: React.FC<Props> = ({ handleCancel }) => {
+const AddFeature: React.FC<Props> = ({
+  onCancel,
+  onSave,
+  isModalOpen,
+  selectedRows = [],
+}) => {
   const tableRef = useRef<HTMLDivElement>(null);
+  const { searchQuery, handleSearch: _, setSearchQuery } = useSearchSync();
   const {
     data: featuresPage,
     fetchNextPage,
@@ -23,78 +34,151 @@ const AddFeature: React.FC<Props> = ({ handleCancel }) => {
   } = useGetInfiniteFeatures({
     page_size: 10,
     is_active: true,
+    search: searchQuery,
   });
 
-  const columns: TableColumnsType<FeatureTableData> = [
+  const totalItemsRef = useRef<number | null>(null);
+  const [savedRowKeys, setSavedRowKeys] = useState<Key[]>(
+    selectedRows.map((row) => row.id),
+  );
+  const [tempSelectedRows, setTempSelectedRows] =
+    useState<Feature[]>(selectedRows);
+  const [tempSelectedRowKeys, setTempSelectedRowKeys] =
+    useState<Key[]>(savedRowKeys);
+
+  const columns: TableColumnsType<Feature> = [
     {
       title: "Feature",
       dataIndex: "name",
       key: "name",
-      width: "75%",
+      width: "25%",
+      align: "center",
+    },
+    {
+      title: "Permission",
+      dataIndex: "permissions",
+      key: "permissions",
+      width: "65%",
+      render: (_, record) => {
+        return <TableTag permissions={record.permissions}></TableTag>;
+      },
     },
   ];
-  const dataSource =
-    featuresPage?.pages.flatMap((features) =>
-      features.data.data.map((feature) => ({
-        key: feature.id,
-        name: feature.name,
-      })),
-    ) ?? [];
+
+  const dataSource = useMemo(
+    () =>
+      featuresPage?.pages.flatMap((features) =>
+        features.data.data.map((feature) => ({
+          ...feature,
+          key: feature.id,
+        })),
+      ) ?? [],
+    [featuresPage],
+  );
+
   const rowSelection = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows,
-      );
+    preserveSelectedRowKeys: true,
+    selectedRowKeys: tempSelectedRowKeys,
+    onChange: (selectedKeys: Key[], selectedRows: Feature[]) => {
+      setTempSelectedRowKeys(selectedKeys);
+      setTempSelectedRows(selectedRows);
     },
-    getCheckboxProps: (record: any) => ({
-      disabled: record.name === "Disabled User", // Column configuration not to be checked
-      name: record.name,
+    getCheckboxProps: (record: Feature) => ({
+      disabled: savedRowKeys.includes(record.id),
     }),
+    hideSelectAll: true,
   };
 
   useEffect(() => {
-    const node = tableRef.current;
+    if (!isModalOpen) {
+      setTempSelectedRowKeys(selectedRows.map((item) => item.id));
+      setSavedRowKeys(selectedRows.map((item) => item.id));
+    }
+  }, [isModalOpen, selectedRows]);
+
+  useEffect(() => {
     const handleScroll = () => {
-      if (node) {
-        const { scrollTop, scrollHeight, clientHeight } = node;
+      if (tableRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = tableRef.current;
         if (scrollTop + clientHeight >= scrollHeight - 5) {
           fetchNextPage();
         }
       }
     };
-    if (node) {
-      node.addEventListener("scroll", handleScroll);
-    }
+    tableRef.current?.addEventListener("scroll", handleScroll);
     return () => {
-      if (node) {
-        node.removeEventListener("scroll", handleScroll);
-      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      tableRef.current?.removeEventListener("scroll", handleScroll);
     };
-  }, [fetchNextPage]);
+  }, [fetchNextPage, isModalOpen]);
+
+  const handleCancel = () => {
+    setTempSelectedRowKeys(savedRowKeys);
+    onCancel();
+  };
+
+  const handleSave = () => {
+    setSavedRowKeys((prevKeys) => [...prevKeys, ...tempSelectedRowKeys]);
+    onSave(tempSelectedRows);
+  };
+
+  const handleReset = () => {
+    setSearchQuery("");
+  };
+
+  const handlePressEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    setSearchQuery((e.target as HTMLInputElement).value);
+  };
+
+  useEffect(() => {
+    if (
+      featuresPage &&
+      featuresPage.pages.length > 0 &&
+      totalItemsRef.current === null
+    ) {
+      totalItemsRef.current = featuresPage.pages[0].data.total;
+    }
+  }, [featuresPage]);
 
   return (
-    <>
+    <Modal
+      open={isModalOpen}
+      width={1408}
+      footer={null}
+      closable={false}
+      centered
+    >
       <Flex vertical gap={24} style={{ padding: "16px" }}>
         <Typography style={{ fontSize: 24, fontWeight: 600, color: "#2F80ED" }}>
           {capitalize("add feature")}
         </Typography>
         <Flex gap={32} align="center">
-          <Search
+          <Input
             placeholder="Search"
-            enterButton
             style={{ width: "50%", paddingBottom: "8px", paddingTop: "8px" }}
+            prefix={<SearchOutlined />}
+            onPressEnter={handlePressEnter}
           />
-          <ButtonV1 title="Refresh" customSize="small" />
+          <ButtonV1 title="Refresh" customSize="small" onClick={handleReset} />
         </Flex>
-        <div ref={tableRef} style={{ height: 360, overflow: "auto" }}>
+        <Flex>
+          <Typography
+            style={{ fontSize: 14, fontWeight: 400, color: "#9095A1" }}
+          >
+            {`You've selected ${tempSelectedRowKeys.length}/${
+              totalItemsRef.current ?? 0
+            }`}
+          </Typography>
+        </Flex>
+        <div
+          ref={tableRef}
+          style={{ height: 360, overflow: "auto", width: "75%" }}
+        >
           <Spin spinning={isFetchingNextPage || isInitialLoading}>
             <Table
-              rowSelection={{
-                type: "checkbox",
-                ...rowSelection,
-              }}
+              rowSelection={{ type: "checkbox", ...rowSelection }}
+              style={{ width: "100%" }}
+              scroll={{ x: "max-content" }}
               columns={columns}
               dataSource={dataSource}
               pagination={false}
@@ -103,10 +187,10 @@ const AddFeature: React.FC<Props> = ({ handleCancel }) => {
         </div>
         <Flex gap={24} justify="end">
           <ButtonV1 title="Cancel" customType="cancel" onClick={handleCancel} />
-          <ButtonV1 title="Save" />
+          <ButtonV1 title="Save" onClick={handleSave} />
         </Flex>
       </Flex>
-    </>
+    </Modal>
   );
 };
 

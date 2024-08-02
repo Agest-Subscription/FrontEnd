@@ -7,11 +7,7 @@ import TableV1 from "@/components/table/TableV1";
 import { PRICING_PlANS } from "@/constants/routes";
 import { useGetListPricingPlans } from "@/hooks/pricingPlan";
 import useSearchSync from "@/hooks/useSearchSync";
-import {
-  DataSourceItem,
-  TableChangeParams,
-  TableParams,
-} from "@/interfaces/base";
+import { TableChangeParams, TableParams } from "@/interfaces/base";
 import {
   PricingPlanFilterParams,
   PricingPlanTableData,
@@ -78,15 +74,15 @@ const PermissionList: React.FC<Props> = () => {
     });
   }, [PricingPlanTableData]);
 
-  const dataSource = useMemo<DataSourceItem<PricingPlanTableData>[]>(() => {
-    return (
-      PricingPlanTableData?.data.map((pricingPlan, index) => ({
-        ...pricingPlan,
-        key: pricingPlan.id,
-        no: index + 1 + ((params.page ?? 1) - 1) * (params?.page_size ?? 5),
-      })) ?? []
-    );
-  }, [PricingPlanTableData?.data, params.page, params?.page_size]);
+  // const dataSource = useMemo<DataSourceItem<PricingPlanTableData>[]>(() => {
+  //   return (
+  //     PricingPlanTableData?.data.map((pricingPlan, index) => ({
+  //       ...pricingPlan,
+  //       key: pricingPlan.id,
+  //       no: index + 1 + ((params.page ?? 1) - 1) * (params?.page_size ?? 5),
+  //     })) ?? []
+  //   );
+  // }, [PricingPlanTableData?.data, params.page, params?.page_size]);
 
   return (
     <div>
@@ -95,7 +91,7 @@ const PermissionList: React.FC<Props> = () => {
         tableTitle="pricing plan"
         showSearchBar={true}
         columns={columns}
-        dataSource={dataSource}
+        dataSource={[]}
         onChange={(pagination, filters) =>
           handleTableChange({ pagination, filters })
         }
