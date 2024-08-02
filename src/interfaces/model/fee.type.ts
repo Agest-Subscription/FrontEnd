@@ -4,7 +4,7 @@ import { OverrateFee } from "./overrateFee.type";
 import { EnumStruct } from "@/interfaces/enum";
 
 export type FeeType = "onetime" | "transaction" | "recurrence";
-export type RecurrenceType = "daily" | "weekly" | "monthly" | "yearly";
+export type RecurrenceType = "day" | "week" | "month" | "year";
 export type Fee = {
   id: string;
   name: string;
@@ -23,20 +23,40 @@ export type FeeTableData = Fee & {
 };
 
 export type OverateFeeArrItems = Pick<OverrateFee, "price" | "threshold"> & {
-  isTransaction?: boolean;
+  overrate_id?: Pick<OverrateFee, "id">;
+  isTransaction?: boolean | null;
 };
-
+// Define a type that omits `isTransaction` from `OverateFeeArrItems`
+export type OverrateFeeOmitTransaction = Omit<
+  OverateFeeArrItems,
+  "isTransaction"
+>;
 export type FeeFilterParams = FilterBase<FeeTableData>;
 
 export type FeeFormValues = Omit<Fee, "id"> & {
-  overrate_fees: OverateFeeArrItems[] | null;
+  overrate_fees?: OverateFeeArrItems[] | null;
 };
 
-export type FeeResponseItem = Fee;
+export type FeeResponseItem = Fee & {
+  overrate_fees?: OverrateFeeOmitTransaction[] | null;
+};
 
-export type AddFeePayload = FeeFormValues;
+export type AddFeePayload = Omit<FeeFormValues, "create" | "update" | "delete">;
 
-export type UpdateFeePayload = Fee;
+export type UpdateFeePayload = FeeFormValues & {
+  id: string | null;
+  create?: Create[] | null;
+  update?: Update[] | null;
+  delete?: Delete[] | null;
+};
+// Define the new type combining `Fee` with the modified `OverrateFeeArrItems`
+export type Create = OverrateFeeOmitTransaction[];
+
+export type Delete = {
+  overrate_id: Pick<OverrateFee, "id">;
+};
+
+export type Update = OverrateFeeOmitTransaction & Delete;
 
 export const FeeTypeEnum = Object.freeze({
   onetime: {
@@ -55,19 +75,19 @@ export const FeeTypeEnum = Object.freeze({
 
 export const RecurrenceTypeEnum = Object.freeze({
   daily: {
-    label: "Daily",
-    value: "daily",
+    label: "Day",
+    value: "day",
   },
   weekly: {
-    label: "Weekly",
-    value: "weekly",
+    label: "Week",
+    value: "week",
   },
   monthly: {
-    label: "Monthly",
-    value: "monthly",
+    label: "Month",
+    value: "month",
   },
   yearly: {
-    label: "Yearly",
-    value: "yearly",
+    label: "Year",
+    value: "year",
   },
 }) satisfies EnumStruct<RecurrenceType>;

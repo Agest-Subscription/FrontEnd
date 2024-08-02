@@ -9,7 +9,9 @@ import {
 
 const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
   fee_type: string<FeeType>().required("Fee type is required"),
-
+  // create: array().min(1).default([]),
+  // update: array().min(1).default([]),
+  // delete: array().min(1).default([]),
   overrate_fees: array<OverateFeeArrItems>(
     object<OverateFeeArrItems>().shape({
       isTransaction: boolean().default(false),

@@ -40,20 +40,25 @@ const Page: React.FC<Props> = () => {
     onConfirm: methods.handleSubmit(onSubmit),
     onClose: () => setOpenModal(false),
   });
+  console.log("Fee object: ", Fee);
 
   function formatPayload(data: FeeFormValues) {
+    console.log("data: FeeFormValues", data);
+
     if (data.fee_type === "transaction") {
       return {
         ...data,
         recurrence_cycle_count: null,
         recurrence_type: null,
+        create: [],
+        update: [],
+        delete: [],
       };
     }
     if (data.fee_type === "onetime") {
       return {
         ...data,
         transaction_unit: null,
-        // is_overrate: null,
         recurrence_cycle_count: null,
         recurrence_type: null,
       };
@@ -62,7 +67,6 @@ const Page: React.FC<Props> = () => {
       return {
         ...data,
         transaction_unit: null,
-        // is_overrate: null,
       };
     }
     return data; // or handle other fee_type cases if necessary
@@ -73,6 +77,8 @@ const Page: React.FC<Props> = () => {
   }
   function onSubmit(data: FeeFormValues) {
     const newData = formatPayload(data);
+    console.log("new data update: ", newData);
+
     const trimmed = trimString(newData, ["name"]);
     updateFee(
       { id, ...trimmed },
@@ -101,6 +107,7 @@ const Page: React.FC<Props> = () => {
 
   const handleSave = async () => {
     const isValid = await methods.trigger();
+
     if (isValid) {
       showModal({
         popup_id: "confirm",
@@ -109,6 +116,8 @@ const Page: React.FC<Props> = () => {
         onConfirm: methods.handleSubmit(onSubmit),
         onClose: () => setOpenModal(false),
       });
+    } else {
+      console.log("Validation Errors: ", methods.formState.errors);
     }
   };
 
@@ -140,12 +149,20 @@ const Page: React.FC<Props> = () => {
       methods.setValue("price", Fee.price);
       methods.setValue("description", Fee.description);
       methods.setValue("transaction_unit", Fee.transaction_unit);
-      // methods.setValue("is_overrate", Fee.is_overrate);
       methods.setValue("recurrence_cycle_count", Fee.recurrence_cycle_count);
       methods.setValue("recurrence_type", Fee.recurrence_type);
       methods.setValue("is_active", Fee.is_active);
+      // Set the overrate_fees
+      methods.reset({
+        ...methods.getValues(),
+        overrate_fees: Fee.overrate_fees || [], // Ensure the field is initialized as an empty array if not present
+      });
     }
   }, [Fee, methods]);
+
+  console.log("overrate watch: ", methods.watch("overrate_fees"));
+  console.log("methods.getValues(): ", methods.getValues());
+
   if (isError) {
     return <NotFound previousPage="fee" />;
   }
