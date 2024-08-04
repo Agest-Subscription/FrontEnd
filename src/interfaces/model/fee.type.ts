@@ -37,7 +37,7 @@ export type FeeFilterParams = FilterBase<FeeTableData> & {
 };
 
 export type FeeFormValues = Omit<Fee, "id"> & {
-  overrate_fees?: OverrateFeeOmitTransaction[] | null;
+  overrate_fees?: OverateFeeArrItems[] | null;
 };
 
 export type FeeResponseItem = Fee & {
