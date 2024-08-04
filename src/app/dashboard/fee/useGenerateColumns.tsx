@@ -28,8 +28,8 @@ const useGenerateColumns = () => {
       },
       {
         title: "Type",
-        dataIndex: "fee",
-        key: "fee",
+        dataIndex: "fee_type",
+        key: "fee_type",
       },
       {
         title: "Fee",

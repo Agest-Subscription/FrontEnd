@@ -23,7 +23,7 @@ export type FeeTableData = Fee & {
 };
 
 export type OverateFeeArrItems = Pick<OverrateFee, "price" | "threshold"> & {
-  overrate_id?: Pick<OverrateFee, "id">;
+  //id: string;
   isTransaction?: boolean | null;
 };
 // Define a type that omits `isTransaction` from `OverateFeeArrItems`
@@ -37,7 +37,7 @@ export type FeeFilterParams = FilterBase<FeeTableData> & {
 };
 
 export type FeeFormValues = Omit<Fee, "id"> & {
-  overrate_fees?: OverateFeeArrItems[] | null;
+  overrate_fees?: OverrateFeeOmitTransaction[] | null;
 };
 
 export type FeeResponseItem = Fee & {
@@ -48,7 +48,7 @@ export type AddFeePayload = Omit<FeeFormValues, "create" | "update" | "delete">;
 
 export type UpdateFeePayload = FeeFormValues & {
   id: string | null;
-  create?: Create[] | null;
+  // create?: Create[] | null;
   update?: Update[] | null;
   delete?: Delete[] | null;
 };
@@ -56,7 +56,7 @@ export type UpdateFeePayload = FeeFormValues & {
 export type Create = OverrateFeeOmitTransaction[];
 
 export type Delete = {
-  overrate_id: Pick<OverrateFee, "id">;
+  id?: string | null;
 };
 
 export type Update = OverrateFeeOmitTransaction & Delete;

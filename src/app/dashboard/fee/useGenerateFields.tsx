@@ -19,7 +19,7 @@ export const useGenerateFields = (): FieldsData<FeeFormValues> => {
           style: { width: "100%" },
         },
       },
-      fee: {
+      fee_type: {
         label: "Fee Type",
         type: "select",
         options: enumToSelectOptions(FeeTypeEnum),

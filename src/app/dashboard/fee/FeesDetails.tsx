@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useFieldArray, useFormContext, UseFormReturn } from "react-hook-form";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Col, Flex, Row, Typography } from "antd";
@@ -84,6 +84,7 @@ export default function FeeDetails({
     control: methodsArr.control,
     name: "overrate_fees",
   });
+  //const [removedIds, setRemovedIds] = useState<string[]>([]);
   const newOverrateFeeItemsArray = React.useMemo(
     () => ({
       price: null,
@@ -98,6 +99,16 @@ export default function FeeDetails({
     append({ ...newOverrateFeeItemsArray, isTransaction: true });
   };
   const goToFee = useGoToDashboardTab("fee");
+
+  const handleDelete = (index: number) => {
+    // const removedItem = fields[index];
+    // if (removedItem.id) {
+    //   setRemovedIds((prevIds) => [...prevIds, removedItem.id]);
+    // }
+    remove(index);
+  };
+
+  // console.log("removedIds: ", removedIds);
 
   useEffect(() => {
     const isTransaction = fee_type === "transaction";
@@ -169,7 +180,7 @@ export default function FeeDetails({
                 <OverrateFeeItemField
                   key={item.id}
                   index={index}
-                  onDelete={() => remove(index)}
+                  onDelete={() => handleDelete(index)}
                   showDelete={fields.length > 1}
                 />
               </>
