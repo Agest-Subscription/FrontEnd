@@ -24,6 +24,7 @@ const LongText: React.FC<LongTextProps> = ({
 
   return (
     <Tooltip title={isOverflowing ? text : ""}>
+      
       <p
         ref={textRef}
         style={{

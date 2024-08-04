@@ -1,41 +1,65 @@
 import { FilterBase } from "../base";
-
-import { EnumStruct } from "@/interfaces/enum";
+import { EnumStruct } from "../enum";
 import { OverrateFee } from "./overrateFee.type";
 
 export type FeeType = "onetime" | "transaction" | "recurrence";
-export type RecurrenceType = "daily" | "weekly" | "monthly" | "yearly";
+export type RecurrenceType = "day" | "week" | "month" | "year";
 export type Fee = {
   id: string;
   name: string;
-  fee: FeeType;
-  is_overrate: boolean | null;
+  fee_type: FeeType;
+  //is_overrate: boolean | null;
   recurrence_type: RecurrenceType | null;
   recurrence_cycle_count: number | null;
-  price: number;
+  price: number | null;
   transaction_unit: string | null;
   description: string | null;
   is_active: boolean;
   overrate_fees?: OverrateFee[] | null;
-
 };
 
 export type FeeTableData = Fee & {
   no: number;
 };
 
-export type FeeResponseItem = Fee;
-
+export type OverateFeeArrItems = Pick<OverrateFee, "price" | "threshold"> & {
+  //id: string;
+  isTransaction?: boolean | null;
+};
+// Define a type that omits `isTransaction` from `OverateFeeArrItems`
+export type OverrateFeeOmitTransaction = Omit<
+  OverateFeeArrItems,
+  "isTransaction"
+>;
 export type FeeFilterParams = FilterBase<FeeTableData> & {
   is_active?: boolean;
   is_recurrence?: boolean;
 };
 
-export type FeeFormValues = Omit<Fee, "id">;
+export type FeeFormValues = Omit<Fee, "id"> & {
+  overrate_fees?: OverateFeeArrItems[] | null;
+};
 
-export type AddFeePayload = FeeFormValues;
+export type FeeResponseItem = Fee & {
+  overrate_fees?: OverrateFeeOmitTransaction[] | null;
+};
 
-export type UpdateFeePayload = Fee;
+export type AddFeePayload = Omit<FeeFormValues, "create" | "update" | "delete">;
+
+export type UpdateFeePayload = FeeFormValues & {
+  id: string | null;
+  // create?: Create[] | null;
+  update?: Update[] | null;
+  delete?: Delete[] | null;
+};
+// Define the new type combining `Fee` with the modified `OverrateFeeArrItems`
+export type Create = OverrateFeeOmitTransaction[];
+
+export type Delete = {
+  id?: string | null;
+};
+
+export type Update = OverrateFeeOmitTransaction & Delete;
 
 export const FeeTypeEnum = Object.freeze({
   onetime: {
@@ -54,19 +78,19 @@ export const FeeTypeEnum = Object.freeze({
 
 export const RecurrenceTypeEnum = Object.freeze({
   daily: {
-    label: "Daily",
-    value: "daily",
+    label: "Day",
+    value: "day",
   },
   weekly: {
-    label: "Weekly",
-    value: "weekly",
+    label: "Week",
+    value: "week",
   },
   monthly: {
-    label: "Monthly",
-    value: "monthly",
+    label: "Month",
+    value: "month",
   },
   yearly: {
-    label: "Yearly",
-    value: "yearly",
+    label: "Year",
+    value: "year",
   },
 }) satisfies EnumStruct<RecurrenceType>;
