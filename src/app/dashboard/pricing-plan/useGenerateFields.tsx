@@ -4,13 +4,17 @@ import dayjs from "dayjs";
 
 import { useGetInfiniteFee } from "@/hooks/fee";
 import { FieldsData } from "@/interfaces/form";
+import { Fee } from "@/interfaces/model/fee.type";
 import {
   FreeTrialPeriodEnum,
   PricingPlanFormValues,
 } from "@/interfaces/model/pricingplan.type";
 import { enumToSelectOptions } from "@/utils/enum";
 
-export const useGenerateFields = (start_date: string) => {
+export const useGenerateFields = (
+  start_date: string,
+  setRecurrenceFee: React.Dispatch<React.SetStateAction<Fee | null>>,
+) => {
   const {
     data: feePages,
     fetchNextPage,
@@ -33,6 +37,12 @@ export const useGenerateFields = (start_date: string) => {
       })),
     );
   }, [feePages]);
+
+  const onChangeRecurrenceFee = (value: string) => {
+    const selectedFee = mappedFeePages.find((fee) => fee.value === value)?.fee;
+    setRecurrenceFee(selectedFee || null);
+    setSearchTerm("");
+  };
   const fields = useMemo<FieldsData<PricingPlanFormValues>>(() => {
     return {
       name: {
@@ -53,9 +63,9 @@ export const useGenerateFields = (start_date: string) => {
           onSearch: (searchTerm) => {
             setSearchTerm(searchTerm);
           },
-          onChange: () => setSearchTerm(""),
+          onChange: (value) => onChangeRecurrenceFee(value ?? ""),
           allowClear: true,
-          style: { width: "250px", height: "40px" },
+          style: { height: "40px" },
           maxTagCount: "responsive",
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
             const target = event.target as HTMLDivElement;
