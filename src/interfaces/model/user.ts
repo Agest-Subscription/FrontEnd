@@ -8,7 +8,7 @@ export type UserModel = {
 
 export type UserTableData = Omit<UserModel, "is_admin"> & {
   is_active: boolean;
-  last_login_date: string;
+  last_login_date?: string;
 };
 
 export type UserResponseItem = UserModel & {
