@@ -1,30 +1,42 @@
 import { FilterBase } from "../base";
-import { PricingPlan } from "./pricingplan.type";
+import { PricingPlan, PricingPlanTableData } from "./pricingplan.type";
+import { UserModel } from "./user";
 
 export type Subscription = {
   id: string;
   user_id: string;
   email: string;
-  pricing_plan: PricingPlan;
   is_cancelled: boolean;
-  start_date: string;
-  end_date: string | null;
-  suspended_date: string | null;
-  due_date_free_trial: string | null;
-  next_billing_date: string | null;
+  start_date: Date;
+  end_date: Date | null;
+  suspended_date: Date | null;
+  due_date_free_trial: Date | null;
+  next_billing_date: Date | null;
   auto_renew: boolean;
 };
 
-export type SubscriptionTableData = Subscription & {
+export type SubscriptionTableData = Omit<Subscription, "user_id" | "email"> & {
   no: number;
+  users?: {
+    id: string;
+    email: string;
+  };
+  pricing_plan?: PricingPlanTableData;
 };
 
-export type SubscriptionResponseItem = Subscription
+export type SubscriptionResponseItem = Subscription & {
+  users: {
+    id: string;
+    email: string;
+  },
+  pricing_plan: PricingPlanTableData
+}
 
 export type SubscriptionFilterParams = FilterBase<SubscriptionResponseItem>
 
-export type SubscriptionFormValues = Omit<Subscription, "id" | "pricing_plan"> & {
+export type SubscriptionFormValues = Omit<Subscription, "id"> & {
   pricing_plan_id: string;
+  pricing_plan?: PricingPlanTableData | null;
 }
 
 export type AddSubscriptionPayload = SubscriptionFormValues;

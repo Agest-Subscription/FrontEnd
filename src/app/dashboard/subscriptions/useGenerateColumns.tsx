@@ -21,20 +21,20 @@ const useGenerateColumns = () => {
       },
       {
         title: "User ID",
-        dataIndex: "user_id",
-        key: "user_id",
+        dataIndex: "users",
+        key: "users",
         width: 200,
         render: (value) => {
-          return <LongText text={value} width={200} />;
+          return <LongText text={value.id} width={200} />;
         },
       },
       {
         title: "Email",
-        dataIndex: "email",
+        dataIndex: "users",
         key: "email",
         width: 200,
         render: (value) => {
-          return <LongText text={value} width={200} />;
+          return <LongText text={value.email} width={200} />;
         },
       },
       {
@@ -43,7 +43,7 @@ const useGenerateColumns = () => {
         key: "pricing_plan",
         width: 200,
         render: (_,record) => {
-          return <LongText text={record.pricing_plan.name} width={200} />;
+          return <LongText text={record.pricing_plan?.name || ""} width={200} />;
         },
       },
       {
