@@ -90,18 +90,12 @@ const Page: React.FC<Props> = () => {
         transaction_unit: null,
         recurrence_cycle_count: null,
         recurrence_type: null,
-        create: [],
-        update: [],
-        delete: [],
       };
     }
     if (data.fee_type === "recurrence") {
       return {
         ...data,
         transaction_unit: null,
-        create: [],
-        update: [],
-        delete: [],
       };
     }
     return data; // or handle other fee_type cases if necessary

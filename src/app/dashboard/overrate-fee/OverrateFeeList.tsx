@@ -101,7 +101,6 @@ const OverrateFeeList: React.FC<Props> = () => {
           handleTableChange({ pagination, filters })
         }
         pagination={tableParams.pagination}
-        addItem={() => router.push(`${OVERRATE_FEE}/add`)}
         onSearch={handleSearch}
         searchValue={searchQuery}
       />
