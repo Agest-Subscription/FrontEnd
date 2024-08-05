@@ -1,6 +1,5 @@
 import { FilterBase } from "../base";
-import { PricingPlan, PricingPlanTableData } from "./pricingplan.type";
-import { UserModel } from "./user";
+import { PricingPlanTableData } from "./pricingplan.type";
 
 export type Subscription = {
   id: string;
@@ -28,16 +27,16 @@ export type SubscriptionResponseItem = Subscription & {
   users: {
     id: string;
     email: string;
-  },
-  pricing_plan: PricingPlanTableData
-}
+  };
+  pricing_plan: PricingPlanTableData;
+};
 
-export type SubscriptionFilterParams = FilterBase<SubscriptionResponseItem>
+export type SubscriptionFilterParams = FilterBase<SubscriptionResponseItem>;
 
 export type SubscriptionFormValues = Omit<Subscription, "id"> & {
   pricing_plan_id: string;
   pricing_plan?: PricingPlanTableData | null;
-}
+};
 
 export type AddSubscriptionPayload = SubscriptionFormValues;
 

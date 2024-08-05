@@ -116,7 +116,7 @@ const Page: React.FC<Props> = () => {
             popup_id: "successpopup",
             popup_text: `${capitalize("This Fee is successfully updated!")}`,
             popup_type: "Success",
-            onConfirm: () => { },
+            onConfirm: () => {},
             onClose: () => goToFee(),
           });
         },
@@ -125,7 +125,7 @@ const Page: React.FC<Props> = () => {
             popup_id: "fail",
             popup_text: `${getErrorDetail(err) ?? "Fee update failed"}`,
             popup_type: "Fail",
-            onConfirm: () => { },
+            onConfirm: () => {},
             onClose: () => setOpenModal(false),
           });
         },
@@ -156,7 +156,7 @@ const Page: React.FC<Props> = () => {
           popup_id: "successpopup",
           popup_text: capitalize("This Fee is successfully deleted!"),
           popup_type: "Success",
-          onConfirm: () => { },
+          onConfirm: () => {},
           onClose: () => goToFee(),
         }),
       onError: (err: CustomError) =>
@@ -164,7 +164,7 @@ const Page: React.FC<Props> = () => {
           popup_id: "fail",
           popup_text: `${getErrorDetail(err) ?? "Fee delete failed"}`,
           popup_type: "Fail",
-          onConfirm: () => { },
+          onConfirm: () => {},
           onClose: () => setOpenModal(false),
         }),
     });

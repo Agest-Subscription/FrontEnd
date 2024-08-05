@@ -1,9 +1,10 @@
 "use client";
 import React from "react";
+
 import SubscriptionList from "./SubscriptionList";
 
 const PricingPlansPage = () => {
-  return <SubscriptionList/>;
+  return <SubscriptionList />;
 };
 
 export default PricingPlansPage;

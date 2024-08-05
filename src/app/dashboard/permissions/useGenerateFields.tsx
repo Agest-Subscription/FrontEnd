@@ -34,7 +34,7 @@ export const useGenerateFields = () => {
         type: "singleCheckbox",
         componentProps: {
           defaultChecked: true,
-        }
+        },
       },
     };
   }, []);

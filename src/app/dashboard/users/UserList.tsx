@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+
 import useGenerateColumns from "./useGenerateColumns";
+
 import TableV1 from "@/components/table/TableV1";
 import { USERS } from "@/constants/routes";
 import { useGetListUser } from "@/hooks/user";
@@ -10,25 +12,20 @@ import {
   TableChangeParams,
   TableParams,
 } from "@/interfaces/base";
-import {
-  UserFilterParams,
-  UserTableData,
-} from "@/interfaces/model/user";
+import { UserFilterParams, UserTableData } from "@/interfaces/model/user";
 
 type Props = {};
 
 const UserList: React.FC<Props> = () => {
   const router = useRouter();
   const { searchQuery, handleSearch } = useSearchSync();
-  const [tableParams, setTableParams] = useState<TableParams<UserTableData>>(
-    {
-      pagination: {
-        current: 1,
-        pageSize: 5,
-        showSizeChanger: false,
-      },
+  const [tableParams, setTableParams] = useState<TableParams<UserTableData>>({
+    pagination: {
+      current: 1,
+      pageSize: 5,
+      showSizeChanger: false,
     },
-  );
+  });
 
   const params = useMemo<UserFilterParams>(
     () => ({
@@ -76,7 +73,7 @@ const UserList: React.FC<Props> = () => {
 
   const dataSource = useMemo<DataSourceItem<UserTableData>[]>(() => {
     return (
-        UserTableData?.data.map((user, index) => ({
+      UserTableData?.data.map((user, index) => ({
         ...user,
         key: user.id,
         no: index + 1 + ((params.page ?? 1) - 1) * (params?.page_size ?? 5),

@@ -4,8 +4,9 @@ import { EditOutlined } from "@ant-design/icons";
 import { Checkbox } from "antd";
 import { ColumnType } from "antd/es/table";
 import dayjs from "dayjs";
-import {DATE_FORMAT} from "@/constants/date";
+
 import LongText from "@/components/table/LongText";
+import { DATE_FORMAT } from "@/constants/date";
 import { SUBSCRIPTIONS } from "@/constants/routes";
 import { SubscriptionTableData } from "@/interfaces/model/subscription.type";
 
@@ -42,8 +43,10 @@ const useGenerateColumns = () => {
         dataIndex: "pricing_plan",
         key: "pricing_plan",
         width: 200,
-        render: (_,record) => {
-          return <LongText text={record.pricing_plan?.name || ""} width={200} />;
+        render: (_, record) => {
+          return (
+            <LongText text={record.pricing_plan?.name || ""} width={200} />
+          );
         },
       },
       {
@@ -62,8 +65,10 @@ const useGenerateColumns = () => {
         key: "start_date",
         width: 200,
         render: (value) => {
-            return <LongText text={dayjs(value).format(DATE_FORMAT)} width={200} />;
-          },
+          return (
+            <LongText text={dayjs(value).format(DATE_FORMAT)} width={200} />
+          );
+        },
       },
       {
         title: "End date",
@@ -71,8 +76,13 @@ const useGenerateColumns = () => {
         key: "end_date",
         width: 200,
         render: (value) => {
-            return <LongText text={value? dayjs(value).format(DATE_FORMAT) : ""} width={200} />;
-          },
+          return (
+            <LongText
+              text={value ? dayjs(value).format(DATE_FORMAT) : ""}
+              width={200}
+            />
+          );
+        },
       },
       {
         title: "Suspended date",
@@ -80,8 +90,13 @@ const useGenerateColumns = () => {
         key: "suspended_date",
         width: 200,
         render: (value) => {
-            return <LongText text={value? dayjs(value).format(DATE_FORMAT) : ""} width={200} />;
-          },
+          return (
+            <LongText
+              text={value ? dayjs(value).format(DATE_FORMAT) : ""}
+              width={200}
+            />
+          );
+        },
       },
       {
         title: "Due date free trial",
@@ -89,8 +104,13 @@ const useGenerateColumns = () => {
         key: "due_date_free_trial",
         width: 200,
         render: (value) => {
-            return <LongText text={value? dayjs(value).format(DATE_FORMAT) : ""} width={200} />;
-          },
+          return (
+            <LongText
+              text={value ? dayjs(value).format(DATE_FORMAT) : ""}
+              width={200}
+            />
+          );
+        },
       },
       {
         title: "Auto renew",
@@ -99,7 +119,7 @@ const useGenerateColumns = () => {
         align: "center",
         width: 100,
         render: (auto_renew: boolean) => {
-            return <Checkbox checked={auto_renew}></Checkbox>;
+          return <Checkbox checked={auto_renew}></Checkbox>;
         },
       },
       {
@@ -108,8 +128,13 @@ const useGenerateColumns = () => {
         key: "next_billing_date",
         width: 200,
         render: (value) => {
-            return <LongText text={value? dayjs(value).format(DATE_FORMAT) : ""} width={200} />;
-          },
+          return (
+            <LongText
+              text={value ? dayjs(value).format(DATE_FORMAT) : ""}
+              width={200}
+            />
+          );
+        },
       },
       {
         title: "Action",

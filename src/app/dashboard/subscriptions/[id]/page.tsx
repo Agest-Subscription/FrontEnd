@@ -27,8 +27,10 @@ import { capitalize } from "@/utils/string";
 type Props = {};
 
 const Page: React.FC<Props> = () => {
-  const { mutate: updateSubscription, isLoading: isUpdating } = useUpdateSubscription();
-  const { mutate: deleteSubscription, isLoading: isDeleting } = useDeleteSubscription();
+  const { mutate: updateSubscription, isLoading: isUpdating } =
+    useUpdateSubscription();
+  const { mutate: deleteSubscription, isLoading: isDeleting } =
+    useDeleteSubscription();
   const goToSubscription = useGoToDashboardTab("subscriptions");
   const id = useGetId();
   const [openModal, setOpenModal] = useState(false);
@@ -47,7 +49,11 @@ const Page: React.FC<Props> = () => {
 
   const { data: Subscription, isError } = useGetSubscriptionById(id);
 
-  const fields = useGenerateFields(methods, true, Subscription?.pricing_plan ?? null);
+  const fields = useGenerateFields(
+    methods,
+    true,
+    Subscription?.pricing_plan ?? null,
+  );
   useEffect(() => {
     if (Subscription) {
       methods.setValue("user_id", Subscription.users.id);

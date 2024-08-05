@@ -1,7 +1,10 @@
 import { boolean, date, object, ObjectSchema, string } from "yup";
+
 import { SubscriptionFormValues } from "@/interfaces/model/subscription.type";
 
-const subscriptionFormValuesSchema: ObjectSchema<Omit<SubscriptionFormValues, "pricing_plan">> = object({
+const subscriptionFormValuesSchema: ObjectSchema<
+  Omit<SubscriptionFormValues, "pricing_plan">
+> = object({
   user_id: string().required("User ID is required"),
   email: string().required("Email is required"),
   start_date: date().required("Start date is required"),

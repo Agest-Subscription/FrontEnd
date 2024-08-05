@@ -71,7 +71,7 @@ export type PricingPlanTableData = Omit<
 export type PricingPlanLandingPage = PricingPlan;
 
 export type PricingPlanFilterParams = FilterBase<PricingPlanTableData> & {
-  is_active?:boolean;
+  is_active?: boolean;
 };
 
 export type PricingPlanFormValues = Omit<

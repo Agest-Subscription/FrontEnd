@@ -4,8 +4,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
 
-import UserDetails from "../UserDetails";
 import { useGenerateFields } from "../useGenerateFields";
+import UserDetails from "../UserDetails";
 
 import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
 import PopUp from "@/components/popup/Popup";
@@ -78,7 +78,9 @@ const Page: React.FC<Props> = () => {
     }
   };
 
-  useEffect(()=>{methods.setValue("is_active",true)},[])
+  useEffect(() => {
+    methods.setValue("is_active", true);
+  }, [methods]);
 
   return (
     <Flex vertical gap={24}>

@@ -4,18 +4,14 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
 
-import UserDetails from "../UserDetails";
 import { useGenerateFields } from "../useGenerateFields";
+import UserDetails from "../UserDetails";
 
 import NotFound from "@/app/not-found";
 import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
 import PopUp from "@/components/popup/Popup";
-import {
-  useDeleteUser,
-  useGetUserById,
-  useUpdateUser,
-} from "@/hooks/user";
 import useGetId from "@/hooks/useGetId";
+import { useDeleteUser, useGetUserById, useUpdateUser } from "@/hooks/user";
 import { CustomError } from "@/interfaces/base";
 import { UserFormValues } from "@/interfaces/model/user";
 import { popUpPropType } from "@/interfaces/popup";
@@ -27,10 +23,8 @@ import { capitalize } from "@/utils/string";
 type Props = {};
 
 const Page: React.FC<Props> = () => {
-  const { mutate: updateUser, isLoading: isUpdating } =
-    useUpdateUser();
-  const { mutate: deleteUser, isLoading: isDeleting } =
-    useDeleteUser();
+  const { mutate: updateUser, isLoading: isUpdating } = useUpdateUser();
+  const { mutate: deleteUser, isLoading: isDeleting } = useDeleteUser();
   const goToUser = useGoToDashboardTab("users");
   const id = useGetId();
   const fields = useGenerateFields();
@@ -66,9 +60,9 @@ const Page: React.FC<Props> = () => {
     setOpenModal(true);
   };
 
-  const handleSubmit = (data: UserFormValues) => { 
+  const handleSubmit = (data: UserFormValues) => {
     updateUser(
-      { id, ...data},
+      { id, ...data },
       {
         onSuccess: () =>
           showModal({

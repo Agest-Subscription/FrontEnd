@@ -41,7 +41,7 @@ const FeatureDetails: React.FC<DetailsProp> = ({
             <FormField name="description" />
           </Col>
         </Row>
-        
+
         <FormField name="is_active" />
       </Flex>
       <Flex

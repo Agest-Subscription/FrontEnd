@@ -1,10 +1,10 @@
 import { axiosClient } from "@/config/axios/client";
 import { GetListResponse } from "@/interfaces/base";
 import {
-  UserFilterParams,
-  UserResponseItem,
   AddUserPayload,
   UpdateUserPayload,
+  UserFilterParams,
+  UserResponseItem,
 } from "@/interfaces/model/user";
 
 export const getListUserApi = (params: UserFilterParams) => {

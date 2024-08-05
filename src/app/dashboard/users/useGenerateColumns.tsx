@@ -4,13 +4,14 @@ import { EditOutlined } from "@ant-design/icons";
 import { ConfigProvider, Tag } from "antd";
 import { ColumnType } from "antd/es/table";
 import dayjs from "dayjs";
+
 import LongText from "@/components/table/LongText";
-import {DATE_FORMAT} from "@/constants/date";
+import { DATE_FORMAT } from "@/constants/date";
 import { USERS } from "@/constants/routes";
 import { UserTableData } from "@/interfaces/model/user";
 
 const useGenerateColumns = () => {
-  return useMemo<ColumnType<UserTableData>[]>(    
+  return useMemo<ColumnType<UserTableData>[]>(
     () => [
       {
         title: "No",
@@ -33,18 +34,23 @@ const useGenerateColumns = () => {
         width: 120,
         align: "center" as const,
         render: (_, record) => {
-          return <ConfigProvider
-            theme={{
-              token: {
-                borderRadiusSM: 14,
-                fontSize: 20,
-              },
-            }}
-          >
-            <Tag bordered={false} color={record.is_active ? "success" : "error"}>
-              {record.is_active ? "Active" : "Inactive"}
-            </Tag>
-          </ConfigProvider>
+          return (
+            <ConfigProvider
+              theme={{
+                token: {
+                  borderRadiusSM: 14,
+                  fontSize: 20,
+                },
+              }}
+            >
+              <Tag
+                bordered={false}
+                color={record.is_active ? "success" : "error"}
+              >
+                {record.is_active ? "Active" : "Inactive"}
+              </Tag>
+            </ConfigProvider>
+          );
         },
       },
       {
@@ -53,7 +59,9 @@ const useGenerateColumns = () => {
         key: "last_login_date",
         width: 200,
         render: (value) => {
-          return <LongText text={dayjs(value).format(DATE_FORMAT)} width={450} />;
+          return (
+            <LongText text={dayjs(value).format(DATE_FORMAT)} width={450} />
+          );
         },
       },
       {
