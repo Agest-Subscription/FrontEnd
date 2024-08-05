@@ -25,7 +25,7 @@ import { popUpPropType } from "@/interfaces/popup";
 import overratefeeFormValuesSchema from "@/schema/overrateFee";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
-import { capitalize, trimString } from "@/utils/string";
+import { capitalize } from "@/utils/string";
 
 type Props = {};
 

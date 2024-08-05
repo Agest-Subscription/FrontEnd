@@ -3,7 +3,6 @@ import Link from "next/link";
 import { EditOutlined } from "@ant-design/icons";
 import { ColumnType } from "antd/es/table";
 
-import LongText from "@/components/table/LongText";
 import { OVERRATE_FEE } from "@/constants/routes";
 import { OverrateFeeTableData } from "@/interfaces/model/overrateFee.type";
 

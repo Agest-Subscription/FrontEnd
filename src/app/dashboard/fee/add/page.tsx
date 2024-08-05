@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
-import { isBoolean, omit, omitBy, pick } from "lodash";
+import { omit } from "lodash";
 
 import FeesDetails from "../FeesDetails";
 import { useGenerateFields } from "../useGenerateFields";
