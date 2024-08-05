@@ -14,12 +14,7 @@ import PopUp from "@/components/popup/Popup";
 import { useDeleteFee, useGetFeeById, useUpdateFee } from "@/hooks/fee";
 import useGetId from "@/hooks/useGetId";
 import { CustomError } from "@/interfaces/base";
-import {
-  Create,
-  Delete,
-  FeeFormValues,
-  Update,
-} from "@/interfaces/model/fee.type";
+import { Delete, FeeFormValues, Update } from "@/interfaces/model/fee.type";
 import { popUpPropType } from "@/interfaces/popup";
 import feeFormValuesSchema from "@/schema/fee";
 import { getErrorDetail } from "@/utils/error";
@@ -46,42 +41,16 @@ const Page: React.FC<Props> = () => {
     onConfirm: methods.handleSubmit(onSubmit),
     onClose: () => setOpenModal(false),
   });
-  // console.log("Fee object: ", Fee);
-  const watchOv = methods.watch("overrate_fees");
-  // console.log("watchOv: ", watchOv);
+
   function formatPayload(data: FeeFormValues) {
-    console.log("data: FeeFormValues", data);
-
-    const currentFees = methods.getValues().overrate_fees || [];
-
-    // const feeReduce = currentFees?.reduce(
-    //   (acc, item) => {
-    //     if (data.overrate_fees?.includes((fee) => fee.id === item.id)) {
-    //       acc.update.push(item);
-    //     } else {
-    //       acc.delete.push(item.id);
-    //     }
-    //     return acc;
-    //   },
-    //   { update: [], delete: [] },
-    // );
-
-    // const create = data.overrate_fees.filter(item => !Number(item.id))
-
     const update: Update[] = [];
     const deleteItems: Delete[] = [];
 
-    console.log("currentFees: ", currentFees);
-
-    const feeReduce = Fee?.overrate_fees?.reduce(
+    const feeReduceDelete = Fee?.overrate_fees?.reduce(
       (acc, item) => {
-        console.log("items currentFee: ", item);
-
         if (!data.overrate_fees?.some((fee) => fee.id === item.id)) {
           acc.deleteItems.push(item);
         }
-        console.log("acc: ", acc);
-
         return acc;
       },
       { deleteItems },
@@ -92,34 +61,27 @@ const Page: React.FC<Props> = () => {
         if (Fee?.overrate_fees?.some((fee) => fee.id === item.id)) {
           acc.update.push(item);
         }
-        console.log("acc ReduceUpadte: ", acc);
 
         return acc;
       },
       { update },
     );
 
-    console.log("feeReduce: ", feeReduce);
-    console.log("feeReduceUpdate: ", feeReduceUpdate);
-
     const createItems = data.overrate_fees?.filter((item) => !item.id) || [];
-    console.log("update forEach: ", update);
-    console.log("delete: ", deleteItems);
-    console.log("createItems: ", createItems);
 
     if (data.fee_type === "transaction") {
-      // const formattedOverrateFees =
-      //   data.overrate_fees?.map((item) => omit(item, "isTransaction")) || [];
-
       return {
         ...data,
         recurrence_cycle_count: null,
         recurrence_type: null,
         create: createItems.map((item) => omit(item, "isTransaction")) || [],
-        update: update.map((item) => omit(item, "isTransaction")) || [],
-        delete:
-          feeReduce?.deleteItems.map((item) => omit(item, "isTransaction")) ||
+        update:
+          feeReduceUpdate?.update.map((item) => omit(item, "isTransaction")) ||
           [],
+        delete:
+          feeReduceDelete?.deleteItems.map((item) =>
+            omit(item, "isTransaction"),
+          ) || [],
       };
     }
     if (data.fee_type === "onetime") {
@@ -128,18 +90,12 @@ const Page: React.FC<Props> = () => {
         transaction_unit: null,
         recurrence_cycle_count: null,
         recurrence_type: null,
-        create: [],
-        update: [],
-        delete: [],
       };
     }
     if (data.fee_type === "recurrence") {
       return {
         ...data,
         transaction_unit: null,
-        create: [],
-        update: [],
-        delete: [],
       };
     }
     return data; // or handle other fee_type cases if necessary
