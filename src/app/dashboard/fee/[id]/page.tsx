@@ -145,7 +145,7 @@ const Page: React.FC<Props> = () => {
         onClose: () => setOpenModal(false),
       });
     } else {
-      console.Error("Validation Errors: ", methods.formState.errors);
+      console.error("Validation Errors: ", methods.formState.errors);
     }
   };
 
