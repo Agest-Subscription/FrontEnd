@@ -18,6 +18,7 @@ const useGenerateColumns = () => {
         key: "no",
         align: "center",
       },
+
       {
         title: "Name",
         dataIndex: "name",
@@ -60,6 +61,7 @@ const useGenerateColumns = () => {
         key: "action",
         width: 150,
         align: "center" as const,
+        fixed: "right",
         render: (_, record) => {
           return (
             <Link href={`${FEATURES}/${record.id}`}>
