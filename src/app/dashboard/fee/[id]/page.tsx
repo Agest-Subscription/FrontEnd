@@ -106,7 +106,6 @@ const Page: React.FC<Props> = () => {
   }
   function onSubmit(data: FeeFormValues) {
     const newData = formatPayload(data);
-    console.log("new data update: ", newData);
 
     const trimmed = trimString(newData, ["name"]);
     updateFee(
@@ -146,7 +145,7 @@ const Page: React.FC<Props> = () => {
         onClose: () => setOpenModal(false),
       });
     } else {
-      console.log("Validation Errors: ", methods.formState.errors);
+      console.error("Validation Errors: ", methods.formState.errors);
     }
   };
 

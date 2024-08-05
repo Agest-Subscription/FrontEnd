@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { UseFormReturn, useWatch } from "react-hook-form";
 import { Col, Flex, Row } from "antd";
 
 import AddFeature from "./AddFeature";
@@ -8,6 +7,7 @@ import PricingPlanFeatures from "./PricingPlanFeature";
 import ButtonV1 from "@/components/button/CustomButton";
 import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
 import { Feature } from "@/interfaces/model/feature.type";
+import { Fee } from "@/interfaces/model/fee.type";
 import {
   FeaturePlanFee,
   OverrateFeeAssociation,
@@ -15,7 +15,6 @@ import {
 } from "@/interfaces/model/pricingplan.type";
 import { PricingPlanFeaturesType } from "@/interfaces/model/pricingplan.type";
 import { useGoToDashboardTab } from "@/utils/navigate";
-import { Fee } from "@/interfaces/model/fee.type";
 
 interface DetailsProp {
   edit?: boolean;

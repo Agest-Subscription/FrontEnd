@@ -173,7 +173,6 @@ const PricingPlanFeatures: React.FC<Props> = ({
         }
         return item;
       });
-      console.log(newDataSource);
       setDataSource(newDataSource);
     };
     const handleDelete = (record: PricingPlanFeaturesType) => {
