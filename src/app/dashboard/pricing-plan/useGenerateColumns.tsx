@@ -92,19 +92,7 @@ const useGenerateColumns = () => {
           return <Checkbox checked={is_overrate}></Checkbox>;
         },
       },
-      {
-        title: "Action",
-        dataIndex: "action",
-        key: "action",
-        align: "center",
-        render: (_, record) => {
-          return (
-            <Link href={`${PRICING_PlANS}/${record.id}`}>
-              <EditOutlined size={100} />
-            </Link>
-          );
-        },
-      },
+
       {
         title: "Action",
         dataIndex: "action",

@@ -14,19 +14,11 @@ export const FreeTrialPeriodEnum = Object.freeze({
 
 export type OverrateFeeWithNewPrice = OverrateFee & {
   new_price?: number | null;
+  feature_id: string;
 };
 
-export type FeaturePlanFee = {
-  id: number;
-  feature: Feature;
-  new_price: number;
-  fee: Fee;
-  overrate_fee_associations: OverrateFeeAssociation[];
-};
-
-export type OverrateFeeAssociation = {
-  overrate_fee: OverrateFee;
-  new_overrate_price: number;
+export type OverrateFeeAssociation = OverrateFee & {
+  new_overrate_price: number | null;
 };
 
 export type PricingPlanFeature = {
@@ -57,6 +49,14 @@ export type PricingPlanResponseItem = Omit<
 > & {
   feature_plan_fees: FeaturePlanFee[];
   recurrence_fee: Fee;
+};
+
+export type FeaturePlanFee = {
+  id: number;
+  feature: Feature;
+  new_price: number;
+  fee: Fee | null;
+  overrate_fees: OverrateFeeAssociation[];
 };
 
 export type PricingPlanTableData = Omit<
@@ -96,16 +96,12 @@ export type FeaturePlanFeeUpdate = {
 };
 
 export type UpdatePricingPlanOverrateFee = {
-  overrate_fee: {
-    id: string;
-    threshold: number;
-    price: number;
-  };
+  fee_overrate_id: string;
   new_overrate_price: number | null;
 };
 export type UpdatePricingPlanPayload = PricingPlanFormValues & {
   id: string;
-  feature_plan_fees: {
+  features: {
     add: FeaturePlanFeeUpdate[];
     update: FeaturePlanFeeUpdate[];
     delete: number[] | null;
