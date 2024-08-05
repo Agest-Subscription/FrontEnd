@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect } from "react";
 import { useFieldArray, useFormContext, UseFormReturn } from "react-hook-form";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Col, Flex, Row, Typography } from "antd";
@@ -31,7 +31,7 @@ const OverrateFeeItemField: FC<OverateFeeItemProps> = ({
 
   return (
     <>
-      <Flex gap={24} align="center" key={index}>
+      <Row gutter={24} key={index}>
         <Col>
           <FormField
             name={"overrate_fees.[].price"}
@@ -39,7 +39,6 @@ const OverrateFeeItemField: FC<OverateFeeItemProps> = ({
             key={index + "price"}
           />
         </Col>
-
         <Col>
           <FormField
             name={"overrate_fees.[].threshold"}
@@ -51,9 +50,9 @@ const OverrateFeeItemField: FC<OverateFeeItemProps> = ({
         {showDelete && (
           <Col
             style={{
-              width: 24,
-              height: 18,
-              paddingTop: 10,
+              paddingLeft: 0,
+              paddingRight: 0,
+              paddingTop: "34px",
             }}
           >
             <DeleteOutlined
@@ -65,7 +64,7 @@ const OverrateFeeItemField: FC<OverateFeeItemProps> = ({
             />
           </Col>
         )}
-      </Flex>
+      </Row>
     </>
   );
 };
@@ -84,7 +83,7 @@ export default function FeeDetails({
     control: methodsArr.control,
     name: "overrate_fees",
   });
-  //const [removedIds, setRemovedIds] = useState<string[]>([]);
+
   const newOverrateFeeItemsArray = React.useMemo(
     () => ({
       price: null,
@@ -101,14 +100,8 @@ export default function FeeDetails({
   const goToFee = useGoToDashboardTab("fee");
 
   const handleDelete = (index: number) => {
-    // const removedItem = fields[index];
-    // if (removedItem.id) {
-    //   setRemovedIds((prevIds) => [...prevIds, removedItem.id]);
-    // }
     remove(index);
   };
-
-  // console.log("removedIds: ", removedIds);
 
   useEffect(() => {
     const isTransaction = fee_type === "transaction";
@@ -186,7 +179,11 @@ export default function FeeDetails({
               </>
             ))}
             <Typography
-              style={{ cursor: "pointer", color: "#15ABFF" }}
+              style={{
+                cursor: "pointer",
+                color: "#15ABFF",
+                width: "fit-content",
+              }}
               onClick={handleAddMoreClick}
             >
               + Add more

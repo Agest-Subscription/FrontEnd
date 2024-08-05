@@ -6,13 +6,9 @@ import {
   OverateFeeArrItems,
   RecurrenceType,
 } from "@/interfaces/model/fee.type";
-import { OverrateFee } from "@/interfaces/model/overrateFee.type";
 
 const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
   fee_type: string<FeeType>().required("Fee type is required"),
-  // create: array().min(1).default([]),
-  // update: array().min(1).default([]),
-  // delete: array().min(1).default([]),
   overrate_fees: array<OverateFeeArrItems>(
     object<OverateFeeArrItems>().shape({
       isTransaction: boolean().default(false),
@@ -51,7 +47,6 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
   price: number()
     .integer("Please enter an integer")
     .min(0, "Price cannot be smaller than 0")
-    .nullable()
     .default(null)
     .max(9999999999, "Price cannot exceed 9999999999")
     .when("fee_type", {
@@ -59,17 +54,10 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
       then: (schema) => schema.required("Fee price is a required fields"),
     }),
   is_active: boolean().default(false),
-  // is_overrate: boolean()
-  //   .nullable()
-  //   .default(null)
-  //   .when("fee_type", {
-  //     is: "transaction",
-  //     then: (schema) => schema.nullable().default(false),
-  //   }),
   recurrence_type: string<RecurrenceType>()
     .nullable()
     .default(null)
-    .when("fee", {
+    .when("fee_type", {
       is: "recurrence",
       then: (schema) => schema.required("Recurrence type is required"),
     }),
@@ -77,7 +65,7 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
     .integer("Please enter a number")
     .nullable()
     .default(null)
-    .when("fee", {
+    .when("fee_type", {
       is: "recurrence",
       then: (schema) =>
         schema
@@ -88,7 +76,7 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
   transaction_unit: string()
     .nullable()
     .default(null)
-    .when("fee", {
+    .when("fee_type", {
       is: "transaction",
       then: (schema) =>
         schema

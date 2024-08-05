@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
-import { isBoolean, omit, omitBy, pick } from "lodash";
+import { omit } from "lodash";
 
 import FeesDetails from "../FeesDetails";
 import { useGenerateFields } from "../useGenerateFields";
@@ -42,8 +42,6 @@ const Page: React.FC<Props> = () => {
   }
 
   function formatPayload(data: FeeFormValues) {
-    console.log("data from add form: ", data);
-
     if (data.fee_type === "transaction") {
       const formattedOverrateFees =
         data.overrate_fees?.map((item) => omit(item, "isTransaction")) || [];
@@ -78,7 +76,6 @@ const Page: React.FC<Props> = () => {
 
   function onSubmit(data: FeeFormValues) {
     const newData = formatPayload(data);
-    console.log("new Data: ", newData);
 
     const trimmed = trimString(newData, ["name"]);
     addFee(trimmed, {

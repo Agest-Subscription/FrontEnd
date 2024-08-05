@@ -11,6 +11,7 @@ import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
 import PopUp from "@/components/popup/Popup";
 import { useAddPricingPlan } from "@/hooks/pricingPlan";
 import { CustomError } from "@/interfaces/base";
+import { Fee } from "@/interfaces/model/fee.type";
 import {
   AddPricingPlanPayload,
   PricingPlanFeaturesType,
@@ -26,6 +27,7 @@ type Props = {};
 const Page: React.FC<Props> = () => {
   const goToPricingPlan = useGoToDashboardTab("pricing-plan");
   const [openModal, setOpenModal] = useState(false);
+  const [recurrenceFee, setRecurrenceFee] = useState<Fee | null>(null);
   const { mutate: addPricingPlan, isLoading: isAdding } = useAddPricingPlan();
   const methods = useForm<PricingPlanFormValues>({
     mode: "onBlur",
@@ -73,7 +75,7 @@ const Page: React.FC<Props> = () => {
   }
   const start_date = methods.watch("start_date");
 
-  const fields = useGenerateFields(start_date);
+  const fields = useGenerateFields(start_date, setRecurrenceFee);
 
   const formatPayload = (
     data: PricingPlanFormValues,
@@ -126,6 +128,7 @@ const Page: React.FC<Props> = () => {
             <PricingPlanDetails
               onSave={handleSave}
               has_free_trial={has_free_trial}
+              recurrenceFee={recurrenceFee}
             />
             <PopUp popupProps={modalProp} isOpen={openModal} />
           </Form>
