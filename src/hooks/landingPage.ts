@@ -1,9 +1,15 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 import {
   addLandingPageApi,
   getListLandingPageApi,
-  getPricingPlanGroupByPeriodApi,
+  getListPricingPlanGroupByPeriodApi,
 } from "@/api/landingPage";
 import { LANDING_PAGES } from "@/constants/query";
 import { CustomError } from "@/interfaces/base";
@@ -29,10 +35,25 @@ export const useAddLandingPage = () => {
   });
 };
 
-export const useGetPricingPlanGroupByPeriod = () => {
-  return useQuery({
-    queryKey: [LANDING_PAGES],
-    queryFn: () => getPricingPlanGroupByPeriodApi(),
-    select: ({ data }) => data,
+export const useGetInfinitePricingPlanGroupByPeriod = (
+  params: LandingPageFilterParams,
+) => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const query = useInfiniteQuery({
+    queryKey: ["LANDING_PAGES", searchTerm, params],
+    queryFn: ({ pageParam = 1 }) =>
+      getListPricingPlanGroupByPeriodApi({
+        ...params,
+        page: pageParam,
+        search: searchTerm,
+      }),
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.data.data.length === 0) {
+        return undefined;
+      }
+      return pages.length + 1;
+    },
   });
+  return { ...query, setSearchTerm };
 };

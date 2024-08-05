@@ -15,21 +15,14 @@ const useGenerateColumns = () => {
         dataIndex: "no",
         key: "no",
         align: "center",
-      },
-      {
-        title: "Name",
-        dataIndex: "name",
-        key: "name",
-        render: (value) => {
-          return <LongText text={value} width={250} />;
-        },
+        fixed: "left",
       },
       {
         title: "Fee Name",
         dataIndex: "fee_name",
         key: "fee_name",
         render: (value) => {
-          return <LongText text={value} width={250} />;
+          return <LongText text={value} width={100} />;
         },
       },
       {
@@ -43,26 +36,11 @@ const useGenerateColumns = () => {
         key: "price",
       },
       {
-        title: "Description",
-        dataIndex: "description",
-        key: "description",
-        render: (value) => {
-          return <LongText text={value} width={250} />;
-        },
-      },
-      {
-        title: "Transaction Unit",
-        dataIndex: "transaction_unit",
-        key: "transaction_unit",
-        render: (value) => {
-          return <LongText text={value} width={250} />;
-        },
-      },
-      {
         title: "Action",
         dataIndex: "action",
         key: "action",
         align: "center",
+        fixed: "right",
         width: 150,
         render: (_, record) => {
           return (

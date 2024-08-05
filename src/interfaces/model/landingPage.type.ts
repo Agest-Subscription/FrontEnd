@@ -17,7 +17,7 @@ export type PricingPlan = {
 
 export type PricingPlanGroupByPeriod = {
   recurrence_period: string;
-  pricing_plan: Pick<PricingPlan, "id" | "name">;
+  pricing_plans: Pick<PricingPlan, "id" | "name">;
 };
 
 export type LandingPage = {

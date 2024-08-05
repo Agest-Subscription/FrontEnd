@@ -20,8 +20,13 @@ export const addLandingPageApi = (data: AddLandingPagePayload) => {
   return axiosClient.post("landing_pages", data);
 };
 
-export const getPricingPlanGroupByPeriodApi = () => {
+export const getListPricingPlanGroupByPeriodApi = (
+  params: LandingPageFilterParams,
+) => {
   return axiosClient.get<GetListResponse<PricingPlanGroupByPeriod>>(
     "landing_pages/recurrence_period",
+    {
+      params,
+    },
   );
 };

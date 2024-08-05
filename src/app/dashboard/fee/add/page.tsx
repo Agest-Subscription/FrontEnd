@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
+import { omit } from "lodash";
 
 import FeesDetails from "../FeesDetails";
 import { useGenerateFields } from "../useGenerateFields";
@@ -41,27 +42,35 @@ const Page: React.FC<Props> = () => {
   }
 
   function formatPayload(data: FeeFormValues) {
-    if (data.fee === "transaction") {
+    console.log("data from add form: ", data);
+
+    if (data.fee_type === "transaction") {
+      const formattedOverrateFees =
+        data.overrate_fees?.map((item) => omit(item, "isTransaction")) || [];
+
       return {
         ...data,
         recurrence_cycle_count: null,
         recurrence_type: null,
+        overrate_fees: formattedOverrateFees,
       };
     }
-    if (data.fee === "onetime") {
+    if (data.fee_type === "onetime") {
       return {
         ...data,
         transaction_unit: null,
-        is_overrate: null,
+        // is_overrate: null,
         recurrence_cycle_count: null,
         recurrence_type: null,
+        overrate_fees: null,
       };
     }
-    if (data.fee === "recurrence") {
+    if (data.fee_type === "recurrence") {
       return {
         ...data,
         transaction_unit: null,
-        is_overrate: null,
+        // is_overrate: null,
+        overrate_fees: null,
       };
     }
     return data; // or handle other fee cases if necessary
@@ -69,6 +78,8 @@ const Page: React.FC<Props> = () => {
 
   function onSubmit(data: FeeFormValues) {
     const newData = formatPayload(data);
+    console.log("new Data: ", newData);
+
     const trimmed = trimString(newData, ["name"]);
     addFee(trimmed, {
       onSuccess: () => {
@@ -104,6 +115,8 @@ const Page: React.FC<Props> = () => {
         onConfirm: methods.handleSubmit(onSubmit),
         onClose: () => setOpenModal(false),
       });
+    } else {
+      console.log("Validation Errors: ", methods.formState.errors);
     }
   };
 

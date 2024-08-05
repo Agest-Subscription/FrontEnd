@@ -33,18 +33,27 @@ const TableV1 = <T extends Record<string, any>>({
 }: CustomTableProps<T>) => {
   return (
     <Flex vertical gap={24} style={{ padding: 20, width: "100%" }}>
-      <Flex justify="space-between">
-        <Typography style={{ fontSize: 24, fontWeight: 600, color: "#2F80ED" }}>
-          {capitalize(tableTitle ?? "")}
-        </Typography>
-        {showButton && (
+      {addItem && (
+        <Flex justify="space-between">
+          <Typography
+            style={{ fontSize: 24, fontWeight: 600, color: "#2F80ED" }}
+          >
+            {capitalize(tableTitle ?? "")}
+          </Typography>
           <ButtonV1 onClick={addItem} customSize="small">
             {addButtonLabel}
           </ButtonV1>
-        )}
-      </Flex>
+        </Flex>
+      )}
       {showSearchBar && (
-        <Flex justify="end">
+        <Flex align="center" justify={addItem ? "end" : "space-between"}>
+          {!addItem && (
+            <Typography
+              style={{ fontSize: 24, fontWeight: 600, color: "#2F80ED" }}
+            >
+              {capitalize(tableTitle ?? "")}
+            </Typography>
+          )}
           <Search
             placeholder="Search"
             enterButton

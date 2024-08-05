@@ -82,7 +82,7 @@ const OverrateFeeList: React.FC<Props> = () => {
     return (
       OverrateFeeTableData?.data.map((overrateFee, index) => ({
         ...overrateFee,
-        key: overrateFee.id,
+        key: overrateFee.id ?? 0,
         no: index + 1 + ((params.page ?? 1) - 1) * (params?.page_size ?? 5),
       })) ?? []
     );
@@ -101,7 +101,6 @@ const OverrateFeeList: React.FC<Props> = () => {
           handleTableChange({ pagination, filters })
         }
         pagination={tableParams.pagination}
-        addItem={() => router.push(`${OVERRATE_FEE}/add`)}
         onSearch={handleSearch}
         searchValue={searchQuery}
       />

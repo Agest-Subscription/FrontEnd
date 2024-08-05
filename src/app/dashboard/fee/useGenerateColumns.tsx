@@ -17,6 +17,7 @@ const useGenerateColumns = () => {
         key: "no",
         align: "center",
       },
+
       {
         title: "Name",
         dataIndex: "name",
@@ -27,8 +28,8 @@ const useGenerateColumns = () => {
       },
       {
         title: "Type",
-        dataIndex: "fee",
-        key: "fee",
+        dataIndex: "fee_type",
+        key: "fee_type",
       },
       {
         title: "Fee",
@@ -71,20 +72,21 @@ const useGenerateColumns = () => {
           return <Checkbox checked={is_active}></Checkbox>;
         },
       },
-      {
-        title: "Overrate Fee",
-        dataIndex: "is_overrate",
-        key: "is_overrate",
-        align: "center",
-        render: (is_overrate: boolean) => {
-          return <Checkbox checked={is_overrate}></Checkbox>;
-        },
-      },
+      // {
+      //   title: "Overrate Fee",
+      //   dataIndex: "is_overrate",
+      //   key: "is_overrate",
+      //   align: "center",
+      //   render: (is_overrate: boolean) => {
+      //     return <Checkbox checked={is_overrate}></Checkbox>;
+      //   },
+      // },
       {
         title: "Action",
         dataIndex: "action",
         key: "action",
         align: "center",
+        fixed: "right",
         render: (_, record) => {
           return (
             <Link href={`${FEES}/${record.id}`}>

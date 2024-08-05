@@ -1,7 +1,6 @@
 .ant-menu {
     font-weight: 700 !important;
     background: #b9e5ff !important;
-    display: flex !important;
     justify-content: space-between !important;
     text-align: center !important;
     &:before {
