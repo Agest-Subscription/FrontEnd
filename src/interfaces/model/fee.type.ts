@@ -8,10 +8,9 @@ export type Fee = {
   id: string;
   name: string;
   fee_type: FeeType;
-  //is_overrate: boolean | null;
   recurrence_type: RecurrenceType | null;
   recurrence_cycle_count: number | null;
-  price: number | null;
+  price: number;
   transaction_unit: string | null;
   description: string | null;
   is_active: boolean;
@@ -23,7 +22,6 @@ export type FeeTableData = Fee & {
 };
 
 export type OverateFeeArrItems = Pick<OverrateFee, "price" | "threshold"> & {
-  //id: string;
   isTransaction?: boolean | null;
 };
 // Define a type that omits `isTransaction` from `OverateFeeArrItems`

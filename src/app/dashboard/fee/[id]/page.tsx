@@ -92,25 +92,15 @@ const Page: React.FC<Props> = () => {
         if (Fee?.overrate_fees?.some((fee) => fee.id === item.id)) {
           acc.update.push(item);
         }
-        console.log("acc ReduceUpadte: ", acc);
 
         return acc;
       },
       { update },
     );
 
-    console.log("feeReduce: ", feeReduce);
-    console.log("feeReduceUpdate: ", feeReduceUpdate);
-
     const createItems = data.overrate_fees?.filter((item) => !item.id) || [];
-    console.log("update forEach: ", update);
-    console.log("delete: ", deleteItems);
-    console.log("createItems: ", createItems);
 
     if (data.fee_type === "transaction") {
-      // const formattedOverrateFees =
-      //   data.overrate_fees?.map((item) => omit(item, "isTransaction")) || [];
-
       return {
         ...data,
         recurrence_cycle_count: null,
