@@ -18,7 +18,9 @@ export const useGenerateFields = (
   isEdit: boolean,
   pricingPlan: PricingPlanTableData | null,
 ) => {
-  methods.setValue("pricing_plan", pricingPlan);
+  if (isEdit) {
+    methods.setValue("pricing_plan", pricingPlan);
+  }
 
   const {
     data: usersPage,
@@ -43,7 +45,13 @@ export const useGenerateFields = (
   });
 
   const fields = useMemo<FieldsData<SubscriptionFormValues>>(() => {
-    const today = new Date();
+    const today = new Date().toString();
+    const suspendedDate = () => {
+      const is_cancelled = methods.getValues("is_cancelled");
+      if (is_cancelled) {
+        methods.setValue("suspended_date", today);
+      } else [methods.setValue("suspended_date", null)];
+    };
 
     const caculateEndDate = () => {
       const pricingPlan = methods.getValues("pricing_plan");
@@ -58,27 +66,38 @@ export const useGenerateFields = (
 
         const due_date_free_trial = dayjs(start_date)
           .add(free_trial_cycle, free_trial_type as ManipulateType | undefined)
-          .toDate();
-
+          .toISOString();
         if (free_trial_cycle != 0) {
           methods.setValue("due_date_free_trial", due_date_free_trial);
         } else {
           methods.setValue("due_date_free_trial", null);
         }
 
+        if (recurrence_cycle === 2 && recurrence_type === "day") {
+          const next_billing_date = dayjs(start_date)
+            .add(
+              recurrence_cycle,
+              recurrence_type as ManipulateType | undefined,
+            )
+            .subtract(1, "day")
+            .toISOString();
+          methods.setValue("next_billing_date", next_billing_date);
+        } else {
+          const next_billing_date = dayjs(start_date)
+            .add(
+              recurrence_cycle,
+              recurrence_type as ManipulateType | undefined,
+            )
+            .subtract(2, "day")
+            .format("YYYY-MM-DD HH:mm:ss");
+          methods.setValue("next_billing_date", next_billing_date);
+        }
         const end_date = dayjs(start_date)
           .add(recurrence_cycle, recurrence_type as ManipulateType | undefined)
-          .toDate();
-        const next_billing_date = dayjs(start_date)
-          .add(recurrence_cycle, recurrence_type as ManipulateType | undefined)
-          .subtract(2, "day")
-          .toDate();
-
+          .toISOString();
         methods.setValue("end_date", end_date);
-        methods.setValue("next_billing_date", next_billing_date);
       }
     };
-
     const mappedEmails =
       usersPage?.pages.flatMap((page) =>
         page.data.data.map((user) => ({
@@ -100,7 +119,17 @@ export const useGenerateFields = (
       const item = mappedPricingPlans.find((item) => item.value === id);
       return item?.pricing_plan ?? null;
     };
-
+    const assignLocaleTimeForToday = () => {
+      const now = dayjs();
+      if (
+        methods.getValues("start_date").toString() === now.format("YYYY-MM-DD")
+      ) {
+        methods.setValue("start_date", dayjs().toISOString());
+        caculateEndDate();
+      }
+      caculateEndDate();
+      console.log("123 start_date antd", methods.getValues("start_date"));
+    };
     return {
       user_id: {
         label: "User ID",
@@ -190,7 +219,9 @@ export const useGenerateFields = (
         label: "Start date",
         type: "datepicker",
         componentProps: {
-          onChange: () => caculateEndDate(),
+          onChange: () => {
+            assignLocaleTimeForToday();
+          },
           isRequired: true,
           minDate: dayjs(today),
           format: DATE_FORMAT_V2,
@@ -225,6 +256,10 @@ export const useGenerateFields = (
         type: "singleCheckbox",
         componentProps: {
           disabled: !isEdit,
+          onChange: () => {
+            suspendedDate();
+            caculateEndDate();
+          },
         },
       },
       suspended_date: {

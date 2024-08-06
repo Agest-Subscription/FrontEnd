@@ -6,11 +6,11 @@ export type Subscription = {
   user_id: string;
   email: string;
   is_cancelled: boolean;
-  start_date: Date;
-  end_date: Date | null;
-  suspended_date: Date | null;
-  due_date_free_trial: Date | null;
-  next_billing_date: Date | null;
+  start_date: string;
+  end_date: string | null;
+  suspended_date: string | null;
+  due_date_free_trial: string | null;
+  next_billing_date: string | null;
   auto_renew: boolean;
 };
 
