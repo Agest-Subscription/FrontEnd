@@ -38,7 +38,7 @@ const useGenerateColumns = () => {
         dataIndex: "transaction_unit",
         key: "transaction_unit",
         render: (value) => {
-          return capitalize(value)
+          return capitalize(value);
         },
       },
     ],
