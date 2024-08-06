@@ -18,7 +18,7 @@ type Props = {};
 
 const PermissionList: React.FC<Props> = () => {
   const router = useRouter();
-  const { searchQuery, handleSearch } = useSearchSync();
+  const { searchQuery, handleSearch } = useSearchSync(resetPagination);
   const [tableParams, setTableParams] = useState<TableParams<FeeTableData>>({
     pagination: {
       current: 1,
@@ -70,6 +70,16 @@ const PermissionList: React.FC<Props> = () => {
       };
     });
   }, [FeeTableData]);
+  
+  function resetPagination() {
+    setTableParams((prev) => ({
+      ...prev,
+      pagination: {
+        ...prev.pagination,
+        current: 1,
+      },
+    }));
+  }
 
   const dataSource = useMemo<DataSourceItem<FeeTableData>[]>(() => {
     return (

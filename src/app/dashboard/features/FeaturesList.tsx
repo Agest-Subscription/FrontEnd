@@ -21,7 +21,7 @@ type Props = {};
 
 const FeaturesList: React.FC<Props> = () => {
   const router = useRouter();
-  const { searchQuery, handleSearch } = useSearchSync();
+  const { searchQuery, handleSearch } = useSearchSync(resetPagination);
   const [tableParams, setTableParams] = useState<TableParams<FeatureTableData>>(
     {
       pagination: {
@@ -56,6 +56,17 @@ const FeaturesList: React.FC<Props> = () => {
       sorter,
     });
   };
+
+  
+  function resetPagination() {
+    setTableParams((prev) => ({
+      ...prev,
+      pagination: {
+        ...prev.pagination,
+        current: 1,
+      },
+    }));
+  }
 
   useEffect(() => {
     if (!FeatureTableData) return;
