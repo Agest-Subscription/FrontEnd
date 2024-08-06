@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
 
 import LandingPagesDetails from "../LandingPageDetails";
@@ -13,8 +14,10 @@ import {
   LandingPage,
   LandingPageFormValues,
   LandingPageItem,
+  LandingPagePayload,
 } from "@/interfaces/model/landingPage.type";
 import { popUpPropType } from "@/interfaces/popup";
+import landingpageFormValuesSchema from "@/schema/landingPage";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
@@ -26,7 +29,7 @@ const Page: React.FC<Props> = () => {
   const { mutate: addLandingPage, isLoading: isAdding } = useAddLandingPage();
   const methods = useForm<LandingPageFormValues>({
     mode: "onBlur",
-    // resolver: yupResolver(landingpageFormValuesSchema),
+    resolver: yupResolver(landingpageFormValuesSchema),
   });
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "successpopup",
@@ -72,8 +75,27 @@ const Page: React.FC<Props> = () => {
     setOpenModal(true);
   }
 
+  const formatPayload = (data: LandingPageFormValues): LandingPagePayload[] => {
+    const transformed: LandingPagePayload[] = [];
+
+    if (data.landing_page_items) {
+      data.landing_page_items.forEach((item) => {
+        const { premium, pro, basic } = item;
+
+        transformed.push({
+          pricing_plan_id: premium ?? "",
+          priority: "premium",
+        });
+        transformed.push({ pricing_plan_id: pro ?? "", priority: "pro" });
+        transformed.push({ pricing_plan_id: basic ?? "", priority: "basic" });
+      });
+    }
+
+    return transformed;
+  };
+
   function onSubmit(data: LandingPageFormValues) {
-    addLandingPage(data, {
+    addLandingPage(formatPayload(data), {
       onSuccess: () => {
         showModal({
           popup_id: "successpopup",
@@ -103,6 +125,14 @@ const Page: React.FC<Props> = () => {
         popup_text: `${capitalize("Are you sure to create a new Landing Page?")}`,
         popup_type: "Confirm",
         onConfirm: methods.handleSubmit(onSubmit),
+        onClose: () => setOpenModal(false),
+      });
+    } else {
+      showModal({
+        popup_id: "error",
+        popup_text: `${capitalize("At least one of basic, pro, or premium must be selected")}`,
+        popup_type: "Fail",
+        onConfirm: () => {},
         onClose: () => setOpenModal(false),
       });
     }

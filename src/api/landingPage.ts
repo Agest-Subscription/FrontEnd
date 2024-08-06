@@ -1,8 +1,8 @@
 import { axiosClient } from "@/config/axios/client";
 import { GetListResponse } from "@/interfaces/base";
 import {
-  AddLandingPagePayload,
   LandingPageFilterParams,
+  LandingPagePayload,
   LandingPageResponseItem,
   PricingPlanGroupByPeriod,
 } from "@/interfaces/model/landingPage.type";
@@ -16,7 +16,7 @@ export const getListLandingPageApi = (params: LandingPageFilterParams) => {
   );
 };
 
-export const addLandingPageApi = (data: AddLandingPagePayload) => {
+export const addLandingPageApi = (data: LandingPagePayload[]) => {
   return axiosClient.post("landing_pages", data);
 };
 

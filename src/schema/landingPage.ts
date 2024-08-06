@@ -1,27 +1,23 @@
-import { array, object, ObjectSchema, string } from "yup";
+import * as yup from "yup";
 
-import { LandingPageFormValues } from "@/interfaces/model/landingPage.type";
+const itemSchema = yup
+  .object()
+  .shape({
+    period: yup.string().required("Period is required"),
+    basic: yup.string().nullable().default(null),
+    pro: yup.string().nullable().default(null),
+    premium: yup.string().nullable().default(null),
+  })
+  .test(
+    "at-least-one",
+    "At least one of basic, pro, or premium must be selected",
+    function (value) {
+      return value.basic != null || value.pro != null || value.premium != null;
+    },
+  );
 
-const landingPageFormValuesSchema: ObjectSchema<LandingPageFormValues> = object(
-  {
-    landing_page_items: array()
-      .of(
-        object({
-          period: string().required("Period is required"),
-          basic_plan_id: string().nullable().default(null),
-          pro_plan_id: string().nullable().default(null),
-          premium_plan_id: string().nullable().default(null),
-        }).test(
-          "at-least-one-plan",
-          "At least one plan must be selected",
-          (item) =>
-            !!item.basic_plan_id ||
-            !!item.pro_plan_id ||
-            !!item.premium_plan_id,
-        ),
-      )
-      .required("At least one landing page item is required"),
-  },
-);
+const landingpageFormValuesSchema = yup.object().shape({
+  landing_page_items: yup.array().of(itemSchema).nullable().default(undefined),
+});
 
-export default landingPageFormValuesSchema;
+export default landingpageFormValuesSchema;

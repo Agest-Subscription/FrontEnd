@@ -1,14 +1,10 @@
 import React, { useMemo } from "react";
-import Link from "next/link";
-import { EditOutlined } from "@ant-design/icons";
 import { ColumnType } from "antd/es/table";
 import dayjs from "dayjs";
 
 import LongText from "@/components/table/LongText";
 import { DATE_FORMAT } from "@/constants/date";
-import { LANDING_PAGE } from "@/constants/routes";
 import { LandingPageTableData } from "@/interfaces/model/landingPage.type";
-import { formatDuration } from "@/utils/string";
 
 const useGenerateColumns = () => {
   return useMemo<ColumnType<LandingPageTableData>[]>(
@@ -58,7 +54,7 @@ const useGenerateColumns = () => {
         dataIndex: "recurrence_period",
         key: "recurrence_period",
         render: (_, record) => {
-          return formatDuration(record?.pricing_plan?.recurrence_period);
+          return record?.pricing_plan?.recurrence_period;
         },
       },
       {
@@ -71,11 +67,16 @@ const useGenerateColumns = () => {
       },
       {
         title: "Description",
-        dataIndex: "name",
-        key: "name",
+        dataIndex: "description",
+        key: "description",
         width: 350,
         render: (_, record) => {
-          return <LongText text={record?.pricing_plan?.name} width={350} />;
+          return (
+            <LongText
+              text={record?.pricing_plan?.description ?? ""}
+              width={350}
+            />
+          );
         },
       },
     ],

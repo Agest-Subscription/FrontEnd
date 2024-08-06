@@ -8,15 +8,20 @@ import {
 } from "react-hook-form";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Flex, Form, Select, Spin } from "antd";
+import { endsWith } from "lodash";
 
 import { useGetInfiniteRecurrencePeriod } from "@/hooks/landingPage";
 import { useGetInfinitePricingPlanByRecurrencePeriod } from "@/hooks/pricingPlan";
+import { popUpPropType } from "@/interfaces/popup";
+import { capitalize } from "@/utils/string";
 
 type Props = {
   control: Control<FieldValues, any>;
   index: number;
   remove: UseFieldArrayRemove;
   usedPeriods: string[];
+  showModal: (popUpProp: popUpPropType) => void;
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const LandingPageComponent = ({
@@ -24,6 +29,8 @@ const LandingPageComponent = ({
   index,
   remove,
   usedPeriods,
+  showModal,
+  setOpenModal,
 }: Props) => {
   const {
     data: recurrencePeriodPage,
@@ -86,6 +93,37 @@ const LandingPageComponent = ({
 
   const isPeriodEmpty = !methods.watch(`landing_page_items.${index}.period`);
   const handlePeriodChange = (value: string) => {
+    if (
+      !isPeriodEmpty &&
+      (methods.getValues(`landing_page_items.${index}.basic`) != null ||
+        methods.getValues(`landing_page_items.${index}.pro`) != null ||
+        methods.getValues(`landing_page_items.${index}.premium`) != null)
+    ) {
+      showModal({
+        popup_id: "successpopup",
+        popup_text: `${capitalize(
+          "Are you sure to change this period?\nThis action will remove your current selection.",
+        )}`,
+        popup_type: "Confirm",
+        onConfirm: () => onConfirm(value),
+        onClose: () => setOpenModal(false),
+      });
+    } else {
+      methods.setValue(`landing_page_items.${index}.period`, value);
+    }
+  };
+
+  const handleDeleteComponent = () => {
+    showModal({
+      popup_id: "successpopup",
+      popup_text: `${capitalize("Are you sure to delete this plan?")}`,
+      popup_type: "Confirm",
+      onConfirm: () => remove(index),
+      onClose: () => setOpenModal(false),
+    });
+  };
+
+  const onConfirm = (value: string) => {
     methods.setValue(`landing_page_items.${index}.period`, value);
     methods.setValue(`landing_page_items.${index}.basic`, null);
     methods.setValue(`landing_page_items.${index}.pro`, null);
@@ -106,7 +144,13 @@ const LandingPageComponent = ({
 
   const getPriceById = (id: string) => {
     const plan = mappedPricingPlans.find((option) => option.value === id);
-    return plan ? plan.price : "";
+    const period = methods.watch(`landing_page_items.${index}.period`);
+
+    let [, unit] = period.split(" ");
+
+    endsWith(unit, "s") ? (unit = unit.slice(0, -1)) : unit;
+
+    return plan ? ` $${plan.price}/${unit}` : "";
   };
 
   const filteredRecurrencePeriods = useMemo(() => {
@@ -178,7 +222,7 @@ const LandingPageComponent = ({
         <div style={{ width: 16, height: 18 }}>
           <DeleteOutlined
             style={{ fontSize: 18, color: "#263e56" }}
-            onClick={() => remove(index)}
+            onClick={() => handleDeleteComponent()}
           />
         </div>
       </Flex>
@@ -245,7 +289,7 @@ const LandingPageComponent = ({
                         color: "#9095A1",
                       }}
                     >
-                      Price: $
+                      Price:
                       {getPriceById(
                         methods.watch(`landing_page_items.${index}.${type}`),
                       )}
