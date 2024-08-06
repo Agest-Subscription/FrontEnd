@@ -10,6 +10,7 @@ export const useGenerateFields = () => {
         label: "Name",
         type: "text",
         componentProps: {
+          disabled: true,
           isRequired: true,
         },
       },
