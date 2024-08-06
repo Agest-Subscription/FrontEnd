@@ -81,7 +81,6 @@ const PricingPlanFeatures: React.FC<Props> = ({
           fee: null,
           price: null,
           new_price: null,
-          overrate: null,
         })),
       );
     } else {
@@ -98,18 +97,20 @@ const PricingPlanFeatures: React.FC<Props> = ({
             fee: null,
             price: null,
             new_price: null,
-            overrate: null,
           })),
         ]);
       }
     }
   }, [FeatureList, dataSource, setDataSource]);
 
-  function mapOverrateFee(overrateFees: OverrateFee[], fee_id: string) {
+  function mapOverrateFee(
+    overrateFees: OverrateFee[],
+    feature_id: string,
+  ): OverrateFeeWithNewPrice[] {
     return overrateFees.map((fee) => ({
       ...fee,
       new_price: null,
-      fee_id: fee_id,
+      feature_id: feature_id,
     }));
   }
 
@@ -129,7 +130,7 @@ const PricingPlanFeatures: React.FC<Props> = ({
             fee: selectedFee || null, // Ensure fee is either Fee or null
             price: selectedFee?.price || null,
             children: selectedFee?.overrate_fees?.length
-              ? mapOverrateFee(selectedFee.overrate_fees, selectedFee.id)
+              ? mapOverrateFee(selectedFee.overrate_fees, item.id)
               : null,
           };
         }
@@ -160,12 +161,12 @@ const PricingPlanFeatures: React.FC<Props> = ({
     ) => {
       if (isNaN(Number(value))) return;
       const newDataSource = dataSource.map((item) => {
-        if (item.fee?.id === record.fee_id) {
+        if (item?.id === record.feature_id) {
           return {
             ...item,
             children: item.children?.map((child) =>
               child.id === record.id
-                ? { ...child, new_price: Number(value) }
+                ? { ...child, new_price: value === "" ? null : Number(value) }
                 : child,
             ),
           };
@@ -271,9 +272,12 @@ const PricingPlanFeatures: React.FC<Props> = ({
             return (
               <Input
                 value={record.new_price ?? ""}
-                onChange={(event) =>
-                  onChangeNewPriceOverrateFee(event.target.value, record as any)
-                }
+                onChange={(event) => {
+                  onChangeNewPriceOverrateFee(
+                    event.target.value,
+                    record as any,
+                  );
+                }}
               />
             );
           }

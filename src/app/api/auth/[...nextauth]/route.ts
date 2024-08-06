@@ -43,10 +43,7 @@ const handler = NextAuth({
           return null;
         } catch (error) {
           if (axios.isAxiosError(error) && error.response) {
-            console.log("error.response.data: ", error.response.data);
-
             const errorMessage = error.response.data.detail || "Login failed";
-            console.log("error: ", errorMessage);
 
             throw new Error(errorMessage);
           }
@@ -75,8 +72,6 @@ const handler = NextAuth({
       const refreshToken =
         typeof token.refresh_token === "string" ? token.refresh_token : "";
 
-      //console.log("token.refreshToken:  ", token.refreshToken);
-
       // Here, check the token validity date
       if (checkTokenExpired(accessToken)) {
         // Call the endpoint where you handle the token refresh for a user
@@ -89,11 +84,6 @@ const handler = NextAuth({
               refresh_token: refreshToken,
             },
           );
-          // Check for the result and update the data accordingly
-          // console.log("...user: ", user?.data);
-          // console.log("...token: ", token);
-
-          // console.log("new access_token: ", user?.data?.access_token);
 
           return {
             ...token,
@@ -103,9 +93,6 @@ const handler = NextAuth({
           console.log("error refresh token: ", error);
         }
       }
-
-      // console.log("old access_token: ", accessToken);
-      // console.log("old refresh_token: ", refreshToken);
 
       return {
         ...token,

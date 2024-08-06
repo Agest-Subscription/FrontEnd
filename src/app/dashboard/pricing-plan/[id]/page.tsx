@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
 
 import PricingPlanDetails from "../PricingPlanDetails";
@@ -16,6 +17,7 @@ import {
 } from "@/hooks/pricingPlan";
 import useGetId from "@/hooks/useGetId";
 import { CustomError } from "@/interfaces/base";
+import { Fee } from "@/interfaces/model/fee.type";
 import {
   PricingPlanFeaturesType,
   PricingPlanFormValues,
@@ -23,6 +25,7 @@ import {
   UpdatePricingPlanPayload,
 } from "@/interfaces/model/pricingplan.type";
 import { popUpPropType } from "@/interfaces/popup";
+import pricingplanFormValuesSchema from "@/schema/pricingPlan";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
@@ -35,9 +38,14 @@ const Page: React.FC<Props> = () => {
   const { mutate: deletePricingPlan, isLoading: isDeleting } =
     useDeletePricingPlan();
   const goToPricingPlan = useGoToDashboardTab("pricing-plan");
+  const [recurrenceFee, setRecurrenceFee] = useState<Fee | null>(null);
   const id = useGetId();
-
+  const methods = useForm<PricingPlanFormValues>({
+    mode: "onBlur",
+    resolver: yupResolver(pricingplanFormValuesSchema),
+  });
   const [openModal, setOpenModal] = useState(false);
+  const has_free_trial = methods.watch("has_free_trial");
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "",
     popup_text: "",
@@ -46,13 +54,9 @@ const Page: React.FC<Props> = () => {
     onClose: () => setOpenModal(false),
   });
 
-  const methods = useForm<PricingPlanFormValues>({
-    mode: "onBlur",
-  });
-
   const { data: PricingPlan, isError } = useGetPricingPlanById(id);
   const start_date = methods.watch("start_date");
-  const fields = useGenerateFields(start_date);
+  const fields = useGenerateFields(start_date, setRecurrenceFee);
   useEffect(() => {
     if (PricingPlan) {
       methods.setValue("description", PricingPlan.description);
@@ -65,6 +69,7 @@ const Page: React.FC<Props> = () => {
         "free_trial_period_count",
         PricingPlan.free_trial_period_count,
       );
+      methods.setValue("has_free_trial", PricingPlan.has_free_trial);
       methods.setValue("recurrence_fee_id", PricingPlan.recurrence_fee.id);
     }
   }, [PricingPlan, methods]);
@@ -88,7 +93,7 @@ const Page: React.FC<Props> = () => {
           popup_id: "successpopup",
           popup_text: capitalize("Pricing plan is updated successfully!"),
           popup_type: "Success",
-          onConfirm: () => {},
+          onConfirm: () => goToPricingPlan(),
           onClose: () => goToPricingPlan(),
         }),
       onError: (err: CustomError) =>
@@ -109,7 +114,7 @@ const Page: React.FC<Props> = () => {
           popup_id: "successpopup",
           popup_text: capitalize("This Pricing plan is successfully deleted!"),
           popup_type: "Success",
-          onConfirm: () => {},
+          onConfirm: () => goToPricingPlan(),
           onClose: () => goToPricingPlan(),
         }),
       onError: (err: CustomError) =>
@@ -149,11 +154,7 @@ const Page: React.FC<Props> = () => {
       new_price: item.new_price,
       overrate_fee_associations:
         item.children?.map((child) => ({
-          overrate_fee: {
-            id: child.id,
-            threshold: 0, // Placeholder, update as needed
-            price: 0, // Placeholder, update as needed
-          },
+          fee_overrate_id: child.id,
           new_overrate_price: child.new_price ?? null,
         })) ?? null,
     });
@@ -177,7 +178,7 @@ const Page: React.FC<Props> = () => {
     return {
       id: id, // Assuming 'id' is a part of 'data'
       ...data,
-      feature_plan_fees: {
+      features: {
         add,
         update,
         delete: deleteIds,
@@ -197,6 +198,7 @@ const Page: React.FC<Props> = () => {
             layout="vertical"
           >
             <PricingPlanDetails
+              has_free_trial={has_free_trial}
               selectedRows={PricingPlan?.feature_plan_fees}
               edit
               onDelete={() =>
@@ -208,6 +210,7 @@ const Page: React.FC<Props> = () => {
                   onClose: () => setOpenModal(false),
                 })
               }
+              recurrenceFee={recurrenceFee}
               onSave={handleSave}
             />
             <PopUp popupProps={modalProp} isOpen={openModal} />

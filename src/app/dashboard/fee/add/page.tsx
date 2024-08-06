@@ -42,8 +42,6 @@ const Page: React.FC<Props> = () => {
   }
 
   function formatPayload(data: FeeFormValues) {
-    console.log("data from add form: ", data);
-
     if (data.fee_type === "transaction") {
       const formattedOverrateFees =
         data.overrate_fees?.map((item) => omit(item, "isTransaction")) || [];
@@ -78,7 +76,6 @@ const Page: React.FC<Props> = () => {
 
   function onSubmit(data: FeeFormValues) {
     const newData = formatPayload(data);
-    console.log("new Data: ", newData);
 
     const trimmed = trimString(newData, ["name"]);
     addFee(trimmed, {

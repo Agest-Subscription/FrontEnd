@@ -7,6 +7,7 @@ import PricingPlanFeatures from "./PricingPlanFeature";
 import ButtonV1 from "@/components/button/CustomButton";
 import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
 import { Feature } from "@/interfaces/model/feature.type";
+import { Fee } from "@/interfaces/model/fee.type";
 import {
   FeaturePlanFee,
   OverrateFeeAssociation,
@@ -22,6 +23,7 @@ interface DetailsProp {
   onSave: (dataSource: PricingPlanFeaturesType[]) => void;
   selectedRows?: FeaturePlanFee[];
   has_free_trial?: boolean;
+  recurrenceFee?: Fee | null;
 }
 
 const PricingPlanDetails: React.FC<DetailsProp> = ({
@@ -31,6 +33,7 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
   selectedRows = [],
   onSave,
   has_free_trial = false,
+  recurrenceFee = null,
 }) => {
   const goToPricingPlan = useGoToDashboardTab("pricing-plan");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,7 +41,6 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
   const [dataSource, setDataSource] = useState<PricingPlanFeaturesType[]>([]);
 
   const { FormField } = useFormWrapperCtx<PricingPlanFormValues>();
-
   useEffect(() => {
     if (edit) {
       setSelectedFeatures(selectedRows.map((item) => item.feature));
@@ -49,21 +51,26 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
           id: item.feature.id,
           no: index + 1,
           name: item.feature.name,
-          price: item.fee.price,
+          price: item.fee?.price ?? null,
           description: item.feature.description,
           fee: item.fee,
           new_price: item.new_price,
-          children: mapOverrateFee(item.overrate_fee_associations),
+          children: mapOverrateFee(item.overrate_fees, item.feature.id ?? ""),
         })),
       );
     }
   }, [edit, selectedRows]);
 
-  function mapOverrateFee(overrateFeeList: OverrateFeeAssociation[]) {
-    if (overrateFeeList.length === 0) return null;
+  function mapOverrateFee(
+    overrateFeeList: OverrateFeeAssociation[],
+    feature_id: string,
+  ) {
+    if (feature_id === "") return null;
+    if (!overrateFeeList || overrateFeeList.length == 0) return null;
     return overrateFeeList.map((data) => ({
-      ...data.overrate_fee,
+      ...data,
       new_price: data.new_overrate_price,
+      feature_id: feature_id,
     }));
   }
 
@@ -86,6 +93,12 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
     setSelectedFeatures([]);
     setDataSource([]);
   };
+
+  const formatPrice = (price: number, cycle_count: number, period: string) => {
+    const cycle = cycle_count === 1 ? "" : cycle_count;
+    const formattedPeriod = cycle_count > 1 ? `${period}s` : period;
+    return `${price}/${cycle} ${formattedPeriod}`;
+  };
   return (
     <>
       <Flex
@@ -99,6 +112,18 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
           </Col>
           <Col span={6}>
             <FormField name="recurrence_fee_id" />
+            {recurrenceFee && (
+              <Flex justify="end">
+                <p style={{ color: "#9095A1" }}>
+                  Price: {"$"}
+                  {formatPrice(
+                    recurrenceFee.price,
+                    recurrenceFee.recurrence_cycle_count ?? 0,
+                    recurrenceFee.recurrence_type ?? "",
+                  )}
+                </p>
+              </Flex>
+            )}
           </Col>
           <Col span={6}>
             <FormField name="start_date" />
@@ -145,6 +170,18 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
             setDataSource={setDataSource}
             deleteAllFeatures={deleteAllFeatures}
           />
+        )}
+        {recurrenceFee && (
+          <Flex justify="end">
+            <p style={{ color: "#9095A1" }}>
+              Price: {"$"}
+              {formatPrice(
+                recurrenceFee.price,
+                recurrenceFee.recurrence_cycle_count ?? 0,
+                recurrenceFee.recurrence_type ?? "",
+              )}
+            </p>
+          </Flex>
         )}
       </Flex>
 

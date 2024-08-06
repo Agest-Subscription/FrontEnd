@@ -96,25 +96,12 @@ const useGenerateColumns = () => {
         title: "Action",
         dataIndex: "action",
         key: "action",
-        align: "center",
-        render: (_, record) => {
-          return (
-            <Link href={`${PRICING_PLANS}/${record.id}`}>
-              <EditOutlined size={100} />
-            </Link>
-          );
-        },
-      },
-      {
-        title: "Action",
-        dataIndex: "action",
-        key: "action",
         width: 150,
         align: "center",
         fixed: "right",
         render: (_, record) => {
           return (
-            <Link href={`${PRICING_PlANS}/${record.id}`}>
+            <Link href={`${PRICING_PLANS}/${record.id}`}>
               <EditOutlined size={100} />
             </Link>
           );

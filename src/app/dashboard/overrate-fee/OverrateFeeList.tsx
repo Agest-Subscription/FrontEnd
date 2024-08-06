@@ -1,10 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 
 import useGenerateColumns from "./useGenerateColumns";
 
 import TableV1 from "@/components/table/TableV1";
-import { OVERRATE_FEE } from "@/constants/routes";
 import { useGetListOverrateFee } from "@/hooks/overrateFee";
 import useSearchSync from "@/hooks/useSearchSync";
 import {
@@ -20,7 +18,6 @@ import {
 type Props = {};
 
 const OverrateFeeList: React.FC<Props> = () => {
-  const router = useRouter();
   const { searchQuery, handleSearch } = useSearchSync();
   const [tableParams, setTableParams] = useState<
     TableParams<OverrateFeeTableData>

@@ -121,7 +121,6 @@ const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
     },
   ];
   const onClick: MenuProps["onClick"] = (e) => {
-    console.log("click ", e.key);
     setCurrent(e.key);
   };
 
