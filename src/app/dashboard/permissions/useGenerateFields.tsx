@@ -12,6 +12,7 @@ export const useGenerateFields = () => {
         componentProps: {
           disabled: true,
           isRequired: true,
+          disabled: true,
         },
       },
       display_name: {
@@ -32,6 +33,9 @@ export const useGenerateFields = () => {
       is_active: {
         label: "Is Active",
         type: "singleCheckbox",
+        componentProps: {
+          defaultChecked: true,
+        },
       },
     };
   }, []);

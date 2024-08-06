@@ -3,7 +3,7 @@ import { Col, Flex, Row } from "antd";
 
 import ButtonV1 from "@/components/button/CustomButton";
 import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
-import { FeatureFormValues } from "@/interfaces/model/feature.type";
+import { SubscriptionFormValues } from "@/interfaces/model/subscription.type";
 import { useGoToDashboardTab } from "@/utils/navigate";
 
 interface DetailsProp {
@@ -13,14 +13,14 @@ interface DetailsProp {
   onSave: any;
 }
 
-const FeatureDetails: React.FC<DetailsProp> = ({
+const SubscriptionDetails: React.FC<DetailsProp> = ({
   edit = false,
   disableSaveBtn = false,
   onDelete,
   onSave,
 }) => {
-  const goToFeature = useGoToDashboardTab("features");
-  const { FormField } = useFormWrapperCtx<FeatureFormValues>();
+  const goToSubscription = useGoToDashboardTab("subscriptions");
+  const { FormField } = useFormWrapperCtx<SubscriptionFormValues>();
   return (
     <>
       <Flex
@@ -30,19 +30,37 @@ const FeatureDetails: React.FC<DetailsProp> = ({
       >
         <Row gutter={24}>
           <Col span={6}>
-            <FormField name="name" />
+            <FormField name="user_id" />
           </Col>
           <Col span={6}>
-            <FormField name="permissions" />
+            <FormField name="email" />
+          </Col>
+          <Col span={6}>
+            <FormField name="pricing_plan_id" />
           </Col>
         </Row>
         <Row gutter={24}>
           <Col span={6}>
-            <FormField name="description" />
+            <FormField name="start_date" />
+          </Col>
+          <Col span={6}>
+            <FormField name="due_date_free_trial" />
+          </Col>
+          <Col span={6}>
+            <FormField name="next_billing_date" />
+          </Col>
+          <Col span={6}>
+            <FormField name="end_date" />
           </Col>
         </Row>
-
-        <FormField name="is_active" />
+        <Row>
+          <Col span={6}>
+            <FormField name="is_cancelled" />
+          </Col>
+          <Col span={6}>
+            <FormField name="suspended_date" />
+          </Col>
+        </Row>
       </Flex>
       <Flex
         style={{ width: "100%" }}
@@ -55,7 +73,7 @@ const FeatureDetails: React.FC<DetailsProp> = ({
           <ButtonV1
             title="Cancel"
             customType="cancel"
-            onClick={() => goToFeature()}
+            onClick={() => goToSubscription()}
           />
           <ButtonV1
             title="Save"
@@ -68,4 +86,4 @@ const FeatureDetails: React.FC<DetailsProp> = ({
   );
 };
 
-export default FeatureDetails;
+export default SubscriptionDetails;

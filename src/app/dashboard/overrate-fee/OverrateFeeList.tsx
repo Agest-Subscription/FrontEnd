@@ -18,7 +18,7 @@ import {
 type Props = {};
 
 const OverrateFeeList: React.FC<Props> = () => {
-  const { searchQuery, handleSearch } = useSearchSync();
+  const { searchQuery, handleSearch } = useSearchSync(resetPagination);
   const [tableParams, setTableParams] = useState<
     TableParams<OverrateFeeTableData>
   >({
@@ -74,6 +74,16 @@ const OverrateFeeList: React.FC<Props> = () => {
       };
     });
   }, [OverrateFeeTableData]);
+
+  function resetPagination() {
+    setTableParams((prev) => ({
+      ...prev,
+      pagination: {
+        ...prev.pagination,
+        current: 1,
+      },
+    }));
+  }
 
   const dataSource = useMemo<DataSourceItem<OverrateFeeTableData>[]>(() => {
     return (

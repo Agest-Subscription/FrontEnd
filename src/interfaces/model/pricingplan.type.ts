@@ -63,6 +63,7 @@ export type PricingPlanTableData = Omit<
 > & {
   no: number;
   features: Feature[] | null;
+  recurrence_period: string;
 };
 
 export type PricingPlanLandingPage = PricingPlan;

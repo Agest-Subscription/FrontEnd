@@ -84,7 +84,6 @@ const LandingPageList: React.FC<Props> = () => {
       })) ?? []
     );
   }, [LandingPageTableData?.data, params.page, params?.page_size]);
-
   return (
     <div>
       <TableV1

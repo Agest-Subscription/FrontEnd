@@ -4,35 +4,30 @@ import { useRouter } from "next/navigation";
 import useGenerateColumns from "./useGenerateColumns";
 
 import TableV1 from "@/components/table/TableV1";
-import { FEATURES } from "@/constants/routes";
-import { useGetListFeature } from "@/hooks/feature";
+import { USERS } from "@/constants/routes";
+import { useGetListUser } from "@/hooks/user";
 import useSearchSync from "@/hooks/useSearchSync";
 import {
   DataSourceItem,
   TableChangeParams,
   TableParams,
 } from "@/interfaces/base";
-import {
-  FeatureFilterParams,
-  FeatureTableData,
-} from "@/interfaces/model/feature.type";
+import { UserFilterParams, UserTableData } from "@/interfaces/model/user";
 
 type Props = {};
 
-const FeaturesList: React.FC<Props> = () => {
+const UserList: React.FC<Props> = () => {
   const router = useRouter();
-  const { searchQuery, handleSearch } = useSearchSync(resetPagination);
-  const [tableParams, setTableParams] = useState<TableParams<FeatureTableData>>(
-    {
-      pagination: {
-        current: 1,
-        pageSize: 5,
-        showSizeChanger: false,
-      },
+  const { searchQuery, handleSearch } = useSearchSync();
+  const [tableParams, setTableParams] = useState<TableParams<UserTableData>>({
+    pagination: {
+      current: 1,
+      pageSize: 5,
+      showSizeChanger: false,
     },
-  );
+  });
 
-  const params = useMemo<FeatureFilterParams>(
+  const params = useMemo<UserFilterParams>(
     () => ({
       page: tableParams.pagination.current,
       page_size: tableParams.pagination?.pageSize,
@@ -41,14 +36,14 @@ const FeaturesList: React.FC<Props> = () => {
     [searchQuery, tableParams.pagination],
   );
 
-  const { data: FeatureTableData, isFetching } = useGetListFeature(params);
+  const { data: UserTableData, isFetching } = useGetListUser(params);
   const columns = useGenerateColumns();
 
   const handleTableChange = ({
     pagination,
     filters,
     sorter,
-  }: TableChangeParams<FeatureTableData>) => {
+  }: TableChangeParams<UserTableData>) => {
     if (Array.isArray(sorter)) return;
     setTableParams({
       pagination,
@@ -56,18 +51,9 @@ const FeaturesList: React.FC<Props> = () => {
       sorter,
     });
   };
-  function resetPagination() {
-    setTableParams((prev) => ({
-      ...prev,
-      pagination: {
-        ...prev.pagination,
-        current: 1,
-      },
-    }));
-  }
 
   useEffect(() => {
-    if (!FeatureTableData) return;
+    if (!UserTableData) return;
     setTableParams((prev) => {
       const current = prev.pagination.current || 1;
       const pageSize = prev.pagination.pageSize || 5;
@@ -75,32 +61,32 @@ const FeaturesList: React.FC<Props> = () => {
         ...prev,
         pagination: {
           ...prev.pagination,
-          total: FeatureTableData?.total,
+          total: UserTableData?.total,
           current:
-            current > 1 && FeatureTableData?.total === pageSize * (current - 1)
+            current > 1 && UserTableData?.total === pageSize * (current - 1)
               ? current - 1
               : current,
         },
       };
     });
-  }, [FeatureTableData]);
+  }, [UserTableData]);
 
-  const dataSource = useMemo<DataSourceItem<FeatureTableData>[]>(() => {
+  const dataSource = useMemo<DataSourceItem<UserTableData>[]>(() => {
     return (
-      FeatureTableData?.data.map((feature, index) => ({
-        ...feature,
-        key: feature.id,
+      UserTableData?.data.map((user, index) => ({
+        ...user,
+        key: user.id,
         no: index + 1 + ((params.page ?? 1) - 1) * (params?.page_size ?? 5),
       })) ?? []
     );
-  }, [FeatureTableData, params.page, params?.page_size]);
+  }, [UserTableData, params.page, params?.page_size]);
 
   return (
     <div>
       <TableV1
         scroll={{ x: "max-content" }}
         loading={isFetching}
-        tableTitle="feature"
+        tableTitle="user"
         showSearchBar={true}
         columns={columns}
         dataSource={dataSource}
@@ -108,7 +94,7 @@ const FeaturesList: React.FC<Props> = () => {
           handleTableChange({ pagination, filters })
         }
         pagination={tableParams.pagination}
-        addItem={() => router.push(`${FEATURES}/add`)}
+        addItem={() => router.push(`${USERS}/add`)}
         onSearch={handleSearch}
         searchValue={searchQuery}
       />
@@ -116,4 +102,4 @@ const FeaturesList: React.FC<Props> = () => {
   );
 };
 
-export default FeaturesList;
+export default UserList;

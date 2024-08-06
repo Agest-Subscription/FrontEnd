@@ -25,7 +25,11 @@ const AddFeature: React.FC<Props> = ({
   selectedRows = [],
 }) => {
   const tableRef = useRef<HTMLDivElement>(null);
-  const { searchQuery, handleSearch: _, setSearchQuery } = useSearchSync();
+  const {
+    searchQuery,
+    handleSearch: _,
+    setSearchQuery,
+  } = useSearchSync(() => {});
   const {
     data: featuresPage,
     fetchNextPage,

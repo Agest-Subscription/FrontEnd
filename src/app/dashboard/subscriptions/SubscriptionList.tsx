@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import useGenerateColumns from "./useGenerateColumns";
 
 import TableV1 from "@/components/table/TableV1";
-import { FEATURES } from "@/constants/routes";
-import { useGetListFeature } from "@/hooks/feature";
+import { SUBSCRIPTIONS } from "@/constants/routes";
+import { useGetListSubscription } from "@/hooks/subscription";
 import useSearchSync from "@/hooks/useSearchSync";
 import {
   DataSourceItem,
@@ -13,26 +13,26 @@ import {
   TableParams,
 } from "@/interfaces/base";
 import {
-  FeatureFilterParams,
-  FeatureTableData,
-} from "@/interfaces/model/feature.type";
+  SubscriptionFilterParams,
+  SubscriptionTableData,
+} from "@/interfaces/model/subscription.type";
 
 type Props = {};
 
-const FeaturesList: React.FC<Props> = () => {
+const SubscriptionList: React.FC<Props> = () => {
   const router = useRouter();
-  const { searchQuery, handleSearch } = useSearchSync(resetPagination);
-  const [tableParams, setTableParams] = useState<TableParams<FeatureTableData>>(
-    {
-      pagination: {
-        current: 1,
-        pageSize: 5,
-        showSizeChanger: false,
-      },
+  const { searchQuery, handleSearch } = useSearchSync();
+  const [tableParams, setTableParams] = useState<
+    TableParams<SubscriptionTableData>
+  >({
+    pagination: {
+      current: 1,
+      pageSize: 5,
+      showSizeChanger: false,
     },
-  );
+  });
 
-  const params = useMemo<FeatureFilterParams>(
+  const params = useMemo<SubscriptionFilterParams>(
     () => ({
       page: tableParams.pagination.current,
       page_size: tableParams.pagination?.pageSize,
@@ -41,14 +41,15 @@ const FeaturesList: React.FC<Props> = () => {
     [searchQuery, tableParams.pagination],
   );
 
-  const { data: FeatureTableData, isFetching } = useGetListFeature(params);
+  const { data: SubscriptionTableData, isFetching } =
+    useGetListSubscription(params);
   const columns = useGenerateColumns();
 
   const handleTableChange = ({
     pagination,
     filters,
     sorter,
-  }: TableChangeParams<FeatureTableData>) => {
+  }: TableChangeParams<SubscriptionTableData>) => {
     if (Array.isArray(sorter)) return;
     setTableParams({
       pagination,
@@ -56,18 +57,9 @@ const FeaturesList: React.FC<Props> = () => {
       sorter,
     });
   };
-  function resetPagination() {
-    setTableParams((prev) => ({
-      ...prev,
-      pagination: {
-        ...prev.pagination,
-        current: 1,
-      },
-    }));
-  }
 
   useEffect(() => {
-    if (!FeatureTableData) return;
+    if (!SubscriptionTableData) return;
     setTableParams((prev) => {
       const current = prev.pagination.current || 1;
       const pageSize = prev.pagination.pageSize || 5;
@@ -75,32 +67,34 @@ const FeaturesList: React.FC<Props> = () => {
         ...prev,
         pagination: {
           ...prev.pagination,
-          total: FeatureTableData?.total,
+          total: SubscriptionTableData?.total,
           current:
-            current > 1 && FeatureTableData?.total === pageSize * (current - 1)
+            current > 1 &&
+            SubscriptionTableData?.total === pageSize * (current - 1)
               ? current - 1
               : current,
         },
       };
     });
-  }, [FeatureTableData]);
+  }, [SubscriptionTableData]);
 
-  const dataSource = useMemo<DataSourceItem<FeatureTableData>[]>(() => {
+  const dataSource = useMemo<DataSourceItem<SubscriptionTableData>[]>(() => {
     return (
-      FeatureTableData?.data.map((feature, index) => ({
-        ...feature,
-        key: feature.id,
+      SubscriptionTableData?.data.map((Subscription, index) => ({
+        ...Subscription,
+        key: Subscription.id,
         no: index + 1 + ((params.page ?? 1) - 1) * (params?.page_size ?? 5),
       })) ?? []
     );
-  }, [FeatureTableData, params.page, params?.page_size]);
+  }, [SubscriptionTableData?.data, params.page, params?.page_size]);
 
+  console.log("123", dataSource);
   return (
     <div>
       <TableV1
         scroll={{ x: "max-content" }}
         loading={isFetching}
-        tableTitle="feature"
+        tableTitle="Subscription"
         showSearchBar={true}
         columns={columns}
         dataSource={dataSource}
@@ -108,7 +102,7 @@ const FeaturesList: React.FC<Props> = () => {
           handleTableChange({ pagination, filters })
         }
         pagination={tableParams.pagination}
-        addItem={() => router.push(`${FEATURES}/add`)}
+        addItem={() => router.push(`${SUBSCRIPTIONS}/add`)}
         onSearch={handleSearch}
         searchValue={searchQuery}
       />
@@ -116,4 +110,4 @@ const FeaturesList: React.FC<Props> = () => {
   );
 };
 
-export default FeaturesList;
+export default SubscriptionList;

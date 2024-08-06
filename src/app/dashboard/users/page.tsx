@@ -1,8 +1,10 @@
 "use client";
 import React from "react";
 
+import UserList from "./UserList";
+
 const PricingPlansPage = () => {
-  return <div>PricingPlansPage</div>;
+  return <UserList />;
 };
 
 export default PricingPlansPage;

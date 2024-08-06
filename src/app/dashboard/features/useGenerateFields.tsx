@@ -42,7 +42,6 @@ export const useGenerateFields = (
         type: "text",
         componentProps: {
           isRequired: true,
-          style: { width: "250px", height: "40px" },
         },
       },
       permissions: {
@@ -59,8 +58,6 @@ export const useGenerateFields = (
           },
           onChange: () => setSearchTerm(""),
           allowClear: true,
-          style: { width: "250px" },
-          maxTagCount: "responsive",
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
             const target = event.target as HTMLDivElement;
             if (
@@ -83,7 +80,7 @@ export const useGenerateFields = (
         label: "Description",
         type: "textarea",
         componentProps: {
-          style: { width: "500px", height: "95px" },
+          rows: 3,
         },
       },
       is_active: {

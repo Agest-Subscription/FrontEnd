@@ -1,9 +1,7 @@
 services:
   frontend:
     container_name: frontend
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: quocc/sub:frontend-latest
     ports:
       - "3000:3000"
     environment:
