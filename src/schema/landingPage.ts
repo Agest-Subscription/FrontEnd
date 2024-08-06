@@ -1,21 +1,23 @@
-import { boolean, object, ObjectSchema, string } from "yup";
+import * as yup from "yup";
 
-import { LandingPageFormValues } from "@/interfaces/model/landingPage.type";
+const itemSchema = yup
+  .object()
+  .shape({
+    period: yup.string().required("Period is required"),
+    basic: yup.string().nullable().default(null),
+    pro: yup.string().nullable().default(null),
+    premium: yup.string().nullable().default(null),
+  })
+  .test(
+    "at-least-one",
+    "At least one of basic, pro, or premium must be selected",
+    function (value) {
+      return value.basic != null || value.pro != null || value.premium != null;
+    },
+  );
 
-const landingPageFormValuesSchema: ObjectSchema<LandingPageFormValues> = object(
-  {
-    name: string()
-      .required("Name is required")
-      .max(100, "Name cannot exceed 100 characters"),
-    display_name: string()
-      .required("Display name is required")
-      .max(100, "Display name cannot exceed 100 characters"),
-    description: string()
-      .nullable()
-      .default(null)
-      .max(255, "Description cannot exceed 255 characters"),
-    is_active: boolean().required("Validity status is required").default(false),
-  },
-);
+const landingpageFormValuesSchema = yup.object().shape({
+  landing_page_items: yup.array().of(itemSchema).nullable().default(undefined),
+});
 
-export default landingPageFormValuesSchema;
+export default landingpageFormValuesSchema;

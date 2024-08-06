@@ -29,6 +29,7 @@ const pricingplanFormValuesSchema: ObjectSchema<PricingPlanFormValues> = object(
           );
         },
       ),
+    recurrence_period: string().nullable().default(null),
     is_active: boolean().default(false),
     has_free_trial: boolean().default(false),
     free_trial_period: string<FreeTrialPeriod>()

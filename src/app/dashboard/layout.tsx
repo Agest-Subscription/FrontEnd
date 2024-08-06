@@ -12,7 +12,7 @@ import {
   LANDING_PAGE,
   OVERRATE_FEE,
   PERMISSIONS,
-  PRICING_PlANS,
+  PRICING_PLANS,
   SUBSCRIPTIONS,
   USERS,
 } from "@/constants/routes";
@@ -37,10 +37,31 @@ const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
 
   const [current, setCurrent] = useState<string>(`${urlParams}`);
 
+  useEffect(() => {
+    const routeToKeyMap = [
+      { path: PRICING_PLANS, key: PRICING_PLANS },
+      { path: SUBSCRIPTIONS, key: SUBSCRIPTIONS },
+      { path: FEES, key: FEES },
+      { path: OVERRATE_FEE, key: OVERRATE_FEE },
+      { path: FEATURES, key: FEATURES },
+      { path: PERMISSIONS, key: PERMISSIONS },
+      { path: USERS, key: USERS },
+      { path: LANDING_PAGE, key: LANDING_PAGE },
+    ];
+
+    const matchedRoute = routeToKeyMap.find((route) =>
+      urlParams.startsWith(route.path),
+    );
+
+    if (matchedRoute) {
+      setCurrent(matchedRoute.key);
+    }
+  }, [urlParams]);
+
   const items = [
     {
-      label: <Link href={PRICING_PlANS}>Pricing Plan</Link>,
-      key: PRICING_PlANS,
+      label: <Link href={PRICING_PLANS}>Pricing Plan</Link>,
+      key: PRICING_PLANS,
     },
     {
       label: (
