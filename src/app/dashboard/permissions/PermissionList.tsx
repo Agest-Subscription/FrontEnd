@@ -24,16 +24,6 @@ type Props = {};
 
 const PermissionList: React.FC<Props> = () => {
   const { mutate: addPermission, isLoading: isAdding } = useAddPermission();
-  const { searchQuery, handleSearch } = useSearchSync();
-  const [openModal, setOpenModal] = useState(false);
-  const [modalProp, setModalProp] = useState<popUpPropType>({
-    popup_id: "successpopup",
-    popup_text: `${capitalize("Are you sure to add new permissions to this table?")}`,
-    popup_type: "Confirm",
-    onConfirm: () => onAddPermissons(),
-    onClose: () => setOpenModal(false),
-  });
-  const [addPermissionModalProp] = useState<popUpPropType>(modalProp);
 
   const [tableParams, setTableParams] = useState<
     TableParams<PermissionTableData>
@@ -44,10 +34,34 @@ const PermissionList: React.FC<Props> = () => {
       showSizeChanger: false,
     },
   });
+
+  function resetPagination() {
+    setTableParams((prev) => ({
+      ...prev,
+      pagination: {
+        ...prev.pagination,
+        current: 1,
+      },
+    }));
+  }
+
+  const { searchQuery, handleSearch } = useSearchSync(resetPagination);
+
+  const [openModal, setOpenModal] = useState(false);
+  const [modalProp, setModalProp] = useState<popUpPropType>({
+    popup_id: "successpopup",
+    popup_text: `${capitalize("Are you sure to add new permissions to this table?")}`,
+    popup_type: "Confirm",
+    onConfirm: () => onAddPermissons(),
+    onClose: () => setOpenModal(false),
+  });
+  const [addPermissionModalProp] = useState<popUpPropType>(modalProp);
+
   function showModal(modalProp: popUpPropType, open = true) {
     setModalProp(modalProp);
     setOpenModal(open);
   }
+
   function onAddPermissons() {
     addPermission(undefined, {
       onSuccess: () => {

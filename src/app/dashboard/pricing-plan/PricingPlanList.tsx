@@ -21,7 +21,7 @@ type Props = {};
 
 const PermissionList: React.FC<Props> = () => {
   const router = useRouter();
-  const { searchQuery, handleSearch } = useSearchSync();
+  const { searchQuery, handleSearch } = useSearchSync(resetPagination);
   const [tableParams, setTableParams] = useState<
     TableParams<PricingPlanTableData>
   >({
@@ -58,6 +58,15 @@ const PermissionList: React.FC<Props> = () => {
     });
   };
 
+  function resetPagination() {
+    setTableParams((prev) => ({
+      ...prev,
+      pagination: {
+        ...prev.pagination,
+        current: 1,
+      },
+    }));
+  }
   useEffect(() => {
     if (!PricingPlanTableData) return;
     setTableParams((prev) => {
