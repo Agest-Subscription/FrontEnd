@@ -56,8 +56,6 @@ const FeaturesList: React.FC<Props> = () => {
       sorter,
     });
   };
-
-  
   function resetPagination() {
     setTableParams((prev) => ({
       ...prev,

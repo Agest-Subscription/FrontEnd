@@ -70,7 +70,7 @@ const PermissionList: React.FC<Props> = () => {
       };
     });
   }, [FeeTableData]);
-  
+
   function resetPagination() {
     setTableParams((prev) => ({
       ...prev,
