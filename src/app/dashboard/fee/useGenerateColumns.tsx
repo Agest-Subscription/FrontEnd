@@ -7,6 +7,7 @@ import { ColumnType } from "antd/es/table";
 import LongText from "@/components/table/LongText";
 import { FEES } from "@/constants/routes";
 import { FeeTableData } from "@/interfaces/model/fee.type";
+import { capitalize } from "@/utils/string";
 
 const useGenerateColumns = () => {
   return useMemo<ColumnType<FeeTableData>[]>(
@@ -30,6 +31,9 @@ const useGenerateColumns = () => {
         title: "Type",
         dataIndex: "fee_type",
         key: "fee_type",
+        render: (value) => {
+          return capitalize(value)
+        },
       },
       {
         title: "Fee",
@@ -41,13 +45,16 @@ const useGenerateColumns = () => {
         dataIndex: "transaction_unit",
         key: "transaction_unit",
         render: (value) => {
-          return <LongText text={value} />;
+          return <LongText text={capitalize(value)} />;
         },
       },
       {
         title: "Recurrence Type",
         dataIndex: "recurrence_type",
         key: "recurrence_type",
+        render: (value) => {
+          return capitalize(value)
+        },
       },
       {
         title: "Recurrence Cycle Count",

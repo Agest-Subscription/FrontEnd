@@ -1,0 +1,290 @@
+import { useMemo } from "react";
+import { UseFormReturn } from "react-hook-form";
+import { Spin } from "antd";
+import dayjs from "dayjs";
+import { ManipulateType } from "dayjs";
+
+import { DATE_FORMAT_V2 } from "@/constants/date";
+import {
+  useGetInfinitePricingPlan,
+  useGetInfiniteUser,
+} from "@/hooks/subscription";
+import { FieldsData } from "@/interfaces/form";
+import { PricingPlanTableData } from "@/interfaces/model/pricingplan.type";
+import { SubscriptionFormValues } from "@/interfaces/model/subscription.type";
+
+export const useGenerateFields = (
+  methods: UseFormReturn<SubscriptionFormValues, any, undefined>,
+  isEdit: boolean,
+  pricingPlan: PricingPlanTableData | null,
+) => {
+  if (isEdit) {
+    methods.setValue("pricing_plan", pricingPlan);
+  }
+
+  const {
+    data: usersPage,
+    fetchNextPage: fetchNextUserPage,
+    isFetchingNextPage: isFetchingNextUserPage,
+    isInitialLoading: isInitialLoadingUsers,
+    setSearchTerm: setUserSearchTerm,
+  } = useGetInfiniteUser({
+    page_size: 10,
+    is_active: true,
+  });
+
+  const {
+    data: pricingPlansPage,
+    fetchNextPage: fetchNextPricingPlanPage,
+    isFetchingNextPage: isFetchingNextPricingPlanPage,
+    isInitialLoading: isInitialLoadingPricingPlans,
+    setSearchTerm: setPricingPlanSearchTerm,
+  } = useGetInfinitePricingPlan({
+    page_size: 10,
+    is_active: true,
+  });
+
+  const fields = useMemo<FieldsData<SubscriptionFormValues>>(() => {
+    const today = new Date().toString();
+    const suspendedDate = () => {
+      const is_cancelled = methods.getValues("is_cancelled");
+      if (is_cancelled) {
+        methods.setValue("suspended_date", today);
+      } else [methods.setValue("suspended_date", null)];
+    };
+
+    const caculateEndDate = () => {
+      const pricingPlan = methods.getValues("pricing_plan");
+      const start_date = methods.getValues("start_date");
+
+      if (start_date && pricingPlan) {
+        const recurrence_period = pricingPlan.recurrence_period.split(" ");
+        const recurrence_cycle = Number(recurrence_period[0]);
+        const recurrence_type = recurrence_period[1];
+        const free_trial_type = pricingPlan.free_trial_period;
+        const free_trial_cycle = pricingPlan.free_trial_period_count ?? 0;
+
+        const due_date_free_trial = dayjs(start_date)
+          .add(free_trial_cycle, free_trial_type as ManipulateType | undefined)
+          .toISOString();
+        if (free_trial_cycle != 0) {
+          methods.setValue("due_date_free_trial", due_date_free_trial);
+        } else {
+          methods.setValue("due_date_free_trial", null);
+        }
+
+        if (recurrence_cycle === 2 && recurrence_type === "day") {
+          const next_billing_date = dayjs(start_date)
+            .add(
+              recurrence_cycle,
+              recurrence_type as ManipulateType | undefined,
+            )
+            .subtract(1, "day")
+            .toISOString();
+          methods.setValue("next_billing_date", next_billing_date);
+        } else {
+          const next_billing_date = dayjs(start_date)
+            .add(
+              recurrence_cycle,
+              recurrence_type as ManipulateType | undefined,
+            )
+            .subtract(2, "day")
+            .format("YYYY-MM-DD HH:mm:ss");
+          methods.setValue("next_billing_date", next_billing_date);
+        }
+        const end_date = dayjs(start_date)
+          .add(recurrence_cycle, recurrence_type as ManipulateType | undefined)
+          .toISOString();
+        methods.setValue("end_date", end_date);
+      }
+    };
+    const mappedEmails =
+      usersPage?.pages.flatMap((page) =>
+        page.data.data.map((user) => ({
+          value: user.id,
+          label: user.email,
+        })),
+      ) ?? [];
+
+    const mappedPricingPlans =
+      pricingPlansPage?.pages.flatMap((page) =>
+        page.data.data.map((pricingPlan) => ({
+          value: pricingPlan.id,
+          label: pricingPlan.name,
+          pricing_plan: pricingPlan,
+        })),
+      ) ?? [];
+
+    const getPricingPlanById = (id: string): PricingPlanTableData | null => {
+      const item = mappedPricingPlans.find((item) => item.value === id);
+      return item?.pricing_plan ?? null;
+    };
+    const assignLocaleTimeForToday = () => {
+      const now = dayjs();
+      if (
+        methods.getValues("start_date").toString() === now.format("YYYY-MM-DD")
+      ) {
+        methods.setValue("start_date", dayjs().toISOString());
+        caculateEndDate();
+      }
+      caculateEndDate();
+      console.log("123 start_date antd", methods.getValues("start_date"));
+    };
+    return {
+      user_id: {
+        label: "User ID",
+        type: "text",
+        componentProps: {
+          isRequired: true,
+          disabled: true,
+          style: { height: "40px" },
+        },
+      },
+      email: {
+        label: "Email",
+        type: "select",
+        options: mappedEmails,
+        componentProps: {
+          isRequired: true,
+          filterOption: true,
+          optionFilterProp: "label",
+          style: { height: "40px" },
+          onSearch: (searchTerm) => {
+            setUserSearchTerm(searchTerm);
+          },
+          onChange: (value) => {
+            setUserSearchTerm("");
+            methods.setValue("user_id", value);
+          },
+          allowClear: true,
+          onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
+            const target = event.target as HTMLDivElement;
+            if (
+              !isFetchingNextUserPage &&
+              target.scrollTop + target.offsetHeight === target.scrollHeight
+            ) {
+              target.scrollTo(0, target.scrollHeight);
+
+              fetchNextUserPage();
+            }
+          },
+          dropdownRender: (menu) => (
+            <Spin spinning={isFetchingNextUserPage || isInitialLoadingUsers}>
+              {menu}
+            </Spin>
+          ),
+        },
+      },
+      pricing_plan_id: {
+        label: "Pricing plan",
+        type: "select",
+        options: mappedPricingPlans,
+        componentProps: {
+          isRequired: true,
+          filterOption: true,
+          style: { height: "40px" },
+          optionFilterProp: "label",
+          onSearch: (searchTerm) => {
+            setPricingPlanSearchTerm(searchTerm);
+          },
+          onChange: (value) => {
+            setPricingPlanSearchTerm("");
+            methods.setValue("pricing_plan", getPricingPlanById(value) ?? null);
+            caculateEndDate();
+          },
+          allowClear: true,
+          onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
+            const target = event.target as HTMLDivElement;
+            if (
+              !isFetchingNextPricingPlanPage &&
+              target.scrollTop + target.offsetHeight === target.scrollHeight
+            ) {
+              target.scrollTo(0, target.scrollHeight);
+
+              fetchNextPricingPlanPage();
+            }
+          },
+          dropdownRender: (menu) => (
+            <Spin
+              spinning={
+                isFetchingNextPricingPlanPage || isInitialLoadingPricingPlans
+              }
+            >
+              {menu}
+            </Spin>
+          ),
+        },
+      },
+      start_date: {
+        label: "Start date",
+        type: "datepicker",
+        componentProps: {
+          onChange: () => {
+            assignLocaleTimeForToday();
+          },
+          isRequired: true,
+          minDate: dayjs(today),
+          format: DATE_FORMAT_V2,
+        },
+      },
+      due_date_free_trial: {
+        label: "Due date free trial",
+        type: "datepicker",
+        componentProps: {
+          disabled: true,
+          format: DATE_FORMAT_V2,
+        },
+      },
+      next_billing_date: {
+        label: "Next billing date",
+        type: "datepicker",
+        componentProps: {
+          disabled: true,
+          format: DATE_FORMAT_V2,
+        },
+      },
+      end_date: {
+        label: "End date",
+        type: "datepicker",
+        componentProps: {
+          disabled: true,
+          format: DATE_FORMAT_V2,
+        },
+      },
+      is_cancelled: {
+        label: "Is Cancelled",
+        type: "singleCheckbox",
+        componentProps: {
+          disabled: !isEdit,
+          onChange: () => {
+            suspendedDate();
+            caculateEndDate();
+          },
+        },
+      },
+      suspended_date: {
+        label: "Suspended date",
+        type: "datepicker",
+        componentProps: {
+          disabled: true,
+          format: DATE_FORMAT_V2,
+        },
+      },
+    };
+  }, [
+    usersPage?.pages,
+    pricingPlansPage?.pages,
+    isFetchingNextPricingPlanPage,
+    isFetchingNextUserPage,
+    isInitialLoadingPricingPlans,
+    isInitialLoadingUsers,
+    setUserSearchTerm,
+    setPricingPlanSearchTerm,
+    fetchNextUserPage,
+    fetchNextPricingPlanPage,
+    isEdit,
+    methods,
+  ]);
+
+  return fields;
+};

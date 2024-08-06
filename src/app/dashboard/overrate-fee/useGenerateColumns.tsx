@@ -3,6 +3,7 @@ import { ColumnType } from "antd/es/table";
 
 import LongText from "@/components/table/LongText";
 import { OverrateFeeTableData } from "@/interfaces/model/overrateFee.type";
+import { capitalize } from "@/utils/string";
 
 const useGenerateColumns = () => {
   return useMemo<ColumnType<OverrateFeeTableData>[]>(
@@ -36,6 +37,9 @@ const useGenerateColumns = () => {
         title: "Transaction unit",
         dataIndex: "transaction_unit",
         key: "transaction_unit",
+        render: (value) => {
+          return capitalize(value)
+        },
       },
     ],
     [],
