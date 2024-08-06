@@ -62,17 +62,20 @@ const useGenerateColumns = () => {
         },
       },
       {
-        title: "Action",
-        dataIndex: "action",
-        key: "action",
-        align: "center",
-        width: 150,
-        render: () => {
-          return (
-            <Link href={`${LANDING_PAGE}/add`}>
-              <EditOutlined size={100} />
-            </Link>
-          );
+        title: "Level",
+        dataIndex: "priority",
+        key: "priority",
+        render: (_, record) => {
+          return record?.priority;
+        },
+      },
+      {
+        title: "Description",
+        dataIndex: "name",
+        key: "name",
+        width: 350,
+        render: (_, record) => {
+          return <LongText text={record?.pricing_plan?.name} width={350} />;
         },
       },
     ],

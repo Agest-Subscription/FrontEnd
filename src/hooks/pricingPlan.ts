@@ -94,3 +94,26 @@ export const useGetInfinitePricingPlans = (params: PricingPlanFilterParams) => {
   });
   return { ...query, setSearchTerm };
 };
+
+export const useGetInfinitePricingPlanByRecurrencePeriod = (
+  params: PricingPlanFilterParams,
+) => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const query = useInfiniteQuery({
+    queryKey: ["PRICING_PLANS", searchTerm, params],
+    queryFn: ({ pageParam = 1 }) =>
+      getListPricingPlansApi({
+        ...params,
+        page: pageParam,
+        search: searchTerm,
+      }),
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.data.data.length === 0) {
+        return undefined;
+      }
+      return pages.length + 1;
+    },
+  });
+  return { ...query, setSearchTerm };
+};

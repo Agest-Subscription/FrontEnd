@@ -35,10 +35,10 @@ export type LandingPageResponseItem = LandingPage;
 export type LandingPageFilterParams = FilterBase<LandingPageResponseItem>;
 
 export type LandingPageItem = {
-  recurrence_period: string;
-  basic_plan_id: string | null;
-  pro_plan_id: string | null;
-  premium_plan_id: string | null;
+  period: string;
+  basic: string | null;
+  pro: string | null;
+  premium: string | null;
 };
 
 export type LandingPageFormValues = { landing_page_items: LandingPageItem[] };

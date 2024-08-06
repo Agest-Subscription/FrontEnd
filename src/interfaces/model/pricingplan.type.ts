@@ -69,6 +69,7 @@ export type PricingPlanLandingPage = PricingPlan;
 
 export type PricingPlanFilterParams = FilterBase<PricingPlanTableData> & {
   is_active?: boolean;
+  recurrence_period?: string;
 };
 
 export type PricingPlanFormValues = Omit<

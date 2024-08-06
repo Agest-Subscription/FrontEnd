@@ -35,7 +35,7 @@ export const useAddLandingPage = () => {
   });
 };
 
-export const useGetInfinitePricingPlanGroupByPeriod = (
+export const useGetInfiniteRecurrencePeriod = (
   params: LandingPageFilterParams,
 ) => {
   const [searchTerm, setSearchTerm] = useState("");

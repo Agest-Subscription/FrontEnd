@@ -1,14 +1,19 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Flex, Form, Spin, Typography } from "antd";
 
 import LandingPagesDetails from "../LandingPageDetails";
 
+import NotFound from "@/app/not-found";
 import PopUp from "@/components/popup/Popup";
-import { useAddLandingPage } from "@/hooks/landingPage";
+import { useAddLandingPage, useGetListLandingPage } from "@/hooks/landingPage";
 import { CustomError } from "@/interfaces/base";
-import { LandingPageFormValues } from "@/interfaces/model/landingPage.type";
+import {
+  LandingPage,
+  LandingPageFormValues,
+  LandingPageItem,
+} from "@/interfaces/model/landingPage.type";
 import { popUpPropType } from "@/interfaces/popup";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
@@ -30,6 +35,37 @@ const Page: React.FC<Props> = () => {
     onConfirm: methods.handleSubmit(onSubmit),
     onClose: () => setOpenModal(false),
   });
+
+  const params = {
+    page_size: 12,
+  };
+
+  const { data: LandingPage, isError } = useGetListLandingPage(params);
+
+  function transformResponse(data: LandingPage[]): LandingPageItem[] {
+    const transformedData: Record<string, Record<string, string>> = {};
+
+    data.forEach((item) => {
+      const period = item.pricing_plan.recurrence_period;
+      const priority = item.priority;
+      const id = item.pricing_plan.id;
+
+      if (!transformedData[period]) {
+        transformedData[period] = { period };
+      }
+
+      transformedData[period][priority] = id;
+    });
+
+    return Object.values(transformedData) as LandingPageItem[];
+  }
+
+  useEffect(() => {
+    if (LandingPage) {
+      const transformData = transformResponse(LandingPage?.data ?? []);
+      methods.setValue("landing_page_items", transformData);
+    }
+  }, [LandingPage, methods]);
 
   function showModal(modalProp: popUpPropType) {
     setModalProp(modalProp);
@@ -71,6 +107,10 @@ const Page: React.FC<Props> = () => {
       });
     }
   };
+
+  if (isError) {
+    return <NotFound previousPage="landing-page" />;
+  }
 
   return (
     <Flex vertical gap={24}>

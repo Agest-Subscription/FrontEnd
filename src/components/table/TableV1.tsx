@@ -14,7 +14,6 @@ interface CustomTableProps<T> extends TableProps<T> {
   onSearch?: (value: string) => void;
   searchValue?: string;
   showSearchBar?: boolean;
-  showButton?: boolean;
   addButtonLabel?: string;
 }
 const { Search } = Input;
@@ -25,7 +24,6 @@ const TableV1 = <T extends Record<string, any>>({
   addItem,
   tableTitle,
   showSearchBar = false,
-  showButton = true,
   onSearch,
   searchValue = "",
   addButtonLabel = "Add New",
