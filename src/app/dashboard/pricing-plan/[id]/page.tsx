@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
 
 import PricingPlanDetails from "../PricingPlanDetails";
@@ -16,6 +17,7 @@ import {
 } from "@/hooks/pricingPlan";
 import useGetId from "@/hooks/useGetId";
 import { CustomError } from "@/interfaces/base";
+import { Fee } from "@/interfaces/model/fee.type";
 import {
   PricingPlanFeaturesType,
   PricingPlanFormValues,
@@ -23,12 +25,10 @@ import {
   UpdatePricingPlanPayload,
 } from "@/interfaces/model/pricingplan.type";
 import { popUpPropType } from "@/interfaces/popup";
+import pricingplanFormValuesSchema from "@/schema/pricingPlan";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
-import { Fee } from "@/interfaces/model/fee.type";
-import { yupResolver } from "@hookform/resolvers/yup";
-import pricingplanFormValuesSchema from "@/schema/pricingPlan";
 
 type Props = {};
 
@@ -53,8 +53,6 @@ const Page: React.FC<Props> = () => {
     onConfirm: () => {},
     onClose: () => setOpenModal(false),
   });
-
-  
 
   const { data: PricingPlan, isError } = useGetPricingPlanById(id);
   const start_date = methods.watch("start_date");

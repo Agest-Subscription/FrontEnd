@@ -1,25 +1,51 @@
 import { FilterBase } from "../base";
 
-export type LandingPage = {
+export type recurrenceFee = {
   id: string;
-  name: string;
-  display_name: string;
-  description: string | null;
-  is_active: boolean;
+  price: number;
 };
 
-export type LandingPageTableData = Omit<LandingPage, "is_active"> & {
+export type PricingPlan = {
+  id: string;
+  name: string;
+  start_date: string;
+  end_date: string;
+  recurrence_fee: recurrenceFee;
+  recurrence_period: string;
+  description: string | null;
+};
+
+export type PricingPlanGroupByPeriod = {
+  recurrence_period: string;
+  pricing_plans: Pick<PricingPlan, "id" | "name">;
+};
+
+export type LandingPage = {
+  id: string;
+  pricing_plan: PricingPlan;
+  priority: "basic" | "pro" | "premium";
+};
+
+export type LandingPageTableData = LandingPage & {
   no: number;
 };
 
 export type LandingPageResponseItem = LandingPage;
 
-export type LandingPageFilterParams = FilterBase<LandingPageResponseItem> & {
-  is_active?: boolean;
+export type LandingPageFilterParams = FilterBase<LandingPageResponseItem>;
+
+export type LandingPageItem = {
+  period: string;
+  basic: string | null;
+  pro: string | null;
+  premium: string | null;
 };
 
-export type LandingPageFormValues = Omit<LandingPage, "id">;
+export type LandingPageFormValues = {
+  landing_page_items?: LandingPageItem[] | null;
+};
 
-export type AddLandingPagePayload = LandingPageFormValues;
-
-export type UpdateLandingPagePayload = LandingPage;
+export type LandingPagePayload = {
+  pricing_plan_id: string;
+  priority: string;
+};

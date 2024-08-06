@@ -1,26 +1,23 @@
 import React from "react";
-import { useRouter } from "next/navigation";
-import { Col, Flex, Row } from "antd";
+import { Flex } from "antd";
+
+import AddMultipleItems from "./AddMultipleItems";
 
 import ButtonV1 from "@/components/button/CustomButton";
-import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
-import { LandingPageFormValues } from "@/interfaces/model/landingPage.type";
+import { useGoToDashboardTab } from "@/utils/navigate";
 
 interface DetailsProp {
   edit?: boolean;
   disableSaveBtn?: boolean;
-  onDelete?: any;
   onSave: any;
 }
 
 const LandingPageDetails: React.FC<DetailsProp> = ({
   edit = false,
   disableSaveBtn = false,
-  onDelete,
   onSave,
 }) => {
-  const router = useRouter();
-  const { FormField } = useFormWrapperCtx<LandingPageFormValues>();
+  const goToLandingPage = useGoToDashboardTab("landing-page");
   return (
     <>
       <Flex
@@ -28,31 +25,17 @@ const LandingPageDetails: React.FC<DetailsProp> = ({
         gap={24}
         style={{ border: "1px solid #BDC1CA", padding: "16px" }}
       >
-        <Row gutter={24}>
-          <Col span={6}>
-            <FormField name="name" />
-          </Col>
-          <Col span={6}>
-            <FormField name="display_name" />
-          </Col>
-        </Row>
-        <Col span={6}>
-          <FormField name="description" />
-        </Col>
-        <FormField name="is_active" />
+        <AddMultipleItems />
       </Flex>
       <Flex
         style={{ width: "100%" }}
         justify={`${edit ? "space-between" : "flex-end"}`}
       >
-        {edit && (
-          <ButtonV1 title="Delete" customType="danger" onClick={onDelete} />
-        )}
         <Flex gap={12}>
           <ButtonV1
             title="Cancel"
             customType="cancel"
-            onClick={() => router.back()}
+            onClick={() => goToLandingPage()}
           />
           <ButtonV1
             title="Save"

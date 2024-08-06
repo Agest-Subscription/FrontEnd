@@ -1,5 +1,5 @@
 export const DASHBOARD = "/dashboard",
-  PRICING_PlANS = `${DASHBOARD}/pricing-plan`,
+  PRICING_PLANS = `${DASHBOARD}/pricing-plan`,
   SUBSCRIPTIONS = `${DASHBOARD}/subscriptions`,
   FEES = `${DASHBOARD}/fee`,
   OVERRATE_FEE = `${DASHBOARD}/overrate-fee`,

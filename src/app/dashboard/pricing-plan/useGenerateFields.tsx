@@ -38,12 +38,14 @@ export const useGenerateFields = (
     );
   }, [feePages]);
 
-  const onChangeRecurrenceFee = (value: string) => {
-    const selectedFee = mappedFeePages.find((fee) => fee.value === value)?.fee;
-    setRecurrenceFee(selectedFee || null);
-    setSearchTerm("");
-  };
   const fields = useMemo<FieldsData<PricingPlanFormValues>>(() => {
+    const onChangeRecurrenceFee = (value: string) => {
+      const selectedFee = mappedFeePages.find(
+        (fee) => fee.value === value,
+      )?.fee;
+      setRecurrenceFee(selectedFee || null);
+      setSearchTerm("");
+    };
     return {
       name: {
         label: "Name",
@@ -144,6 +146,7 @@ export const useGenerateFields = (
     isFetchingNextPage,
     isInitialLoading,
     mappedFeePages,
+    setRecurrenceFee,
     setSearchTerm,
     start_date,
   ]);

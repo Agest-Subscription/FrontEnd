@@ -6,7 +6,7 @@ import { ColumnType } from "antd/es/table";
 import dayjs from "dayjs";
 
 import { DATE_FORMAT } from "@/constants/date";
-import { PRICING_PlANS } from "@/constants/routes";
+import { PRICING_PLANS } from "@/constants/routes";
 import { PricingPlanTableData } from "@/interfaces/model/pricingplan.type";
 const useGenerateColumns = () => {
   return useMemo<ColumnType<PricingPlanTableData>[]>(
@@ -92,7 +92,6 @@ const useGenerateColumns = () => {
           return <Checkbox checked={is_overrate}></Checkbox>;
         },
       },
-
       {
         title: "Action",
         dataIndex: "action",
@@ -102,7 +101,7 @@ const useGenerateColumns = () => {
         fixed: "right",
         render: (_, record) => {
           return (
-            <Link href={`${PRICING_PlANS}/${record.id}`}>
+            <Link href={`${PRICING_PLANS}/${record.id}`}>
               <EditOutlined size={100} />
             </Link>
           );

@@ -173,7 +173,6 @@ const PricingPlanFeatures: React.FC<Props> = ({
         }
         return item;
       });
-      console.log(newDataSource);
       setDataSource(newDataSource);
     };
     const handleDelete = (record: PricingPlanFeaturesType) => {
@@ -228,6 +227,7 @@ const PricingPlanFeatures: React.FC<Props> = ({
               <Select
                 value={record.fee?.id ?? null}
                 options={mappedFeePages}
+                allowClear={true}
                 onChange={(value) => updateFeeType(value, record)}
                 style={{ width: "150px" }}
                 onPopupScroll={onScroll}
