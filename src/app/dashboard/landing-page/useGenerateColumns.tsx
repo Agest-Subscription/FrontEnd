@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import LongText from "@/components/table/LongText";
 import { DATE_FORMAT } from "@/constants/date";
 import { LandingPageTableData } from "@/interfaces/model/landingPage.type";
+import { capitalize } from "@/utils/string";
 
 const useGenerateColumns = () => {
   return useMemo<ColumnType<LandingPageTableData>[]>(
@@ -54,7 +55,7 @@ const useGenerateColumns = () => {
         dataIndex: "recurrence_period",
         key: "recurrence_period",
         render: (_, record) => {
-          return record?.pricing_plan?.recurrence_period;
+          return capitalize(record?.pricing_plan?.recurrence_period);
         },
       },
       {
@@ -62,7 +63,7 @@ const useGenerateColumns = () => {
         dataIndex: "priority",
         key: "priority",
         render: (_, record) => {
-          return record?.priority;
+          return capitalize(record?.priority);
         },
       },
       {

@@ -16,7 +16,7 @@ export const getListLandingPageApi = (params: LandingPageFilterParams) => {
   );
 };
 
-export const addLandingPageApi = (data: LandingPagePayload[]) => {
+export const addLandingPageApi = (data: { data: LandingPagePayload[] }) => {
   return axiosClient.post("landing_pages", data);
 };
 

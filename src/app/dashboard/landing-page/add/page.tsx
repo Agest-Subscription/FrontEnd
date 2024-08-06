@@ -75,23 +75,31 @@ const Page: React.FC<Props> = () => {
     setOpenModal(true);
   }
 
-  const formatPayload = (data: LandingPageFormValues): LandingPagePayload[] => {
+  const formatPayload = (
+    data: LandingPageFormValues,
+  ): { data: LandingPagePayload[] } => {
     const transformed: LandingPagePayload[] = [];
 
     if (data.landing_page_items) {
       data.landing_page_items.forEach((item) => {
         const { premium, pro, basic } = item;
 
-        transformed.push({
-          pricing_plan_id: premium ?? "",
-          priority: "premium",
-        });
-        transformed.push({ pricing_plan_id: pro ?? "", priority: "pro" });
-        transformed.push({ pricing_plan_id: basic ?? "", priority: "basic" });
+        if (premium) {
+          transformed.push({
+            pricing_plan_id: premium ?? "",
+            priority: "premium",
+          });
+        }
+        if (pro) {
+          transformed.push({ pricing_plan_id: pro ?? "", priority: "pro" });
+        }
+        if (basic) {
+          transformed.push({ pricing_plan_id: basic ?? "", priority: "basic" });
+        }
       });
     }
-
-    return transformed;
+    const result = { data: transformed };
+    return result;
   };
 
   function onSubmit(data: LandingPageFormValues) {
