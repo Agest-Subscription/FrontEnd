@@ -12,7 +12,6 @@ export const useGenerateFields = () => {
         componentProps: {
           disabled: true,
           isRequired: true,
-          disabled: true,
         },
       },
       display_name: {
