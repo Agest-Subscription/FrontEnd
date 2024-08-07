@@ -54,7 +54,7 @@ const Page: React.FC<Props> = () => {
 
   const { data: PricingPlan, isError } = useGetPricingPlanById(id);
   const start_date = methods.watch("start_date");
-  const fields = useGenerateFields(start_date);
+  const fields = useGenerateFields(start_date, methods);
   useEffect(() => {
     if (PricingPlan) {
       methods.setValue("description", PricingPlan.description);
@@ -72,7 +72,12 @@ const Page: React.FC<Props> = () => {
         "recurrence_fee_id",
         PricingPlan.recurrence_fee?.id ?? null,
       );
-      methods.setValue("recurrence_fee", PricingPlan.recurrence_fee);
+      if (PricingPlan.recurrence_fee) {
+        methods.setValue("recurrence_fee", {
+          ...PricingPlan?.recurrence_fee,
+          fee_type: "recurrence",
+        });
+      }
     }
   }, [PricingPlan, methods]);
 
@@ -132,6 +137,7 @@ const Page: React.FC<Props> = () => {
 
   const handleSave = async (featureList: PricingPlanFeaturesType[]) => {
     const isValid = await methods.trigger();
+    console.log(methods.formState.errors);
     if (isValid) {
       showModal({
         popup_id: "confirm",
@@ -166,11 +172,11 @@ const Page: React.FC<Props> = () => {
           (item) =>
             !featureList.some(
               (feature) =>
-                feature.id === item.feature.id && "feature_plan_fee_id" in item,
+                feature.id === item.feature.id &&
+                "feature_plan_fee_id" in feature,
             ),
         )
         .map((item) => item.id) ?? null;
-
     const add = featureList
       .filter((item) => !("feature_plan_fee_id" in item))
       .map(getFeatureAssociation);
