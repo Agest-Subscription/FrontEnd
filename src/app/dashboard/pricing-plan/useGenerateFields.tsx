@@ -11,7 +11,7 @@ import {
 } from "@/interfaces/model/pricingplan.type";
 import { enumToSelectOptions } from "@/utils/enum";
 
-export const useGenerateFields = (start_date: string) => {
+export const useGenerateFields = (start_date: string, methods: any) => {
   const {
     data: feePages,
     fetchNextPage,
@@ -56,6 +56,15 @@ export const useGenerateFields = (start_date: string) => {
           allowClear: true,
           style: { height: "40px" },
           maxTagCount: "responsive",
+          onChange: (value) => {
+            const selectedOption = mappedFeePages.find(
+              (item) => item.value === value,
+            );
+            methods.setValue("recurrence_fee", {
+              id: value,
+              ...selectedOption?.fee,
+            });
+          },
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
             const target = event.target as HTMLDivElement;
             if (
@@ -134,6 +143,7 @@ export const useGenerateFields = (start_date: string) => {
     isFetchingNextPage,
     isInitialLoading,
     mappedFeePages,
+    methods,
     setSearchTerm,
     start_date,
   ]);
