@@ -46,11 +46,10 @@ export const useGenerateFields = (
   });
 
   const fields = useMemo<FieldsData<SubscriptionFormValues>>(() => {
-    const today = new Date().toString();
     const suspendedDate = () => {
       const is_cancelled = methods.getValues("is_cancelled");
       if (is_cancelled) {
-        methods.setValue("suspended_date", today);
+        methods.setValue("suspended_date", dayjs().toISOString());
       } else [methods.setValue("suspended_date", null)];
     };
 
@@ -92,7 +91,7 @@ export const useGenerateFields = (
               recurrence_type as ManipulateType | undefined,
             )
             .subtract(2, "day")
-            .format("YYYY-MM-DD HH:mm:ss");
+            .toISOString();
           methods.setValue("next_billing_date", next_billing_date);
         }
         const end_date = dayjs(start_date)
@@ -124,12 +123,14 @@ export const useGenerateFields = (
     };
     const assignLocaleTimeForToday = () => {
       const now = dayjs();
-      if (
-        methods.getValues("start_date").toString() === now.format("YYYY-MM-DD")
+      const dayPicker = methods.getValues("start_date");
+       if (
+        dayPicker.toString() === now.format("YYYY-MM-DD")
       ) {
         methods.setValue("start_date", dayjs().toISOString());
         caculateEndDate();
       }
+      methods.setValue("start_date", dayjs(dayPicker).toISOString());
       caculateEndDate();
       console.log("123 start_date antd", methods.getValues("start_date"));
     };
@@ -222,7 +223,7 @@ export const useGenerateFields = (
             assignLocaleTimeForToday();
           },
           isRequired: true,
-          minDate: dayjs(today),
+          minDate: dayjs(),
           format: DATE_FORMAT_V2,
         },
       },

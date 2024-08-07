@@ -17,6 +17,7 @@ const useGenerateColumns = () => {
         title: "No",
         dataIndex: "no",
         key: "no",
+        width: 100,
       },
       {
         title: "Email",
