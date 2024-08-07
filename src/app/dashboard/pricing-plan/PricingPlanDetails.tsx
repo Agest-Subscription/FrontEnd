@@ -179,6 +179,7 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
             <span style={{ color: "#9095A1", fontWeight: 700, fontSize: 16 }}>
               Total Fee:{" "}
               <span style={{ color: "#62CD14" }}>
+                $
                 {formatPrice(
                   recurrenceFee.price,
                   recurrenceFee.recurrence_cycle_count ?? 0,

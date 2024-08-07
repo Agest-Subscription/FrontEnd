@@ -171,7 +171,9 @@ const Page: React.FC<Props> = () => {
         .filter(
           (item) =>
             !featureList.some(
-              (feature) => feature.id === item.feature.id && "id" in item,
+              (feature) =>
+                feature.id === item.feature.id &&
+                "feature_plan_fee_id" in feature,
             ),
         )
         .map((item) => item.id) ?? null;
