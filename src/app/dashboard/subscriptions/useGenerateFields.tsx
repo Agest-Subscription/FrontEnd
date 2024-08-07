@@ -53,6 +53,11 @@ export const useGenerateFields = (
       } else [methods.setValue("suspended_date", null)];
     };
 
+    const checkIfAlreadfySubscribed = () => {
+      const user_id = methods.getValues("user_id");
+      const pricingPlan_id = methods.getValues("pricing_plan.id");
+    }
+
     const caculateEndDate = () => {
       const pricingPlan = methods.getValues("pricing_plan");
       const start_date = methods.getValues("start_date");
@@ -157,6 +162,7 @@ export const useGenerateFields = (
           onChange: (value) => {
             setUserSearchTerm("");
             methods.setValue("user_id", value);
+            checkIfAlreadfySubscribed();
           },
           allowClear: true,
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
