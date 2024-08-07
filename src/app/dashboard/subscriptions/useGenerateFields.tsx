@@ -91,7 +91,7 @@ export const useGenerateFields = (
               recurrence_type as ManipulateType | undefined,
             )
             .subtract(2, "day")
-            .format("YYYY-MM-DD HH:mm:ss");
+            .toISOString();
           methods.setValue("next_billing_date", next_billing_date);
         }
         const end_date = dayjs(start_date)
@@ -123,12 +123,14 @@ export const useGenerateFields = (
     };
     const assignLocaleTimeForToday = () => {
       const now = dayjs();
-      if (
-        methods.getValues("start_date").toString() === now.format("YYYY-MM-DD")
+      const dayPicker = methods.getValues("start_date");
+       if (
+        dayPicker.toString() === now.format("YYYY-MM-DD")
       ) {
         methods.setValue("start_date", dayjs().toISOString());
         caculateEndDate();
       }
+      methods.setValue("start_date", dayjs(dayPicker).toISOString());
       caculateEndDate();
       console.log("123 start_date antd", methods.getValues("start_date"));
     };
