@@ -21,7 +21,7 @@ type Props = {};
 
 const SubscriptionList: React.FC<Props> = () => {
   const router = useRouter();
-  const { searchQuery, handleSearch } = useSearchSync();
+  const { searchQuery, handleSearch } = useSearchSync(resetPagination);
   const [tableParams, setTableParams] = useState<
     TableParams<SubscriptionTableData>
   >({
@@ -57,6 +57,15 @@ const SubscriptionList: React.FC<Props> = () => {
       sorter,
     });
   };
+  function resetPagination() {
+    setTableParams((prev) => ({
+      ...prev,
+      pagination: {
+        ...prev.pagination,
+        current: 1,
+      },
+    }));
+  }
 
   useEffect(() => {
     if (!SubscriptionTableData) return;

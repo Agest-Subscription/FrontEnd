@@ -83,6 +83,8 @@ export const useGenerateFields = (
             .subtract(1, "day")
             .toISOString();
           methods.setValue("next_billing_date", next_billing_date);
+        } else if (recurrence_cycle === 1 && recurrence_type === "day") {
+          methods.setValue("next_billing_date", null);
         } else {
           const next_billing_date = dayjs(start_date)
             .add(

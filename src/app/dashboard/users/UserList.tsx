@@ -18,7 +18,7 @@ type Props = {};
 
 const UserList: React.FC<Props> = () => {
   const router = useRouter();
-  const { searchQuery, handleSearch } = useSearchSync();
+  const { searchQuery, handleSearch } = useSearchSync(resetPagination);
   const [tableParams, setTableParams] = useState<TableParams<UserTableData>>({
     pagination: {
       current: 1,
@@ -51,6 +51,16 @@ const UserList: React.FC<Props> = () => {
       sorter,
     });
   };
+
+  function resetPagination() {
+    setTableParams((prev) => ({
+      ...prev,
+      pagination: {
+        ...prev.pagination,
+        current: 1,
+      },
+    }));
+  }
 
   useEffect(() => {
     if (!UserTableData) return;
