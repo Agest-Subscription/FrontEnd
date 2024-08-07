@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Spin } from "antd";
 import dayjs from "dayjs";
@@ -19,6 +19,7 @@ export const useGenerateFields = (
   isEdit: boolean,
   pricingPlan: PricingPlanTableData | null,
 ) => {
+  const [isPricingPlanChange, setIsPricingPlanChange] = useState(false);
   if (isEdit) {
     methods.setValue("pricing_plan", pricingPlan);
   }
@@ -50,7 +51,11 @@ export const useGenerateFields = (
       const is_cancelled = methods.getValues("is_cancelled");
       if (is_cancelled) {
         methods.setValue("suspended_date", dayjs().toISOString());
-      } else [methods.setValue("suspended_date", null)];
+        methods.setValue("next_billing_date", null)
+      } else {
+        methods.setValue("suspended_date", null)
+        caculateEndDate()
+      };
     };
 
     const checkIfAlreadfySubscribed = () => {
@@ -75,6 +80,7 @@ export const useGenerateFields = (
 
         const due_date_free_trial = dayjs(start_date)
           .add(free_trial_cycle, free_trial_type as ManipulateType | undefined)
+          .subtract(1, "minute")
           .toISOString();
         if (free_trial_cycle != 0) {
           methods.setValue("due_date_free_trial", due_date_free_trial);
@@ -105,6 +111,7 @@ export const useGenerateFields = (
         }
         const end_date = dayjs(start_date)
           .add(recurrence_cycle, recurrence_type as ManipulateType | undefined)
+          .subtract(1, "minute")
           .toISOString();
         methods.setValue("end_date", end_date);
       }
@@ -139,7 +146,6 @@ export const useGenerateFields = (
       }
       methods.setValue("start_date", dayjs(dayPicker).toISOString());
       caculateEndDate();
-      console.log("123 start_date antd", methods.getValues("start_date"));
     };
     return {
       user_id: {
@@ -198,6 +204,7 @@ export const useGenerateFields = (
           onChange: (value) => {
             setPricingPlanSearchTerm("");
             methods.setValue("pricing_plan", getPricingPlanById(value) ?? null);
+            setIsPricingPlanChange(true);
             caculateEndDate();
           },
           allowClear: true,
@@ -233,6 +240,7 @@ export const useGenerateFields = (
           isRequired: true,
           minDate: dayjs(),
           format: DATE_FORMAT_V2,
+          disabled: isEdit && !isPricingPlanChange
         },
       },
       due_date_free_trial: {
@@ -266,7 +274,6 @@ export const useGenerateFields = (
           disabled: !isEdit,
           onChange: () => {
             suspendedDate();
-            caculateEndDate();
           },
         },
       },
@@ -290,6 +297,8 @@ export const useGenerateFields = (
     setPricingPlanSearchTerm,
     fetchNextUserPage,
     fetchNextPricingPlanPage,
+    isPricingPlanChange, 
+    setIsPricingPlanChange,
     isEdit,
     methods,
   ]);
