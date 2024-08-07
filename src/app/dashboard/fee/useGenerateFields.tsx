@@ -89,7 +89,6 @@ export const useGenerateFields = (): FieldsData<FeeFormValues> => {
         componentProps: {
           isRequired: true,
           type: "number",
-          min: 1,
         },
       },
     }),
