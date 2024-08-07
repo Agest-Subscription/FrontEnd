@@ -214,10 +214,6 @@ const PricingPlanFeatures: React.FC<Props> = ({
         dataIndex: "name",
       },
       {
-        title: "Description",
-        dataIndex: "description",
-      },
-      {
         title: "Fee type",
         dataIndex: "fee",
         width: "150px",

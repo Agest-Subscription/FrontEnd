@@ -32,14 +32,14 @@ const OverrateFeeItemField: FC<OverateFeeItemProps> = ({
   return (
     <>
       <Row gutter={24} key={index}>
-        <Col>
+        <Col span={4}>
           <FormField
             name={"overrate_fees.[].price"}
             index={[index]}
             key={index + "price"}
           />
         </Col>
-        <Col>
+        <Col span={4}>
           <FormField
             name={"overrate_fees.[].threshold"}
             index={[index]}
