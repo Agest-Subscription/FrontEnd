@@ -78,8 +78,6 @@ const Page: React.FC<Props> = () => {
     }
   };
 
-  useEffect(() => methods.setValue("auto_renew", true), [methods]);
-
   return (
     <Flex vertical gap={24}>
       <Typography style={{ fontSize: 24, fontWeight: 600, color: "#2F80ED" }}>

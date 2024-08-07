@@ -113,16 +113,6 @@ const useGenerateColumns = () => {
         },
       },
       {
-        title: "Auto renew",
-        dataIndex: "auto_renew",
-        key: "auto_renew",
-        align: "center",
-        width: 100,
-        render: (auto_renew: boolean) => {
-          return <Checkbox checked={auto_renew}></Checkbox>;
-        },
-      },
-      {
         title: "Next billing date",
         dataIndex: "next_billing_date",
         key: "next_billing_date",
