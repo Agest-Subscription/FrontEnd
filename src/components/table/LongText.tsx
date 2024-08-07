@@ -5,12 +5,14 @@ interface LongTextProps {
   text: string | null;
   width?: string | number;
   centerText?: boolean;
+  wrap?: boolean;
 }
 
 const LongText: React.FC<LongTextProps> = ({
   text,
   centerText = false,
-  width = 200,
+  width,
+  wrap,
 }) => {
   const textRef = useRef<HTMLParagraphElement | null>(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
@@ -29,7 +31,7 @@ const LongText: React.FC<LongTextProps> = ({
         style={{
           textOverflow: "ellipsis",
           overflow: "hidden",
-          whiteSpace: "nowrap",
+          whiteSpace: `${wrap ? "nowrap" : "wrap"}`,
           width: width,
           textAlign: `${centerText ? "center" : "start"}`,
         }}

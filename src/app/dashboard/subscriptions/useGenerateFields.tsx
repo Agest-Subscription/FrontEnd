@@ -129,9 +129,7 @@ export const useGenerateFields = (
     const assignLocaleTimeForToday = () => {
       const now = dayjs();
       const dayPicker = methods.getValues("start_date");
-       if (
-        dayPicker.toString() === now.format("YYYY-MM-DD")
-      ) {
+      if (dayPicker.toString() === now.format("YYYY-MM-DD")) {
         methods.setValue("start_date", dayjs().toISOString());
         caculateEndDate();
       }

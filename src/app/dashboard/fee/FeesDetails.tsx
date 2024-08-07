@@ -32,14 +32,14 @@ const OverrateFeeItemField: FC<OverateFeeItemProps> = ({
   return (
     <>
       <Row gutter={24} key={index}>
-        <Col>
+        <Col span={4}>
           <FormField
             name={"overrate_fees.[].price"}
             index={[index]}
             key={index + "price"}
           />
         </Col>
-        <Col>
+        <Col span={4}>
           <FormField
             name={"overrate_fees.[].threshold"}
             index={[index]}
@@ -139,22 +139,22 @@ export default function FeeDetails({
               <FormField name="transaction_unit" />
             </Col>
           )}
+          {fee_type === "recurrence" && (
+            <>
+              <Col span={4}>
+                <FormField name="recurrence_type" />
+              </Col>
+              <Col span={4}>
+                <FormField name="recurrence_cycle_count" />
+              </Col>
+            </>
+          )}
         </Row>
         <Row gutter={16}>
           <Col span={8}>
             <FormField name="description" />
           </Col>
         </Row>
-        {fee_type === "recurrence" && (
-          <Row gutter={16}>
-            <Col span={4}>
-              <FormField name="recurrence_type" />
-            </Col>
-            <Col span={4}>
-              <FormField name="recurrence_cycle_count" />
-            </Col>
-          </Row>
-        )}
 
         <FormField name="is_active" />
         {fee_type === "transaction" && (

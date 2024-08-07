@@ -24,11 +24,58 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
       threshold: number()
         .nullable()
         .integer()
-        .min(0, "Price cannot be smaller than 0")
+        .min(1, "Thresholds must be greater than or equal to 1")
         .when("isTransaction", {
           is: true,
           then: (schema) => schema.required("Threshold cannot be null"),
-        }),
+        })
+        .test(
+          "unique-thresholds",
+          "Thresholds must be unique",
+          function (value) {
+            const index = parseInt(this.path.split("[")[1].split("]")[0], 10);
+
+            const arr =
+              (this.from?.[1].value.overrate_fees as OverateFeeArrItems[]) ??
+              [];
+
+            const thresholds = arr.map((item) => {
+              return item.threshold;
+            });
+
+            // Use `some` to check if there is any threshold equal to `value`, skipping the `index`
+            const isDuplicate = thresholds.some(
+              (threshold, i) => threshold === value && i !== index,
+            );
+
+            return !isDuplicate;
+          },
+        )
+        .test(
+          "ascending-thresholds",
+          "Thresholds must be greater than previous",
+          function (value) {
+            const index = parseInt(this.path.split("[")[1].split("]")[0], 10);
+
+            const arr =
+              (this.from?.[1].value.overrate_fees as OverateFeeArrItems[]) ??
+              [];
+
+            const thresholds = arr.map((item) => {
+              return item.threshold;
+            });
+
+            if (index > 0) {
+              const previousThreshold = thresholds[index - 1];
+              if (value == null) return true;
+              if (previousThreshold != null && value <= previousThreshold) {
+                return false;
+              }
+            }
+
+            return true;
+          },
+        ),
     }),
   )
     .nullable()
@@ -37,6 +84,7 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
       is: "transaction",
       then: (schema) => schema.required(),
     }),
+
   name: string()
     .required("Name is required")
     .max(100, "Name cannot exceed 100 characters"),

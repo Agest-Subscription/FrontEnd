@@ -32,12 +32,12 @@ const FeatureDetails: React.FC<DetailsProp> = ({
           <Col span={6}>
             <FormField name="name" />
           </Col>
-          <Col span={12}>
+          <Col span={18}>
             <FormField name="permissions" />
           </Col>
         </Row>
         <Row gutter={24}>
-          <Col span={6}>
+          <Col span={24}>
             <FormField name="description" />
           </Col>
         </Row>
