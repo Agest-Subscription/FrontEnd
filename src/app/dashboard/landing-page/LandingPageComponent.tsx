@@ -8,7 +8,7 @@ import {
 } from "react-hook-form";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Flex, Form, Select, Spin } from "antd";
-import { endsWith } from "lodash";
+import { debounce, endsWith } from "lodash";
 
 import { useGetInfiniteRecurrencePeriod } from "@/hooks/landingPage";
 import { useGetInfinitePricingPlanByRecurrencePeriod } from "@/hooks/pricingPlan";
@@ -55,12 +55,17 @@ const LandingPageComponent = ({
     recurrence_period: methods.watch(`landing_page_items.${index}.period`),
   });
 
+  const formatPeriod = (date: string) => {
+    const [number, unit] = date.split(" ");
+    return `${number} ${unit}${number === "1" ? "" : "s"}`;
+  };
+
   const mappedRecurrencePeriods = useMemo(() => {
     return recurrencePeriodPage?.pages
       .map((page) =>
         page.data.data.map((item) => ({
           value: item.recurrence_period,
-          label: item.recurrence_period,
+          label: formatPeriod(item.recurrence_period),
         })),
       )
       .flat();
@@ -161,6 +166,17 @@ const LandingPageComponent = ({
     );
   }, [mappedRecurrencePeriods, usedPeriods, methods, index]);
 
+  const onScroll = async (event: React.UIEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLDivElement;
+    if (
+      !isFetchingNextRecurrencePeriodPage &&
+      target.scrollTop + target.offsetHeight === target.scrollHeight
+    ) {
+      target.scrollTo(0, target.scrollHeight);
+      fetchNextRecurrencePeriodPage();
+    }
+  };
+
   return (
     <Flex
       vertical
@@ -191,20 +207,13 @@ const LandingPageComponent = ({
                 options={filteredRecurrencePeriods}
                 allowClear={true}
                 showSearch={true}
-                onSearch={(searchTerm) => {
-                  setSearchTermRecurrencePeriod(searchTerm);
-                }}
-                onPopupScroll={(event: React.UIEvent<HTMLDivElement>) => {
-                  const target = event.target as HTMLDivElement;
-                  if (
-                    !isFetchingNextRecurrencePeriodPage &&
-                    target.scrollTop + target.offsetHeight ===
-                      target.scrollHeight
-                  ) {
-                    target.scrollTo(0, target.scrollHeight);
-                    fetchNextRecurrencePeriodPage();
-                  }
-                }}
+                onSearch={debounce(
+                  (value) => setSearchTermRecurrencePeriod(value),
+                  500,
+                )}
+                listHeight={125}
+                onPopupScroll={onScroll}
+                dropdownStyle={{ maxHeight: 200, overflow: "auto" }}
                 dropdownRender={(menu) => (
                   <Spin
                     spinning={
@@ -257,10 +266,9 @@ const LandingPageComponent = ({
                     )}
                     allowClear={true}
                     options={getFilteredOptions(type)}
+                    listHeight={125}
                     showSearch={true}
-                    onSearch={(searchTerm) => {
-                      setSearchTerm(searchTerm);
-                    }}
+                    onSearch={debounce((value) => setSearchTerm(value), 500)}
                     onPopupScroll={(event: React.UIEvent<HTMLDivElement>) => {
                       const target = event.target as HTMLDivElement;
                       if (

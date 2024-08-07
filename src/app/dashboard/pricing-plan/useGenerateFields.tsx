@@ -10,6 +10,7 @@ import {
   PricingPlanFormValues,
 } from "@/interfaces/model/pricingplan.type";
 import { enumToSelectOptions } from "@/utils/enum";
+import { debounce } from "lodash";
 
 export const useGenerateFields = (
   start_date: string,
@@ -62,9 +63,7 @@ export const useGenerateFields = (
           isRequired: true,
           filterOption: true,
           optionFilterProp: "label",
-          onSearch: (searchTerm) => {
-            setSearchTerm(searchTerm);
-          },
+          onSearch: debounce((value) => setSearchTerm(value), 500),
           onChange: (value) => onChangeRecurrenceFee(value ?? ""),
           allowClear: true,
           style: { height: "40px" },

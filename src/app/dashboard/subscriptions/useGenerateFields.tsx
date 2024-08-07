@@ -12,6 +12,7 @@ import {
 import { FieldsData } from "@/interfaces/form";
 import { PricingPlanTableData } from "@/interfaces/model/pricingplan.type";
 import { SubscriptionFormValues } from "@/interfaces/model/subscription.type";
+import { debounce } from "lodash";
 
 export const useGenerateFields = (
   methods: UseFormReturn<SubscriptionFormValues, any, undefined>,
@@ -149,9 +150,7 @@ export const useGenerateFields = (
           filterOption: true,
           optionFilterProp: "label",
           style: { height: "40px" },
-          onSearch: (searchTerm) => {
-            setUserSearchTerm(searchTerm);
-          },
+          onSearch: debounce((value) => setUserSearchTerm(value), 500),
           onChange: (value) => {
             setUserSearchTerm("");
             methods.setValue("user_id", value);
@@ -184,9 +183,7 @@ export const useGenerateFields = (
           filterOption: true,
           style: { height: "40px" },
           optionFilterProp: "label",
-          onSearch: (searchTerm) => {
-            setPricingPlanSearchTerm(searchTerm);
-          },
+          onSearch: debounce((value) => setPricingPlanSearchTerm(value), 500),
           onChange: (value) => {
             setPricingPlanSearchTerm("");
             methods.setValue("pricing_plan", getPricingPlanById(value) ?? null);

@@ -8,6 +8,7 @@ import {
   OverrateFeeFormValues,
 } from "@/interfaces/model/overrateFee.type";
 import { mergeAndMapInfiniteData } from "@/utils/infiniteFetch";
+import { debounce } from "lodash";
 
 export const useGenerateFields = (initialSelectedFees?: IsOverrateFee) => {
   const {
@@ -53,9 +54,7 @@ export const useGenerateFields = (initialSelectedFees?: IsOverrateFee) => {
           showSearch: true,
           filterOption: true,
           optionFilterProp: "label",
-          onSearch: (searchTerm) => {
-            setSearchTerm(searchTerm);
-          },
+          onSearch: debounce((value) => setSearchTerm(value), 500),
           onChange: () => setSearchTerm(""),
           allowClear: true,
           style: { height: "40px" },
