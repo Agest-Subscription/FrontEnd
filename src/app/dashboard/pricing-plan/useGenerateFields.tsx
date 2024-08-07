@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { Spin } from "antd";
 import dayjs from "dayjs";
+import { debounce } from "lodash";
 
 import { useGetInfiniteFee } from "@/hooks/fee";
 import { FieldsData } from "@/interfaces/form";
@@ -62,9 +63,7 @@ export const useGenerateFields = (
           isRequired: true,
           filterOption: true,
           optionFilterProp: "label",
-          onSearch: (searchTerm) => {
-            setSearchTerm(searchTerm);
-          },
+          onSearch: debounce((value) => setSearchTerm(value), 500),
           onChange: (value) => onChangeRecurrenceFee(value ?? ""),
           allowClear: true,
           style: { height: "40px" },

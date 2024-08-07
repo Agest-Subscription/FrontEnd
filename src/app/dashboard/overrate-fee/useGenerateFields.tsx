@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { Spin } from "antd";
+import { debounce } from "lodash";
 
 import { useGetInfiniteIsOverrateFee } from "@/hooks/overrateFee";
 import { FieldsData } from "@/interfaces/form";
@@ -53,9 +54,7 @@ export const useGenerateFields = (initialSelectedFees?: IsOverrateFee) => {
           showSearch: true,
           filterOption: true,
           optionFilterProp: "label",
-          onSearch: (searchTerm) => {
-            setSearchTerm(searchTerm);
-          },
+          onSearch: debounce((value) => setSearchTerm(value), 500),
           onChange: () => setSearchTerm(""),
           allowClear: true,
           style: { height: "40px" },
