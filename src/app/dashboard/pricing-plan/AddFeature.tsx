@@ -65,7 +65,7 @@ const AddFeature: React.FC<Props> = ({
       width: "65%",
       render: (_, record) => {
         return (
-          <TableTag permissions={record.permissions} width="150px"></TableTag>
+          <TableTag permissions={record.permissions} width="100%"></TableTag>
         );
       },
     },
@@ -178,7 +178,7 @@ const AddFeature: React.FC<Props> = ({
         </Flex>
         <div
           ref={tableRef}
-          style={{ height: 360, overflow: "auto", width: "75%" }}
+          style={{ height: 360, overflow: "auto", width: "100%" }}
         >
           <Spin spinning={isFetchingNextPage || isInitialLoading}>
             <Table
