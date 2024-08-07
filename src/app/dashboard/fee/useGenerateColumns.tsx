@@ -32,7 +32,7 @@ const useGenerateColumns = () => {
         dataIndex: "fee_type",
         key: "fee_type",
         render: (value) => {
-          return capitalize(value)
+          return capitalize(value);
         },
       },
       {
@@ -53,7 +53,7 @@ const useGenerateColumns = () => {
         dataIndex: "recurrence_type",
         key: "recurrence_type",
         render: (value) => {
-          return capitalize(value)
+          return capitalize(value);
         },
       },
       {

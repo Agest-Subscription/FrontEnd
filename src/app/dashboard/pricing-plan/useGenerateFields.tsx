@@ -92,6 +92,7 @@ export const useGenerateFields = (
         type: "datepicker",
         componentProps: {
           isRequired: true,
+          minDate: dayjs(),
         },
       },
       end_date: {
