@@ -2,8 +2,6 @@ import { useState } from "react";
 import { CaretUpOutlined, EllipsisOutlined } from "@ant-design/icons";
 import { Button, ConfigProvider, Flex, Tag } from "antd";
 
-import LongText from "../table/LongText";
-
 import { Permission } from "@/interfaces/model/permission.type";
 
 type Props = {
@@ -11,7 +9,7 @@ type Props = {
   width?: string;
 };
 
-const TableTag = ({ permissions, width = "80px" }: Props) => {
+const TableTag = ({ permissions }: Props) => {
   const [isLoadMore, setIsLoadMore] = useState(false);
 
   const loadMoreData = () => {

@@ -1,8 +1,4 @@
-import { useState } from "react";
-import { CaretUpOutlined, EllipsisOutlined } from "@ant-design/icons";
-import { Button, ConfigProvider, Flex, Tag } from "antd";
-
-import LongText from "../table/LongText";
+import { ConfigProvider, Flex, Tag } from "antd";
 
 import { Permission } from "@/interfaces/model/permission.type";
 
@@ -12,16 +8,6 @@ type Props = {
 };
 
 const PermissionColumn = ({ permissions }: Props) => {
-  const [isLoadMore, setIsLoadMore] = useState(false);
-
-  const loadMoreData = () => {
-    setIsLoadMore(true);
-  };
-
-  const hiddenData = () => {
-    setIsLoadMore(false);
-  };
-
   return (
     <ConfigProvider
       theme={{
@@ -37,49 +23,8 @@ const PermissionColumn = ({ permissions }: Props) => {
       }}
     >
       <Flex wrap gap="small" style={{ width: "100%" }}>
-        {/* {isLoadMore
-          ? permissions.map((permission) => (
-              <Tag key={permission.id} bordered={false}>
-                <LongText
-                  text={permission.display_name}
-                  centerText
-                  width={width}
-                />
-              </Tag>
-            ))
-          : permissions.slice(0, 3).map((permission) => (
-              <Tag key={permission.id} bordered={false}>
-                <LongText
-                  text={permission.display_name}
-                  centerText
-                  width={width}
-                />
-              </Tag>
-            ))}
-        {permissions.length > 3 ? (
-          !isLoadMore ? (
-            <Button
-              size="small"
-              type="primary"
-              ghost={true}
-              style={{ borderColor: "transparent" }}
-              icon={<EllipsisOutlined />}
-              onClick={loadMoreData}
-            />
-          ) : (
-            <Button
-              size="small"
-              type="primary"
-              ghost={true}
-              style={{ borderColor: "transparent" }}
-              icon={<CaretUpOutlined />}
-              onClick={hiddenData}
-            />
-          )
-        ) : null} */}
         {permissions.map((permission) => (
           <Tag key={permission.id} bordered={false}>
-            {/* <LongText text={permission.display_name} centerText /> */}
             {permission.display_name}
           </Tag>
         ))}
