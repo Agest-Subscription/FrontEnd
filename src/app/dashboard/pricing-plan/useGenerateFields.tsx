@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { Spin } from "antd";
 import dayjs from "dayjs";
+import { debounce } from "lodash";
 
 import { useGetInfiniteFee } from "@/hooks/fee";
 import { FieldsData } from "@/interfaces/form";
@@ -10,7 +11,6 @@ import {
   PricingPlanFormValues,
 } from "@/interfaces/model/pricingplan.type";
 import { enumToSelectOptions } from "@/utils/enum";
-import { debounce } from "lodash";
 
 export const useGenerateFields = (
   start_date: string,

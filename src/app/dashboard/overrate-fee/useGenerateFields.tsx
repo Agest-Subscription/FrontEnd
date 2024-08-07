@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { Spin } from "antd";
+import { debounce } from "lodash";
 
 import { useGetInfiniteIsOverrateFee } from "@/hooks/overrateFee";
 import { FieldsData } from "@/interfaces/form";
@@ -8,7 +9,6 @@ import {
   OverrateFeeFormValues,
 } from "@/interfaces/model/overrateFee.type";
 import { mergeAndMapInfiniteData } from "@/utils/infiniteFetch";
-import { debounce } from "lodash";
 
 export const useGenerateFields = (initialSelectedFees?: IsOverrateFee) => {
   const {
