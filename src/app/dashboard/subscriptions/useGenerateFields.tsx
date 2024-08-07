@@ -45,11 +45,10 @@ export const useGenerateFields = (
   });
 
   const fields = useMemo<FieldsData<SubscriptionFormValues>>(() => {
-    const today = new Date().toString();
     const suspendedDate = () => {
       const is_cancelled = methods.getValues("is_cancelled");
       if (is_cancelled) {
-        methods.setValue("suspended_date", today);
+        methods.setValue("suspended_date", dayjs().toISOString());
       } else [methods.setValue("suspended_date", null)];
     };
 
@@ -227,7 +226,7 @@ export const useGenerateFields = (
             assignLocaleTimeForToday();
           },
           isRequired: true,
-          minDate: dayjs(today),
+          minDate: dayjs(),
           format: DATE_FORMAT_V2,
         },
       },
