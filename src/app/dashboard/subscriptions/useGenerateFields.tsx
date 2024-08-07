@@ -56,7 +56,11 @@ export const useGenerateFields = (
     const checkIfAlreadfySubscribed = () => {
       const user_id = methods.getValues("user_id");
       const pricingPlan_id = methods.getValues("pricing_plan.id");
-    }
+
+      if(user_id && pricingPlan_id){
+        console.log(pricingPlan_id)
+      }
+    };
 
     const caculateEndDate = () => {
       const pricingPlan = methods.getValues("pricing_plan");
