@@ -1,20 +1,17 @@
 import { useMemo } from "react";
 import { Spin } from "antd";
 import dayjs from "dayjs";
+import { debounce } from "lodash";
 
 import { useGetInfiniteFee } from "@/hooks/fee";
 import { FieldsData } from "@/interfaces/form";
-import { Fee } from "@/interfaces/model/fee.type";
 import {
   FreeTrialPeriodEnum,
   PricingPlanFormValues,
 } from "@/interfaces/model/pricingplan.type";
 import { enumToSelectOptions } from "@/utils/enum";
 
-export const useGenerateFields = (
-  start_date: string,
-  setRecurrenceFee: React.Dispatch<React.SetStateAction<Fee | null>>,
-) => {
+export const useGenerateFields = (start_date: string) => {
   const {
     data: feePages,
     fetchNextPage,
@@ -39,13 +36,6 @@ export const useGenerateFields = (
   }, [feePages]);
 
   const fields = useMemo<FieldsData<PricingPlanFormValues>>(() => {
-    const onChangeRecurrenceFee = (value: string) => {
-      const selectedFee = mappedFeePages.find(
-        (fee) => fee.value === value,
-      )?.fee;
-      setRecurrenceFee(selectedFee || null);
-      setSearchTerm("");
-    };
     return {
       name: {
         label: "Name",
@@ -62,10 +52,7 @@ export const useGenerateFields = (
           isRequired: true,
           filterOption: true,
           optionFilterProp: "label",
-          onSearch: (searchTerm) => {
-            setSearchTerm(searchTerm);
-          },
-          onChange: (value) => onChangeRecurrenceFee(value ?? ""),
+          onSearch: debounce((value) => setSearchTerm(value), 500),
           allowClear: true,
           style: { height: "40px" },
           maxTagCount: "responsive",
@@ -147,7 +134,6 @@ export const useGenerateFields = (
     isFetchingNextPage,
     isInitialLoading,
     mappedFeePages,
-    setRecurrenceFee,
     setSearchTerm,
     start_date,
   ]);

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
@@ -77,8 +77,6 @@ const Page: React.FC<Props> = () => {
       });
     }
   };
-
-  useEffect(() => methods.setValue("auto_renew", true), [methods]);
 
   return (
     <Flex vertical gap={24}>

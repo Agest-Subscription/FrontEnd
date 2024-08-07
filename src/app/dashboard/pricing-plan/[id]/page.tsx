@@ -17,7 +17,6 @@ import {
 } from "@/hooks/pricingPlan";
 import useGetId from "@/hooks/useGetId";
 import { CustomError } from "@/interfaces/base";
-import { Fee } from "@/interfaces/model/fee.type";
 import {
   PricingPlanFeaturesType,
   PricingPlanFormValues,
@@ -38,7 +37,6 @@ const Page: React.FC<Props> = () => {
   const { mutate: deletePricingPlan, isLoading: isDeleting } =
     useDeletePricingPlan();
   const goToPricingPlan = useGoToDashboardTab("pricing-plan");
-  const [recurrenceFee, setRecurrenceFee] = useState<Fee | null>(null);
   const id = useGetId();
   const methods = useForm<PricingPlanFormValues>({
     mode: "onBlur",
@@ -56,7 +54,7 @@ const Page: React.FC<Props> = () => {
 
   const { data: PricingPlan, isError } = useGetPricingPlanById(id);
   const start_date = methods.watch("start_date");
-  const fields = useGenerateFields(start_date, setRecurrenceFee);
+  const fields = useGenerateFields(start_date);
   useEffect(() => {
     if (PricingPlan) {
       methods.setValue("description", PricingPlan.description);
@@ -70,7 +68,11 @@ const Page: React.FC<Props> = () => {
         PricingPlan.free_trial_period_count,
       );
       methods.setValue("has_free_trial", PricingPlan.has_free_trial);
-      methods.setValue("recurrence_fee_id", PricingPlan.recurrence_fee.id);
+      methods.setValue(
+        "recurrence_fee_id",
+        PricingPlan.recurrence_fee?.id ?? null,
+      );
+      methods.setValue("recurrence_fee", PricingPlan.recurrence_fee);
     }
   }, [PricingPlan, methods]);
 
@@ -158,22 +160,26 @@ const Page: React.FC<Props> = () => {
           new_overrate_price: child.new_price ?? null,
         })) ?? null,
     });
-
-    const update = featureList
-      .filter((item) => item.feature_plan_fee_id != null)
-      .map(getFeatureAssociation);
-
-    const add = featureList
-      .filter((item) => item.feature_plan_fee_id == null)
-      .map(getFeatureAssociation);
-
     const deleteIds =
       editRecord?.feature_plan_fees
         .filter(
           (item) =>
-            !featureList.some((feature) => feature.id === item.feature.id),
+            !featureList.some(
+              (feature) =>
+                feature.id === item.feature.id && "feature_plan_fee_id" in item,
+            ),
         )
         .map((item) => item.id) ?? null;
+
+    const add = featureList
+      .filter((item) => !("feature_plan_fee_id" in item))
+      .map(getFeatureAssociation);
+    const update = featureList
+      .filter(
+        (item) =>
+          item.feature_plan_fee_id !== null && "feature_plan_fee_id" in item,
+      )
+      .map(getFeatureAssociation);
 
     return {
       id: id, // Assuming 'id' is a part of 'data'
@@ -210,7 +216,6 @@ const Page: React.FC<Props> = () => {
                   onClose: () => setOpenModal(false),
                 })
               }
-              recurrenceFee={recurrenceFee}
               onSave={handleSave}
             />
             <PopUp popupProps={modalProp} isOpen={openModal} />

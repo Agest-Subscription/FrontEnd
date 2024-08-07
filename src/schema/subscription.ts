@@ -12,7 +12,7 @@ const subscriptionFormValuesSchema: ObjectSchema<
   due_date_free_trial: string().nullable().default(null),
   suspended_date: string().nullable().default(null),
   next_billing_date: string().nullable().default(null),
-  auto_renew: boolean().default(true),
+  auto_renew: boolean().default(false),
   is_cancelled: boolean().default(false),
   pricing_plan_id: string().required("Pricing plan is required"),
 });

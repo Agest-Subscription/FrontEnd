@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { Spin } from "antd";
+import { debounce } from "lodash";
 
 import { useGetInfinitePermission } from "@/hooks/permission";
 import { FieldsData } from "@/interfaces/form";
@@ -53,9 +54,7 @@ export const useGenerateFields = (
           isRequired: true,
           filterOption: true,
           optionFilterProp: "label",
-          onSearch: (searchTerm) => {
-            setSearchTerm(searchTerm);
-          },
+          onSearch: debounce((value) => setSearchTerm(value), 500),
           onChange: () => setSearchTerm(""),
           allowClear: true,
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
