@@ -5,7 +5,7 @@ import type { TableColumnsType } from "antd";
 import { Flex, Input, Modal, Spin, Table, Typography } from "antd";
 
 import ButtonV1 from "@/components/button/CustomButton";
-import TableTag from "@/components/tag/TableTag";
+import PermissionColumn from "@/components/tag/PermissionColumn";
 import { useGetInfiniteFeatures } from "@/hooks/feature";
 import useSearchSync from "@/hooks/useSearchSync";
 import { Feature } from "@/interfaces/model/feature.type";
@@ -55,17 +55,18 @@ const AddFeature: React.FC<Props> = ({
       title: "Feature",
       dataIndex: "name",
       key: "name",
-      width: "25%",
+      width: "20%",
       align: "center",
     },
     {
+      align: "center",
       title: "Permission",
       dataIndex: "permissions",
       key: "permissions",
-      width: "65%",
+      width: "200px",
       render: (_, record) => {
         return (
-          <TableTag permissions={record.permissions} width="100%"></TableTag>
+          <PermissionColumn permissions={record.permissions}></PermissionColumn>
         );
       },
     },
@@ -182,15 +183,21 @@ const AddFeature: React.FC<Props> = ({
         >
           <Spin spinning={isFetchingNextPage || isInitialLoading}>
             <Table
-              rowSelection={{ type: "checkbox", ...rowSelection }}
+              rowSelection={{
+                type: "checkbox",
+                columnWidth: "5px",
+                ...rowSelection,
+              }}
               style={{ width: "100%" }}
               scroll={{ x: "max-content" }}
               columns={columns}
               dataSource={dataSource}
               pagination={false}
+              bordered
             />
           </Spin>
         </div>
+
         <Flex gap={24} justify="end">
           <ButtonV1 title="Cancel" customType="cancel" onClick={handleCancel} />
           <ButtonV1 title="Save" onClick={handleSave} />

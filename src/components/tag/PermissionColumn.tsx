@@ -11,7 +11,7 @@ type Props = {
   width?: string;
 };
 
-const TableTag = ({ permissions, width = "80px" }: Props) => {
+const PermissionColumn = ({ permissions }: Props) => {
   const [isLoadMore, setIsLoadMore] = useState(false);
 
   const loadMoreData = () => {
@@ -37,25 +37,23 @@ const TableTag = ({ permissions, width = "80px" }: Props) => {
       }}
     >
       <Flex wrap gap="small" style={{ width: "100%" }}>
-        {isLoadMore
+        {/* {isLoadMore
           ? permissions.map((permission) => (
               <Tag key={permission.id} bordered={false}>
-                {/* <LongText
+                <LongText
                   text={permission.display_name}
                   centerText
                   width={width}
-                /> */}
-                {permission.display_name}
+                />
               </Tag>
             ))
           : permissions.slice(0, 3).map((permission) => (
               <Tag key={permission.id} bordered={false}>
-                {/* <LongText
+                <LongText
                   text={permission.display_name}
                   centerText
                   width={width}
-                /> */}
-                {permission.display_name}
+                />
               </Tag>
             ))}
         {permissions.length > 3 ? (
@@ -78,10 +76,16 @@ const TableTag = ({ permissions, width = "80px" }: Props) => {
               onClick={hiddenData}
             />
           )
-        ) : null}
+        ) : null} */}
+        {permissions.map((permission) => (
+          <Tag key={permission.id} bordered={false}>
+            {/* <LongText text={permission.display_name} centerText /> */}
+            {permission.display_name}
+          </Tag>
+        ))}
       </Flex>
     </ConfigProvider>
   );
 };
 
-export default TableTag;
+export default PermissionColumn;

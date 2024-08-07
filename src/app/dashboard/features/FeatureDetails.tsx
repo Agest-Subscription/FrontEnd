@@ -37,7 +37,7 @@ const FeatureDetails: React.FC<DetailsProp> = ({
           </Col>
         </Row>
         <Row gutter={24}>
-          <Col span={6}>
+          <Col span={24}>
             <FormField name="description" />
           </Col>
         </Row>
