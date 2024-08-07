@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import { Col, Flex, Row } from "antd";
 
 import AddFeature from "./AddFeature";
@@ -7,11 +8,12 @@ import PricingPlanFeatures from "./PricingPlanFeature";
 import ButtonV1 from "@/components/button/CustomButton";
 import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
 import { Feature } from "@/interfaces/model/feature.type";
-import { Fee } from "@/interfaces/model/fee.type";
+import { PricingPlan } from "@/interfaces/model/landingPage.type";
 import {
   FeaturePlanFee,
   OverrateFeeAssociation,
   PricingPlanFormValues,
+  PricingPlanResponseItem,
 } from "@/interfaces/model/pricingplan.type";
 import { PricingPlanFeaturesType } from "@/interfaces/model/pricingplan.type";
 import { useGoToDashboardTab } from "@/utils/navigate";
@@ -23,7 +25,7 @@ interface DetailsProp {
   onSave: (dataSource: PricingPlanFeaturesType[]) => void;
   selectedRows?: FeaturePlanFee[];
   has_free_trial?: boolean;
-  recurrenceFee?: Fee | null;
+  editingRecord?: PricingPlan | null;
 }
 
 const PricingPlanDetails: React.FC<DetailsProp> = ({
@@ -33,8 +35,9 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
   selectedRows = [],
   onSave,
   has_free_trial = false,
-  recurrenceFee = null,
 }) => {
+  const methods = useFormContext<PricingPlanResponseItem>();
+  const recurrenceFee = methods.watch("recurrence_fee");
   const goToPricingPlan = useGoToDashboardTab("pricing-plan");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFeatures, setSelectedFeatures] = useState<Feature[]>([]);
@@ -171,16 +174,18 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
             deleteAllFeatures={deleteAllFeatures}
           />
         )}
-        {recurrenceFee && (
+        {recurrenceFee && dataSource.length > 0 && (
           <Flex justify="end">
-            <p style={{ color: "#9095A1" }}>
-              Price: {"$"}
-              {formatPrice(
-                recurrenceFee.price,
-                recurrenceFee.recurrence_cycle_count ?? 0,
-                recurrenceFee.recurrence_type ?? "",
-              )}
-            </p>
+            <span style={{ color: "#9095A1", fontWeight: 700, fontSize: 16 }}>
+              Total Fee:{" "}
+              <span style={{ color: "#62CD14" }}>
+                {formatPrice(
+                  recurrenceFee.price,
+                  recurrenceFee.recurrence_cycle_count ?? 0,
+                  recurrenceFee.recurrence_type ?? "",
+                )}
+              </span>
+            </span>
           </Flex>
         )}
       </Flex>

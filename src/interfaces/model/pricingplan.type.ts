@@ -42,11 +42,11 @@ export type PricingPlan = {
   recurrence_period?: string | null;
   is_active: boolean;
   features: PricingPlanFeature[];
+  recurrence_fee?: Fee | null;
 };
 
 export type PricingPlanResponseItem = Omit<PricingPlan, "features"> & {
   feature_plan_fees: FeaturePlanFee[];
-  recurrence_fee: Fee;
 };
 
 export type FeaturePlanFee = {
