@@ -175,19 +175,6 @@ const Page: React.FC<Props> = () => {
             ),
         )
         .map((item) => item.id) ?? null;
-
-    console.log(
-      "123",
-      editRecord?.feature_plan_fees.filter(
-        (item) =>
-          !featureList.some(
-            (feature) =>
-              feature.id === item.feature.id && "feature_plan_fee_id" in item,
-          ),
-      ),
-    );
-    console.log("editrecod", editRecord?.feature_plan_fees);
-    console.log("feature", featureList);
     const add = featureList
       .filter((item) => !("feature_plan_fee_id" in item))
       .map(getFeatureAssociation);

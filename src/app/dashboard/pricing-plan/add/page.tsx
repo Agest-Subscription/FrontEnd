@@ -73,7 +73,7 @@ const Page: React.FC<Props> = () => {
   }
   const start_date = methods.watch("start_date");
 
-  const fields = useGenerateFields(start_date);
+  const fields = useGenerateFields(start_date, methods);
 
   const formatPayload = (
     data: PricingPlanFormValues,
