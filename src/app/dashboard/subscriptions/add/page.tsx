@@ -27,11 +27,6 @@ const Page: React.FC<Props> = () => {
     resolver: yupResolver(subscriptionFormValuesSchema),
   });
 
-  const checkFirstTime=(user_id: string, pricing_plan_id: string)=>{
-    const {data: isAlreadySubscribed} = useCheckFirstTime(user_id, pricing_plan_id);
-    return isAlreadySubscribed ?? false;
-  }
-
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "successpopup",
     popup_text: `${capitalize("Are you sure to create a new subscription?")}`,
@@ -68,7 +63,7 @@ const Page: React.FC<Props> = () => {
     });
   }
 
-  const fields = useGenerateFields(methods, false, null, checkFirstTime);
+  const fields = useGenerateFields(methods, false, null);
 
   const handleSave = async () => {
     const isValid = await methods.trigger();
