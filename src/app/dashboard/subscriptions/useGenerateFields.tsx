@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Spin } from "antd";
 import dayjs from "dayjs";
@@ -19,13 +19,12 @@ export const useGenerateFields = (
   methods: UseFormReturn<SubscriptionFormValues, any, undefined>,
   isEdit: boolean,
   pricingPlan: PricingPlanTableData | null,
-  checkFirstTime: (user_id: string, pricing_plan_id: string) => boolean,
 ) => {
   const userId = methods.watch("user_id");
   const pricingPlanId = methods.watch("pricing_plan_id");
 
-  const  {data: isAlreadySubscribed}  = useCheckFirstTime(userId, pricingPlanId);
   const [isPricingPlanChange, setIsPricingPlanChange] = useState(false);
+
 
   if (isEdit) {
     methods.setValue("pricing_plan", pricingPlan);
@@ -66,29 +65,20 @@ export const useGenerateFields = (
       };
     };
 
-    const caculateDueDateFreeTrial = () => {
-      const pricingPlan = methods.getValues("pricing_plan");
-      const start_date = methods.getValues("start_date");
+    const caculateAllDateFields = () => {
+      // const user_id = methods.watch("user_id");
+      // const pricing_plan_id = methods.watch("pricing_plan_id");
+      // const start_date = methods.watch("start_date");
+    
+      // if(user_id && pricing_plan_id && isAlreadySubscribed?.data !== undefined){
+      //   caculateDueDateFreeTrial();
 
-      console.log("123", isAlreadySubscribed)
-      if (start_date && pricingPlan) {
-        const free_trial_type = pricingPlan.free_trial_period;
-        const free_trial_cycle = pricingPlan.free_trial_period_count ?? 0;
-
-        const due_date_free_trial = dayjs(start_date)
-          .add(free_trial_cycle, free_trial_type as ManipulateType | undefined)
-          .subtract(1, "minute")
-          .toISOString();
-
-        
-        if (free_trial_cycle != 0 && !isAlreadySubscribed) {
-          methods.setValue("due_date_free_trial", due_date_free_trial);
-        } else {
-          methods.setValue("due_date_free_trial", null);
-        }
-      }
+      //   if(start_date){
+      //     caculateEndDate();
+      //     caculateNextBillingDate();  
+      //   }
+      // }
     }
-
     const caculateNextBillingDate = () => {
       const pricingPlan = methods.getValues("pricing_plan");
       const end_date = methods.getValues("end_date");
@@ -231,10 +221,7 @@ export const useGenerateFields = (
             setPricingPlanSearchTerm("");
             methods.setValue("pricing_plan", getPricingPlanById(value) ?? null);
             setIsPricingPlanChange(true);
-
-            caculateDueDateFreeTrial();
-            caculateEndDate();
-            caculateNextBillingDate();
+            caculateAllDateFields();
           },
           allowClear: true,
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
@@ -265,9 +252,7 @@ export const useGenerateFields = (
         componentProps: {
           onChange: () => {
             assignLocaleTimeForToday();
-            caculateDueDateFreeTrial();
-            caculateEndDate();
-            caculateNextBillingDate();
+            caculateAllDateFields();
           },
           isRequired: true,
           minDate: dayjs(),
@@ -332,7 +317,9 @@ export const useGenerateFields = (
     isPricingPlanChange, 
     setIsPricingPlanChange,
     isEdit,
+    isAlreadySubscribed,
     methods,
+    refetch,
   ]);
 
   return fields;

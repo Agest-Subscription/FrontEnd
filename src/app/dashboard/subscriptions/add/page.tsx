@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
@@ -17,6 +17,9 @@ import subscriptionFormValuesSchema from "@/schema/subscription";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
+import pricingPlan from "@/schema/pricingPlan";
+import dayjs from "dayjs";
+import { ManipulateType } from "dayjs";
 type Props = {};
 const Page: React.FC<Props> = () => {
   const goToSubscription = useGoToDashboardTab("subscriptions");
@@ -26,11 +29,38 @@ const Page: React.FC<Props> = () => {
     mode: "onBlur",
     resolver: yupResolver(subscriptionFormValuesSchema),
   });
+  const userId = methods.watch("user_id");
+  const pricingPlanId = methods.watch("pricing_plan_id");
+  const  {data: isAlreadySubscribed, refetch, isLoading}  = useCheckFirstTime(userId, pricingPlanId);
+  const caculateDueDateFreeTrial = () => {
+    if (isLoading) return;
+    const pricingPlan = methods.getValues("pricing_plan");
+    const { free_trial_period: freeTrialType, free_trial_period_count: freeTrialCycle = 0 } = pricingPlan;
+      const isFirstTime = isAlreadySubscribed?.data?.is_first_time;
+      console.log("123",pricingPlan)
+      if(isFirstTime || freeTrialCycle === 0){
+        methods.setValue("due_date_free_trial", null)
+        return;
+      }
+    
+    const start_date = methods.getValues("start_date");
+  
+    if (!start_date || !pricingPlan || isFirstTime) return;
+  
+  
+    if (freeTrialCycle === 0) return;
+  
+    const dueDateFreeTrial = dayjs(start_date)
+      .add(freeTrialCycle ?? 0, freeTrialType as ManipulateType | undefined)
+      .subtract(1, "minute")
+      .toISOString();
+  
+    methods.setValue("due_date_free_trial", dueDateFreeTrial);
+  };
 
-  const checkFirstTime=(user_id: string, pricing_plan_id: string)=>{
-    const {data: isAlreadySubscribed} = useCheckFirstTime(user_id, pricing_plan_id);
-    return isAlreadySubscribed ?? false;
-  }
+  useEffect(()=>{
+    caculateDueDateFreeTrial();
+  },[isAlreadySubscribed,methods.watch("start_date")])
 
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "successpopup",
@@ -68,7 +98,7 @@ const Page: React.FC<Props> = () => {
     });
   }
 
-  const fields = useGenerateFields(methods, false, null, checkFirstTime);
+  const fields = useGenerateFields(methods, false, null);
 
   const handleSave = async () => {
     const isValid = await methods.trigger();

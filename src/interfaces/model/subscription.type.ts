@@ -1,4 +1,5 @@
 import { FilterBase } from "../base";
+import { PricingPlan } from "./landingPage.type";
 import { PricingPlanTableData } from "./pricingplan.type";
 
 export type Subscription = {
@@ -35,7 +36,7 @@ export type SubscriptionFilterParams = FilterBase<SubscriptionResponseItem>;
 
 export type SubscriptionFormValues = Omit<Subscription, "id"> & {
   pricing_plan_id: string;
-  pricing_plan?: PricingPlanTableData | null;
+  pricing_plan?: PricingPlan | null;
 };
 
 export type AddSubscriptionPayload = SubscriptionFormValues;
