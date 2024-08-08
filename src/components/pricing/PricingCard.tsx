@@ -2,12 +2,11 @@ import React from "react";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { Button, Flex, Typography } from "antd";
 
-import { PricingPlan } from "@/interfaces/model/pricingplan.type";
-import { capitalize } from "@/utils/string";
-
+import { LandingPage } from "@/interfaces/model/landingPage.type";
+import { capitalize, formatDuration } from "@/utils/string";
 type Props = {
   isPrimary?: boolean;
-  PricingPlan: PricingPlan;
+  PricingPlan: LandingPage;
 };
 
 const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
@@ -72,22 +71,24 @@ const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
             color: styles.colorTitle,
           }}
         >
-          {PricingPlan.name}
+          {PricingPlan.pricing_plan.name}
         </Typography>
         <Typography style={{ fontSize: 16, fontWeight: 400 }}>
-          {PricingPlan.description}
+          {PricingPlan.pricing_plan.name}
         </Typography>
         <Typography style={{ fontSize: 40, fontWeight: 700 }}>
-          ${PricingPlan.price}
-          <sup style={{ fontSize: 14, fontWeight: 400 }}>/month</sup>
+          ${PricingPlan.pricing_plan.recurrence_fee.price}
+          <sup style={{ fontSize: 14, fontWeight: 400 }}>
+            /{formatDuration(PricingPlan.pricing_plan.recurrence_period)}
+          </sup>
         </Typography>
 
         <Flex vertical>
-          {PricingPlan.features.map((feature) => (
-            <Flex gap={8} key={feature.feature.id}>
+          {PricingPlan.pricing_plan.feature_plan_fees.map((feature, index) => (
+            <Flex gap={8} key={index}>
               <CheckCircleOutlined style={{ color: "green" }} />
               <Typography style={{ fontSize: 16, fontWeight: 400 }}>
-                {capitalize(feature.feature.name)}
+                {capitalize(feature.feature?.description ?? "")}
               </Typography>
             </Flex>
           ))}

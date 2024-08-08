@@ -8,12 +8,12 @@ import {
 } from "react-hook-form";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Flex, Form, Select, Spin } from "antd";
-import { debounce, endsWith } from "lodash";
+import { debounce } from "lodash";
 
 import { useGetInfiniteRecurrencePeriod } from "@/hooks/landingPage";
-import { useGetInfinitePricingPlanByRecurrencePeriod } from "@/hooks/pricingPlan";
+import { useGetInfinitePricingPlans } from "@/hooks/pricingPlan";
 import { popUpPropType } from "@/interfaces/popup";
-import { capitalize } from "@/utils/string";
+import { capitalize, formatDuration } from "@/utils/string";
 
 type Props = {
   control: Control<FieldValues, any>;
@@ -50,22 +50,18 @@ const LandingPageComponent = ({
     isFetchingNextPage,
     isInitialLoading,
     setSearchTerm,
-  } = useGetInfinitePricingPlanByRecurrencePeriod({
+  } = useGetInfinitePricingPlans({
     page_size: 10,
+    is_active: true,
     recurrence_period: methods.watch(`landing_page_items.${index}.period`),
   });
-
-  const formatPeriod = (date: string) => {
-    const [number, unit] = date.split(" ");
-    return `${number} ${unit}${number === "1" ? "" : "s"}`;
-  };
 
   const mappedRecurrencePeriods = useMemo(() => {
     return recurrencePeriodPage?.pages
       .map((page) =>
         page.data.data.map((item) => ({
           value: item.recurrence_period,
-          label: formatPeriod(item.recurrence_period),
+          label: formatDuration(item.recurrence_period),
         })),
       )
       .flat();
@@ -151,11 +147,7 @@ const LandingPageComponent = ({
     const plan = mappedPricingPlans.find((option) => option.value === id);
     const period = methods.watch(`landing_page_items.${index}.period`);
 
-    let [, unit] = period.split(" ");
-
-    endsWith(unit, "s") ? (unit = unit.slice(0, -1)) : unit;
-
-    return plan ? ` $${plan.price}/${unit}` : "";
+    return plan ? ` $${plan.price}/${formatDuration(period)}` : "";
   };
 
   const filteredRecurrencePeriods = useMemo(() => {
