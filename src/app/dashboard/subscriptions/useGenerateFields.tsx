@@ -7,24 +7,20 @@ import { debounce } from "lodash";
 
 import { DATE_FORMAT_V2 } from "@/constants/date";
 import {
+  useCheckFirstTime,
   useGetInfinitePricingPlan,
   useGetInfiniteUser,
-  useCheckFirstTime,
 } from "@/hooks/subscription";
 import { FieldsData } from "@/interfaces/form";
-import { PricingPlanTableData } from "@/interfaces/model/pricingplan.type";
+import { PricingPlan } from "@/interfaces/model/pricingplan.type";
 import { SubscriptionFormValues } from "@/interfaces/model/subscription.type";
 
 export const useGenerateFields = (
   methods: UseFormReturn<SubscriptionFormValues, any, undefined>,
   isEdit: boolean,
-  pricingPlan: PricingPlanTableData | null,
+  pricingPlan: PricingPlan | null,
 ) => {
-  const userId = methods.watch("user_id");
-  const pricingPlanId = methods.watch("pricing_plan_id");
-
   const [isPricingPlanChange, setIsPricingPlanChange] = useState(false);
-
 
   if (isEdit) {
     methods.setValue("pricing_plan", pricingPlan);
@@ -53,37 +49,22 @@ export const useGenerateFields = (
   });
 
   const fields = useMemo<FieldsData<SubscriptionFormValues>>(() => {
-
     const suspendedDate = () => {
       const is_cancelled = methods.getValues("is_cancelled");
       if (is_cancelled) {
         methods.setValue("suspended_date", dayjs().toISOString());
-        methods.setValue("next_billing_date", null)
+        methods.setValue("next_billing_date", null);
       } else {
-        methods.setValue("suspended_date", null)
+        methods.setValue("suspended_date", null);
         caculateNextBillingDate();
-      };
+      }
     };
 
-    const caculateAllDateFields = () => {
-      // const user_id = methods.watch("user_id");
-      // const pricing_plan_id = methods.watch("pricing_plan_id");
-      // const start_date = methods.watch("start_date");
-    
-      // if(user_id && pricing_plan_id && isAlreadySubscribed?.data !== undefined){
-      //   caculateDueDateFreeTrial();
-
-      //   if(start_date){
-      //     caculateEndDate();
-      //     caculateNextBillingDate();  
-      //   }
-      // }
-    }
     const caculateNextBillingDate = () => {
       const pricingPlan = methods.getValues("pricing_plan");
       const end_date = methods.getValues("end_date");
 
-      if (end_date && pricingPlan) {
+      if (end_date && pricingPlan && pricingPlan.recurrence_period) {
         const recurrence_period = pricingPlan.recurrence_period.split(" ");
         const recurrence_cycle = Number(recurrence_period[0]);
         const recurrence_type = recurrence_period[1];
@@ -106,30 +87,36 @@ export const useGenerateFields = (
           methods.setValue("next_billing_date", next_billing_date);
         }
       }
-    }
+    };
 
     const caculateEndDate = () => {
       const pricingPlan = methods.getValues("pricing_plan");
       const start_date = methods.getValues("start_date");
       const due_date_free_trial = methods.getValues("due_date_free_trial");
-      
-      if (start_date && pricingPlan) {
-        const recurrence_period = pricingPlan.recurrence_period.split(" ");
+
+      if (start_date && pricingPlan && pricingPlan.recurrence_period) {
+        const recurrence_period = pricingPlan?.recurrence_period.split(" ");
         const recurrence_cycle = Number(recurrence_period[0]);
         const recurrence_type = recurrence_period[1];
 
-        if(due_date_free_trial){
+        if (due_date_free_trial) {
           const end_date = dayjs(due_date_free_trial)
-          .add(recurrence_cycle, recurrence_type as ManipulateType | undefined)
-          .subtract(1, "minute")
-          .toISOString();
-        methods.setValue("end_date", end_date);
-        }else{
+            .add(
+              recurrence_cycle,
+              recurrence_type as ManipulateType | undefined,
+            )
+            .subtract(1, "minute")
+            .toISOString();
+          methods.setValue("end_date", end_date);
+        } else {
           const end_date = dayjs(start_date)
-          .add(recurrence_cycle, recurrence_type as ManipulateType | undefined)
-          .subtract(1, "minute")
-          .toISOString();
-        methods.setValue("end_date", end_date);
+            .add(
+              recurrence_cycle,
+              recurrence_type as ManipulateType | undefined,
+            )
+            .subtract(1, "minute")
+            .toISOString();
+          methods.setValue("end_date", end_date);
         }
       }
     };
@@ -151,7 +138,7 @@ export const useGenerateFields = (
         })),
       ) ?? [];
 
-    const getPricingPlanById = (id: string): PricingPlanTableData | null => {
+    const getPricingPlanById = (id: string): PricingPlan | null => {
       const item = mappedPricingPlans.find((item) => item.value === id);
       return item?.pricing_plan ?? null;
     };
@@ -221,7 +208,6 @@ export const useGenerateFields = (
             setPricingPlanSearchTerm("");
             methods.setValue("pricing_plan", getPricingPlanById(value) ?? null);
             setIsPricingPlanChange(true);
-            caculateAllDateFields();
           },
           allowClear: true,
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
@@ -252,12 +238,11 @@ export const useGenerateFields = (
         componentProps: {
           onChange: () => {
             assignLocaleTimeForToday();
-            caculateAllDateFields();
           },
           isRequired: true,
           minDate: dayjs(),
           format: DATE_FORMAT_V2,
-          disabled: isEdit && !isPricingPlanChange
+          disabled: isEdit && !isPricingPlanChange,
         },
       },
       due_date_free_trial: {
@@ -314,7 +299,7 @@ export const useGenerateFields = (
     setPricingPlanSearchTerm,
     fetchNextUserPage,
     fetchNextPricingPlanPage,
-    isPricingPlanChange, 
+    isPricingPlanChange,
     setIsPricingPlanChange,
     isEdit,
     methods,

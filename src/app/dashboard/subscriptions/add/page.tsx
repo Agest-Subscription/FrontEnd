@@ -17,9 +17,8 @@ import subscriptionFormValuesSchema from "@/schema/subscription";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
-import pricingPlan from "@/schema/pricingPlan";
-import dayjs from "dayjs";
-import { ManipulateType } from "dayjs";
+
+
 type Props = {};
 const Page: React.FC<Props> = () => {
   const goToSubscription = useGoToDashboardTab("subscriptions");
@@ -29,39 +28,6 @@ const Page: React.FC<Props> = () => {
     mode: "onBlur",
     resolver: yupResolver(subscriptionFormValuesSchema),
   });
-  const userId = methods.watch("user_id");
-  const pricingPlanId = methods.watch("pricing_plan_id");
-  const {
-    data: isAlreadySubscribed,
-    refetch,
-    isLoading,
-  } = useCheckFirstTime(userId, pricingPlanId);
-  const start_date = methods.watch("start_date");
-  useEffect(() => {
-    const caculateDueDateFreeTrial = () => {
-      if (isLoading) return;
-      const pricingPlan = methods.getValues("pricing_plan");
-      const isFirstTime = isAlreadySubscribed?.data?.is_first_time;
-      console.log("123", pricingPlan);
-      if (isFirstTime || pricingPlan?.has_free_trial === false) {
-        methods.setValue("due_date_free_trial", null);
-        return;
-      }
-
-      if (!start_date || !pricingPlan || isFirstTime) return;
-
-      const dueDateFreeTrial = dayjs(start_date)
-        .add(
-          pricingPlan.free_trial_period_count ?? 0,
-          pricingPlan.free_trial_period as ManipulateType | undefined,
-        )
-        .subtract(1, "minute")
-        .toISOString();
-
-      methods.setValue("due_date_free_trial", dueDateFreeTrial);
-    };
-    caculateDueDateFreeTrial();
-  }, [isAlreadySubscribed, isLoading, methods, start_date]);
 
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "successpopup",

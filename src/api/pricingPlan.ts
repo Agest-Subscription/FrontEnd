@@ -2,14 +2,14 @@ import { axiosClient } from "@/config/axios/client";
 import { GetListResponse } from "@/interfaces/base";
 import {
   AddPricingPlanPayload,
+  PricingPlan,
   PricingPlanFilterParams,
   PricingPlanResponseItem,
-  PricingPlanTableData,
   UpdatePricingPlanPayload,
 } from "@/interfaces/model/pricingplan.type";
 
 export const getListPricingPlansApi = (params: PricingPlanFilterParams) => {
-  return axiosClient.get<GetListResponse<PricingPlanTableData>>(
+  return axiosClient.get<GetListResponse<PricingPlan>>(
     "pricing-plans",
     {
       params,

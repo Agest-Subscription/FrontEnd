@@ -20,7 +20,7 @@ export type SubscriptionTableData = Omit<Subscription, "user_id" | "email"> & {
     id: string;
     email: string;
   };
-  pricing_plan?: PricingPlanTableData;
+  pricing_plan?: PricingPlan;
 };
 
 export type SubscriptionResponseItem = Subscription & {
@@ -28,7 +28,7 @@ export type SubscriptionResponseItem = Subscription & {
     id: string;
     email: string;
   };
-  pricing_plan: PricingPlanTableData;
+  pricing_plan: PricingPlan;
 };
 
 export type SubscriptionFilterParams = FilterBase<SubscriptionResponseItem>;
