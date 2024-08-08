@@ -63,15 +63,18 @@ const PricingCarousel = ({ PricingList, pricingPeriod }: Props) => {
       (plan) => plan.pricing_plan.recurrence_period === pricingPeriod,
     );
 
-    if (filterList.length === 3) {
-      const premiumIndex = filterList.findIndex(
-        (item) => item.priority === "premium",
-      );
+    const priorities = ["basic", "pro", "premium"];
 
-      if (premiumIndex !== -1) {
-        const [premiumItem] = filterList.splice(premiumIndex, 1);
-        filterList.splice(1, 0, premiumItem);
-      }
+    if (filterList.length === 3) {
+      filterList.sort(
+        (a, b) =>
+          priorities.indexOf(a.priority) - priorities.indexOf(b.priority),
+      );
+    } else if (filterList.length === 2) {
+      filterList.sort(
+        (a, b) =>
+          priorities.indexOf(a.priority) - priorities.indexOf(b.priority),
+      );
     }
 
     setMapPeriod(filterList);
@@ -83,13 +86,17 @@ const PricingCarousel = ({ PricingList, pricingPeriod }: Props) => {
     <div ref={containerRef}>
       <AnimatedFlex animate={animate}>
         <Flex justify={"center"} align={"center"}>
-          {mapPeriod.map((plan) =>
-            plan.priority === "premium" ? (
-              <PricingCard isPrimary key={plan.id} PricingPlan={plan} />
-            ) : (
-              <PricingCard key={plan.id} PricingPlan={plan} />
-            ),
-          )}
+          {mapPeriod.map((plan) => {
+            if (plan.priority === "premium") {
+              return <PricingCard isPrimary key={plan.id} PricingPlan={plan} />;
+            } else if (mapPeriod.length === 1) {
+              return <PricingCard isPrimary key={plan.id} PricingPlan={plan} />;
+            } else if (mapPeriod.length === 2 && plan.priority === "pro") {
+              return <PricingCard isPrimary key={plan.id} PricingPlan={plan} />;
+            } else {
+              return <PricingCard key={plan.id} PricingPlan={plan} />;
+            }
+          })}
         </Flex>
       </AnimatedFlex>
     </div>
