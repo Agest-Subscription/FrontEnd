@@ -124,7 +124,7 @@ export const useCheckFirstTime = (user_id: string, pricing_plan_id: string) => {
   return useQuery({
     queryKey: ["checkFirstTime", user_id, pricing_plan_id],
     queryFn: () => getCheckFirstTime(user_id, pricing_plan_id),
-    select: (response) => response?.data,
+    select: (response) => response?.data.is_first_time,
     enabled: !!user_id && !!pricing_plan_id,
   });
 };

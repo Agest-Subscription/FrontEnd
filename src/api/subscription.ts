@@ -33,6 +33,9 @@ export const deleteSubscriptionApi = (id: string) => {
   return axiosClient.delete(`subscriptions/${id}`);
 };
 
+type response = {
+  is_first_time: boolean;
+}
 export const getCheckFirstTime = (user_id: string, pricing_plan_id: string) => {
-  return axiosClient.get<boolean>(`subscriptions/check-first-time?user_id=${user_id}&pricing_plan_id=${pricing_plan_id}`);
+  return axiosClient.get<response>(`subscriptions/check-first-time?user_id=${user_id}&pricing_plan_id=${pricing_plan_id}`);
 };

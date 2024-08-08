@@ -21,8 +21,12 @@ export const useGenerateFields = (
   pricingPlan: PricingPlanTableData | null,
   checkFirstTime: (user_id: string, pricing_plan_id: string) => boolean,
 ) => {
+  const userId = methods.watch("user_id");
+  const pricingPlanId = methods.watch("pricing_plan_id");
+
+  const  {data: isAlreadySubscribed}  = useCheckFirstTime(userId, pricingPlanId);
   const [isPricingPlanChange, setIsPricingPlanChange] = useState(false);
-  const [isFirstTime, setIsFirstTime] = useState(false);
+
   if (isEdit) {
     methods.setValue("pricing_plan", pricingPlan);
   }
@@ -48,12 +52,8 @@ export const useGenerateFields = (
     page_size: 10,
     is_active: true,
   });
-  const user_id = methods.watch("user_id");
-    const pricingPlan_id = methods.watch("pricing_plan.id");
 
   const fields = useMemo<FieldsData<SubscriptionFormValues>>(() => {
-    
-    const isAlreadySubscribed = checkFirstTime(user_id, pricingPlan_id)
 
     const suspendedDate = () => {
       const is_cancelled = methods.getValues("is_cancelled");
@@ -66,23 +66,12 @@ export const useGenerateFields = (
       };
     };
 
-    const checkIfAlreadfySubscribed = () => {
-      
-      if(user_id && pricingPlan_id){
-        console.log("123", isAlreadySubscribed)
-        if(isAlreadySubscribed){
-          setIsFirstTime(isAlreadySubscribed);
-          caculateDueDateFreeTrial();
-          caculateEndDate();
-          caculateNextBillingDate();
-        }
-      }
-    };
     const caculateDueDateFreeTrial = () => {
       const pricingPlan = methods.getValues("pricing_plan");
       const start_date = methods.getValues("start_date");
 
-      if (start_date && pricingPlan && !isFirstTime) {
+      console.log("123", isAlreadySubscribed)
+      if (start_date && pricingPlan) {
         const free_trial_type = pricingPlan.free_trial_period;
         const free_trial_cycle = pricingPlan.free_trial_period_count ?? 0;
 
@@ -90,13 +79,13 @@ export const useGenerateFields = (
           .add(free_trial_cycle, free_trial_type as ManipulateType | undefined)
           .subtract(1, "minute")
           .toISOString();
-        if (free_trial_cycle != 0) {
+
+        
+        if (free_trial_cycle != 0 && !isAlreadySubscribed) {
           methods.setValue("due_date_free_trial", due_date_free_trial);
         } else {
           methods.setValue("due_date_free_trial", null);
         }
-      }else {
-        methods.setValue("due_date_free_trial", null);
       }
     }
 
@@ -208,7 +197,6 @@ export const useGenerateFields = (
           onChange: (value) => {
             setUserSearchTerm("");
             methods.setValue("user_id", value);
-            checkIfAlreadfySubscribed();
           },
           allowClear: true,
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
@@ -243,7 +231,10 @@ export const useGenerateFields = (
             setPricingPlanSearchTerm("");
             methods.setValue("pricing_plan", getPricingPlanById(value) ?? null);
             setIsPricingPlanChange(true);
-            checkIfAlreadfySubscribed();
+
+            caculateDueDateFreeTrial();
+            caculateEndDate();
+            caculateNextBillingDate();
           },
           allowClear: true,
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
@@ -340,8 +331,6 @@ export const useGenerateFields = (
     fetchNextPricingPlanPage,
     isPricingPlanChange, 
     setIsPricingPlanChange,
-    isFirstTime, 
-    setIsFirstTime,
     isEdit,
     methods,
   ]);
