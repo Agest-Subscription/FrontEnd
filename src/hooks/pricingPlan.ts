@@ -78,7 +78,7 @@ export const useGetInfinitePricingPlans = (params: PricingPlanFilterParams) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const query = useInfiniteQuery({
-    queryKey: ["PRICING_PLANS", searchTerm, params],
+    queryKey: [PRICING_PLANS, searchTerm, params],
     queryFn: ({ pageParam = 1 }) =>
       getListPricingPlansApi({
         ...params,
@@ -101,7 +101,7 @@ export const useGetInfinitePricingPlanByRecurrencePeriod = (
   const [searchTerm, setSearchTerm] = useState("");
 
   const query = useInfiniteQuery({
-    queryKey: ["PRICING_PLANS", searchTerm, params],
+    queryKey: [PRICING_PLANS, searchTerm, params],
     queryFn: ({ pageParam = 1 }) =>
       getListPricingPlansApi({
         ...params,

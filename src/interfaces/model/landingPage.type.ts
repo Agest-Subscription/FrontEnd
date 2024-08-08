@@ -1,5 +1,9 @@
 import { FilterBase } from "../base";
 
+export type Feature = {
+  feature: { description: string };
+};
+
 export type recurrenceFee = {
   id: string;
   price: number;
@@ -13,6 +17,7 @@ export type PricingPlan = {
   recurrence_fee: recurrenceFee;
   recurrence_period: string;
   description: string | null;
+  feature_plan_fees: Feature[];
 };
 
 export type PricingPlanGroupByPeriod = {

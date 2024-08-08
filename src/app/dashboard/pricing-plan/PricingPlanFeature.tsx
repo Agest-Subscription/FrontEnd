@@ -128,7 +128,7 @@ const PricingPlanFeatures: React.FC<Props> = ({
           return {
             ...item,
             fee: selectedFee || null, // Ensure fee is either Fee or null
-            price: selectedFee?.price || null,
+            price: selectedFee?.price || 0,
             children: selectedFee?.overrate_fees?.length
               ? mapOverrateFee(selectedFee.overrate_fees, item.id)
               : null,

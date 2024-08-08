@@ -77,7 +77,7 @@ export const useDeleteFee = () => {
 export const useGetInfiniteFee = (params: FeeFilterParams) => {
   const [searchTerm, setSearchTerm] = useState("");
   const query = useInfiniteQuery({
-    queryKey: ["FEES", params, searchTerm],
+    queryKey: [FEES, params, searchTerm],
     queryFn: ({ pageParam = 1 }) =>
       getListFeesApi({ ...params, search: searchTerm, page: pageParam }),
     getNextPageParam: (lastPage, pages) => {
