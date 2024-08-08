@@ -9,6 +9,7 @@ import { DATE_FORMAT_V2 } from "@/constants/date";
 import {
   useGetInfinitePricingPlan,
   useGetInfiniteUser,
+  useCheckFirstTime,
 } from "@/hooks/subscription";
 import { FieldsData } from "@/interfaces/form";
 import { PricingPlanTableData } from "@/interfaces/model/pricingplan.type";
@@ -18,8 +19,10 @@ export const useGenerateFields = (
   methods: UseFormReturn<SubscriptionFormValues, any, undefined>,
   isEdit: boolean,
   pricingPlan: PricingPlanTableData | null,
+  checkFirstTime: (user_id: string, pricing_plan_id: string) => boolean,
 ) => {
   const [isPricingPlanChange, setIsPricingPlanChange] = useState(false);
+  const [isFirstTime, setIsFirstTime] = useState(false);
   if (isEdit) {
     methods.setValue("pricing_plan", pricingPlan);
   }
@@ -45,8 +48,13 @@ export const useGenerateFields = (
     page_size: 10,
     is_active: true,
   });
+  const user_id = methods.watch("user_id");
+    const pricingPlan_id = methods.watch("pricing_plan.id");
 
   const fields = useMemo<FieldsData<SubscriptionFormValues>>(() => {
+    
+    const isAlreadySubscribed = checkFirstTime(user_id, pricingPlan_id)
+
     const suspendedDate = () => {
       const is_cancelled = methods.getValues("is_cancelled");
       if (is_cancelled) {
@@ -54,27 +62,27 @@ export const useGenerateFields = (
         methods.setValue("next_billing_date", null)
       } else {
         methods.setValue("suspended_date", null)
-        caculateEndDate()
+        caculateNextBillingDate();
       };
     };
 
     const checkIfAlreadfySubscribed = () => {
-      const user_id = methods.getValues("user_id");
-      const pricingPlan_id = methods.getValues("pricing_plan.id");
-
+      
       if(user_id && pricingPlan_id){
-        console.log(pricingPlan_id)
+        console.log("123", isAlreadySubscribed)
+        if(isAlreadySubscribed){
+          setIsFirstTime(isAlreadySubscribed);
+          caculateDueDateFreeTrial();
+          caculateEndDate();
+          caculateNextBillingDate();
+        }
       }
     };
-
-    const caculateEndDate = () => {
+    const caculateDueDateFreeTrial = () => {
       const pricingPlan = methods.getValues("pricing_plan");
       const start_date = methods.getValues("start_date");
 
-      if (start_date && pricingPlan) {
-        const recurrence_period = pricingPlan.recurrence_period.split(" ");
-        const recurrence_cycle = Number(recurrence_period[0]);
-        const recurrence_type = recurrence_period[1];
+      if (start_date && pricingPlan && !isFirstTime) {
         const free_trial_type = pricingPlan.free_trial_period;
         const free_trial_cycle = pricingPlan.free_trial_period_count ?? 0;
 
@@ -87,20 +95,29 @@ export const useGenerateFields = (
         } else {
           methods.setValue("due_date_free_trial", null);
         }
+      }else {
+        methods.setValue("due_date_free_trial", null);
+      }
+    }
+
+    const caculateNextBillingDate = () => {
+      const pricingPlan = methods.getValues("pricing_plan");
+      const end_date = methods.getValues("end_date");
+
+      if (end_date && pricingPlan) {
+        const recurrence_period = pricingPlan.recurrence_period.split(" ");
+        const recurrence_cycle = Number(recurrence_period[0]);
+        const recurrence_type = recurrence_period[1];
 
         if (recurrence_cycle === 2 && recurrence_type === "day") {
-          const next_billing_date = dayjs(start_date)
-            .add(
-              recurrence_cycle,
-              recurrence_type as ManipulateType | undefined,
-            )
+          const next_billing_date = dayjs(end_date)
             .subtract(1, "day")
             .toISOString();
           methods.setValue("next_billing_date", next_billing_date);
         } else if (recurrence_cycle === 1 && recurrence_type === "day") {
           methods.setValue("next_billing_date", null);
         } else {
-          const next_billing_date = dayjs(start_date)
+          const next_billing_date = dayjs(end_date)
             .add(
               recurrence_cycle,
               recurrence_type as ManipulateType | undefined,
@@ -109,13 +126,35 @@ export const useGenerateFields = (
             .toISOString();
           methods.setValue("next_billing_date", next_billing_date);
         }
-        const end_date = dayjs(start_date)
+      }
+    }
+
+    const caculateEndDate = () => {
+      const pricingPlan = methods.getValues("pricing_plan");
+      const start_date = methods.getValues("start_date");
+      const due_date_free_trial = methods.getValues("due_date_free_trial");
+      
+      if (start_date && pricingPlan) {
+        const recurrence_period = pricingPlan.recurrence_period.split(" ");
+        const recurrence_cycle = Number(recurrence_period[0]);
+        const recurrence_type = recurrence_period[1];
+
+        if(due_date_free_trial){
+          const end_date = dayjs(due_date_free_trial)
           .add(recurrence_cycle, recurrence_type as ManipulateType | undefined)
           .subtract(1, "minute")
           .toISOString();
         methods.setValue("end_date", end_date);
+        }else{
+          const end_date = dayjs(start_date)
+          .add(recurrence_cycle, recurrence_type as ManipulateType | undefined)
+          .subtract(1, "minute")
+          .toISOString();
+        methods.setValue("end_date", end_date);
+        }
       }
     };
+
     const mappedEmails =
       usersPage?.pages.flatMap((page) =>
         page.data.data.map((user) => ({
@@ -142,11 +181,10 @@ export const useGenerateFields = (
       const dayPicker = methods.getValues("start_date");
       if (dayPicker.toString() === now.format("YYYY-MM-DD")) {
         methods.setValue("start_date", dayjs().toISOString());
-        caculateEndDate();
       }
       methods.setValue("start_date", dayjs(dayPicker).toISOString());
-      caculateEndDate();
     };
+
     return {
       user_id: {
         label: "User ID",
@@ -205,7 +243,7 @@ export const useGenerateFields = (
             setPricingPlanSearchTerm("");
             methods.setValue("pricing_plan", getPricingPlanById(value) ?? null);
             setIsPricingPlanChange(true);
-            caculateEndDate();
+            checkIfAlreadfySubscribed();
           },
           allowClear: true,
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
@@ -236,6 +274,9 @@ export const useGenerateFields = (
         componentProps: {
           onChange: () => {
             assignLocaleTimeForToday();
+            caculateDueDateFreeTrial();
+            caculateEndDate();
+            caculateNextBillingDate();
           },
           isRequired: true,
           minDate: dayjs(),
@@ -299,6 +340,8 @@ export const useGenerateFields = (
     fetchNextPricingPlanPage,
     isPricingPlanChange, 
     setIsPricingPlanChange,
+    isFirstTime, 
+    setIsFirstTime,
     isEdit,
     methods,
   ]);

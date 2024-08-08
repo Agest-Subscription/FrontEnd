@@ -9,7 +9,7 @@ import { useGenerateFields } from "../useGenerateFields";
 
 import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
 import PopUp from "@/components/popup/Popup";
-import { useAddSubscription } from "@/hooks/subscription";
+import { useAddSubscription, useCheckFirstTime } from "@/hooks/subscription";
 import { CustomError } from "@/interfaces/base";
 import { SubscriptionFormValues } from "@/interfaces/model/subscription.type";
 import { popUpPropType } from "@/interfaces/popup";
@@ -26,6 +26,11 @@ const Page: React.FC<Props> = () => {
     mode: "onBlur",
     resolver: yupResolver(subscriptionFormValuesSchema),
   });
+
+  const checkFirstTime=(user_id: string, pricing_plan_id: string)=>{
+    const {data: isAlreadySubscribed} = useCheckFirstTime(user_id, pricing_plan_id);
+    return isAlreadySubscribed ?? false;
+  }
 
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "successpopup",
@@ -63,7 +68,7 @@ const Page: React.FC<Props> = () => {
     });
   }
 
-  const fields = useGenerateFields(methods, false, null);
+  const fields = useGenerateFields(methods, false, null, checkFirstTime);
 
   const handleSave = async () => {
     const isValid = await methods.trigger();
