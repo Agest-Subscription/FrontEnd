@@ -32,12 +32,12 @@ const SubscriptionDetails: React.FC<DetailsProp> = ({
     pricingPlanId,
   );
   const start_date = methods.watch("start_date");
+  const is_cancelled = methods.watch("is_cancelled");
   useEffect(() => {
     const caculateDueDateFreeTrial = () => {
       if (isLoading) return;
       const pricingPlan = methods.getValues("pricing_plan");
       const isFirstTime = isAlreadySubscribed?.data?.is_first_time;
-      console.log("123", pricingPlan);
       if (isFirstTime || pricingPlan?.has_free_trial === false) {
         methods.setValue("due_date_free_trial", null);
         return;
@@ -55,8 +55,83 @@ const SubscriptionDetails: React.FC<DetailsProp> = ({
 
       methods.setValue("due_date_free_trial", dueDateFreeTrial);
     };
+    const caculateEndDate = () => {
+      const pricingPlan = methods.getValues("pricing_plan");
+      const start_date = methods.getValues("start_date");
+      const due_date_free_trial = methods.getValues("due_date_free_trial");
+
+      if (start_date && pricingPlan && pricingPlan.recurrence_period) {
+        const recurrence_period = pricingPlan?.recurrence_period.split(" ");
+        const recurrence_cycle = Number(recurrence_period[0]);
+        const recurrence_type = recurrence_period[1];
+
+        if (due_date_free_trial) {
+          const end_date = dayjs(due_date_free_trial)
+            .add(
+              recurrence_cycle,
+              recurrence_type as ManipulateType | undefined,
+            )
+            .subtract(1, "minute")
+            .toISOString();
+          methods.setValue("end_date", end_date);
+        } else {
+          const end_date = dayjs(start_date)
+            .add(
+              recurrence_cycle,
+              recurrence_type as ManipulateType | undefined,
+            )
+            .subtract(1, "minute")
+            .toISOString();
+          methods.setValue("end_date", end_date);
+        }
+      }
+    };
+    const suspendedDate = () => {
+      const is_cancelled = methods.getValues("is_cancelled");
+      console.log(is_cancelled)
+      if (is_cancelled) {
+        methods.setValue("suspended_date", dayjs().toISOString());
+        methods.setValue("next_billing_date", null);
+      } else {
+        methods.setValue("suspended_date", null);
+        caculateNextBillingDate();
+      }
+    };
+
+    const caculateNextBillingDate = () => {
+      const pricingPlan = methods.getValues("pricing_plan");
+      const end_date = methods.getValues("end_date");
+
+      if (end_date && pricingPlan && pricingPlan.recurrence_period) {
+        const recurrence_period = pricingPlan.recurrence_period.split(" ");
+        const recurrence_cycle = Number(recurrence_period[0]);
+        const recurrence_type = recurrence_period[1];
+
+        if (recurrence_cycle === 2 && recurrence_type === "day") {
+          const next_billing_date = dayjs(end_date)
+            .subtract(1, "day")
+            .toISOString();
+          methods.setValue("next_billing_date", next_billing_date);
+        } else if (recurrence_cycle === 1 && recurrence_type === "day") {
+          methods.setValue("next_billing_date", null);
+        } else {
+          const next_billing_date = dayjs(end_date)
+            .add(
+              recurrence_cycle,
+              recurrence_type as ManipulateType | undefined,
+            )
+            .subtract(2, "day")
+            .toISOString();
+          methods.setValue("next_billing_date", next_billing_date);
+        }
+      }
+    };
+
     caculateDueDateFreeTrial();
-  }, [isAlreadySubscribed, isLoading, methods, start_date]);
+    caculateEndDate();
+    caculateNextBillingDate();
+    suspendedDate();
+  }, [isAlreadySubscribed, isLoading, methods, start_date, is_cancelled]);
 
   return (
     <>

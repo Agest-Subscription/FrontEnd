@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Spin } from "antd";
 import dayjs from "dayjs";
-import { ManipulateType } from "dayjs";
 import { debounce } from "lodash";
 
 import { DATE_FORMAT_V2 } from "@/constants/date";
@@ -11,6 +10,7 @@ import { useGetInfiniteUser } from "@/hooks/subscription";
 import { FieldsData } from "@/interfaces/form";
 import { PricingPlan } from "@/interfaces/model/pricingplan.type";
 import { SubscriptionFormValues } from "@/interfaces/model/subscription.type";
+import { NEXT_CACHE_TAG_MAX_LENGTH } from "next/dist/lib/constants";
 
 export const useGenerateFields = (
   methods: UseFormReturn<SubscriptionFormValues, any, undefined>,
@@ -43,81 +43,10 @@ export const useGenerateFields = (
   } = useGetInfinitePricingPlans({
     page_size: 10,
     is_active: true,
+    is_available: true,
   });
 
   const fields = useMemo<FieldsData<SubscriptionFormValues>>(() => {
-    const suspendedDate = () => {
-      const is_cancelled = methods.getValues("is_cancelled");
-      if (is_cancelled) {
-        methods.setValue("suspended_date", dayjs().toISOString());
-        methods.setValue("next_billing_date", null);
-      } else {
-        methods.setValue("suspended_date", null);
-        caculateNextBillingDate();
-      }
-    };
-
-    const caculateNextBillingDate = () => {
-      const pricingPlan = methods.getValues("pricing_plan");
-      const end_date = methods.getValues("end_date");
-
-      if (end_date && pricingPlan && pricingPlan.recurrence_period) {
-        const recurrence_period = pricingPlan.recurrence_period.split(" ");
-        const recurrence_cycle = Number(recurrence_period[0]);
-        const recurrence_type = recurrence_period[1];
-
-        if (recurrence_cycle === 2 && recurrence_type === "day") {
-          const next_billing_date = dayjs(end_date)
-            .subtract(1, "day")
-            .toISOString();
-          methods.setValue("next_billing_date", next_billing_date);
-        } else if (recurrence_cycle === 1 && recurrence_type === "day") {
-          methods.setValue("next_billing_date", null);
-        } else {
-          const next_billing_date = dayjs(end_date)
-            .add(
-              recurrence_cycle,
-              recurrence_type as ManipulateType | undefined,
-            )
-            .subtract(2, "day")
-            .toISOString();
-          methods.setValue("next_billing_date", next_billing_date);
-        }
-      }
-    };
-
-    const caculateEndDate = () => {
-      const pricingPlan = methods.getValues("pricing_plan");
-      const start_date = methods.getValues("start_date");
-      const due_date_free_trial = methods.getValues("due_date_free_trial");
-
-      if (start_date && pricingPlan && pricingPlan.recurrence_period) {
-        const recurrence_period = pricingPlan?.recurrence_period.split(" ");
-        const recurrence_cycle = Number(recurrence_period[0]);
-        const recurrence_type = recurrence_period[1];
-
-        if (due_date_free_trial) {
-          const end_date = dayjs(due_date_free_trial)
-            .add(
-              recurrence_cycle,
-              recurrence_type as ManipulateType | undefined,
-            )
-            .subtract(1, "minute")
-            .toISOString();
-          methods.setValue("end_date", end_date);
-        } else {
-          const end_date = dayjs(start_date)
-            .add(
-              recurrence_cycle,
-              recurrence_type as ManipulateType | undefined,
-            )
-            .subtract(1, "minute")
-            .toISOString();
-          methods.setValue("end_date", end_date);
-        }
-      }
-    };
-
     const mappedEmails =
       usersPage?.pages.flatMap((page) =>
         page.data.data.map((user) => ({
@@ -137,7 +66,13 @@ export const useGenerateFields = (
 
     const getPricingPlanById = (id: string): PricingPlan | null => {
       const item = mappedPricingPlans.find((item) => item.value === id);
-      return item?.pricing_plan ?? null;
+      if (item) {
+        return {
+          ...item.pricing_plan,
+          recurrence_fee_id: "0",
+          features: [],
+        };
+      } else return null;
     };
     const assignLocaleTimeForToday = () => {
       const now = dayjs();
@@ -271,9 +206,15 @@ export const useGenerateFields = (
         type: "singleCheckbox",
         componentProps: {
           disabled: !isEdit,
-          onChange: () => {
-            suspendedDate();
-          },
+          // onChange: (event) => {
+          //   if (event.target.checked) {
+          //     methods.setValue("suspended_date", dayjs().toISOString());
+          //     methods.setValue("next_billing_date", null);
+          //   } else {
+          //     methods.setValue("suspended_date", null);
+          //     methods.setValue("next_billing_date", )
+          //   }
+          // },
         },
       },
       suspended_date: {
