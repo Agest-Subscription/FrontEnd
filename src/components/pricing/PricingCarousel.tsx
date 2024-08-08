@@ -5,14 +5,13 @@ import styled, { css, keyframes } from "styled-components";
 
 import PricingCard from "./PricingCard";
 
-import { PricingPlan } from "@/interfaces/model/pricingplan.type";
+import { LandingPage } from "@/interfaces/model/landingPage.type";
 
 type Props = {
-  PricingList: PricingPlan[];
+  PricingList: LandingPage[];
   pricingPeriod: string;
 };
 
-// Step 1: Define keyframes for animation
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -24,7 +23,6 @@ const fadeIn = keyframes`
   }
 `;
 
-//Create a styled component with conditional animation
 const AnimatedFlex = styled(Flex)<{ animate: boolean }>`
   ${({ animate }) =>
     animate &&
@@ -34,7 +32,7 @@ const AnimatedFlex = styled(Flex)<{ animate: boolean }>`
 `;
 
 const PricingCarousel = ({ PricingList, pricingPeriod }: Props) => {
-  const [mapPeriod, setMapPeriod] = useState<PricingPlan[]>([]);
+  const [mapPeriod, setMapPeriod] = useState<LandingPage[]>([]);
   const [animate, setAnimate] = useState(false);
   const containerRef = useRef(null);
 
@@ -62,8 +60,20 @@ const PricingCarousel = ({ PricingList, pricingPeriod }: Props) => {
 
   useEffect(() => {
     const filterList = PricingList.filter(
-      (plan) => plan.recurrence_fee_id === pricingPeriod,
+      (plan) => plan.pricing_plan.recurrence_period === pricingPeriod,
     );
+
+    if (filterList.length === 3) {
+      const premiumIndex = filterList.findIndex(
+        (item) => item.priority === "premium",
+      );
+
+      if (premiumIndex !== -1) {
+        const [premiumItem] = filterList.splice(premiumIndex, 1);
+        filterList.splice(1, 0, premiumItem);
+      }
+    }
+
     setMapPeriod(filterList);
     setAnimate(true);
     setAnimate(false);
@@ -74,7 +84,7 @@ const PricingCarousel = ({ PricingList, pricingPeriod }: Props) => {
       <AnimatedFlex animate={animate}>
         <Flex justify={"center"} align={"center"}>
           {mapPeriod.map((plan) =>
-            plan.name === "Premium" ? (
+            plan.priority === "premium" ? (
               <PricingCard isPrimary key={plan.id} PricingPlan={plan} />
             ) : (
               <PricingCard key={plan.id} PricingPlan={plan} />

@@ -6,11 +6,8 @@ import { ManipulateType } from "dayjs";
 import { debounce } from "lodash";
 
 import { DATE_FORMAT_V2 } from "@/constants/date";
-import {
-  useCheckFirstTime,
-  useGetInfinitePricingPlan,
-  useGetInfiniteUser,
-} from "@/hooks/subscription";
+import { useGetInfinitePricingPlans } from "@/hooks/pricingPlan";
+import { useGetInfiniteUser } from "@/hooks/subscription";
 import { FieldsData } from "@/interfaces/form";
 import { PricingPlan } from "@/interfaces/model/pricingplan.type";
 import { SubscriptionFormValues } from "@/interfaces/model/subscription.type";
@@ -43,7 +40,7 @@ export const useGenerateFields = (
     isFetchingNextPage: isFetchingNextPricingPlanPage,
     isInitialLoading: isInitialLoadingPricingPlans,
     setSearchTerm: setPricingPlanSearchTerm,
-  } = useGetInfinitePricingPlan({
+  } = useGetInfinitePricingPlans({
     page_size: 10,
     is_active: true,
   });

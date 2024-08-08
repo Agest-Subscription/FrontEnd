@@ -25,7 +25,7 @@ export const useGetListFeature = (params: FeatureFilterParams) => {
 };
 export const useGetInfiniteFeatures = (params: FeatureFilterParams) => {
   return useInfiniteQuery({
-    queryKey: ["PERMISSIONS", params],
+    queryKey: [FEATURES, params],
     queryFn: ({ pageParam = 1 }) =>
       getListFeatureApi({ ...params, page: pageParam }),
     getNextPageParam: (lastPage, pages) => {

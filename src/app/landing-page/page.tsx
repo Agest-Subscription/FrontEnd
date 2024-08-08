@@ -1,29 +1,60 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { RadioChangeEvent } from "antd";
-import { ConfigProvider, Flex, Radio, Typography } from "antd";
-
-import { DummyData } from "./DummyData";
+import { ConfigProvider, Radio, Spin, Typography } from "antd";
+import Flex from "antd/lib/flex";
 
 import PricingCarousel from "@/components/pricing/PricingCarousel";
+import { useGetListLandingPage } from "@/hooks/landingPage";
+import { capitalize } from "@/utils/string";
 
 const LandingPage = () => {
-  const [value, setValue] = useState("Monthly");
-  const Options = [
-    { label: "Daily", value: "Daily" },
-    { label: "Weekly", value: "Weekly" },
-    { label: "Monthly", value: "Monthly" },
-    { label: "Yearly", value: "Yearly" },
-  ];
+  const params = {
+    page_size: 12,
+  };
+
+  const {
+    data: landingPage,
+    isError,
+    isLoading,
+  } = useGetListLandingPage(params);
+
+  const [options, setOption] = useState<{ label: string; value: string }[]>([]);
+  const [value, setValue] = useState("");
+
+  useEffect(() => {
+    if (landingPage?.data) {
+      const recurrencePeriods = Array.from(
+        new Set(
+          landingPage.data.map((item) => item.pricing_plan.recurrence_period),
+        ),
+      );
+
+      const labelMapping: { [key: string]: string } = {
+        "1 day": "Daily",
+        "1 week": "Weekly",
+        "1 month": "Monthly",
+        "1 year": "Yearly",
+      };
+
+      const options = recurrencePeriods.map((period) => ({
+        label: labelMapping[period] || capitalize(period + "s"),
+        value: period,
+      }));
+
+      setOption(options);
+      setValue(options[0]?.value || "");
+    }
+  }, [landingPage]);
 
   const onChange = ({ target: { value } }: RadioChangeEvent) => {
     setValue(value);
   };
 
   return (
-    <div>
-      <Flex vertical align="center">
+    <Spin spinning={isLoading}>
+      <Flex vertical align="center" style={{ padding: "3rem" }}>
         <Typography
           style={{
             fontSize: 50,
@@ -37,39 +68,57 @@ const LandingPage = () => {
           Officia exercitation quis voluptate elit consequat nostrud
         </Typography>
         <br />
-        <Flex
-          style={{
-            backgroundColor: "#15ABFF",
-            padding: "3px",
-            height: "fit-content",
-            borderRadius: 8,
-          }}
-        >
-          <ConfigProvider
-            theme={{
-              components: {
-                Radio: {
-                  buttonBg: "#15ABFF",
-                  buttonColor: "white",
-                  borderRadius: 8,
-                  colorBorder: "#15ABFF",
-                },
-              },
+        {(isError || !landingPage) && !isLoading ? (
+          <p
+            style={{
+              fontSize: "48px",
+              fontWeight: 700,
+              lineHeight: "68px",
+              color: "#008AD9",
+              paddingTop: "12rem",
             }}
           >
-            <Radio.Group
-              options={Options}
-              value={value}
-              onChange={onChange}
-              optionType="button"
+            Coming soon!
+          </p>
+        ) : (
+          <>
+            <Flex
+              style={{
+                backgroundColor: "#15ABFF",
+                padding: "3px",
+                height: "fit-content",
+                borderRadius: 8,
+              }}
+            >
+              <ConfigProvider
+                theme={{
+                  components: {
+                    Radio: {
+                      buttonBg: "#15ABFF",
+                      buttonColor: "white",
+                      borderRadius: 8,
+                      colorBorder: "#15ABFF",
+                    },
+                  },
+                }}
+              >
+                <Radio.Group
+                  options={options}
+                  value={value}
+                  onChange={onChange}
+                  optionType="button"
+                />
+              </ConfigProvider>
+            </Flex>
+            <br />
+            <PricingCarousel
+              PricingList={landingPage?.data ?? []}
+              pricingPeriod={value}
             />
-          </ConfigProvider>
-        </Flex>
-
-        <br />
-        <PricingCarousel PricingList={DummyData} pricingPeriod={value} />
+          </>
+        )}
       </Flex>
-    </div>
+    </Spin>
   );
 };
 

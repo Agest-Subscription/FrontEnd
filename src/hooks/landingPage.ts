@@ -41,7 +41,7 @@ export const useGetInfiniteRecurrencePeriod = (
   const [searchTerm, setSearchTerm] = useState("");
 
   const query = useInfiniteQuery({
-    queryKey: ["LANDING_PAGES", searchTerm, params],
+    queryKey: [LANDING_PAGES, searchTerm, params],
     queryFn: ({ pageParam = 1 }) =>
       getListPricingPlanGroupByPeriodApi({
         ...params,

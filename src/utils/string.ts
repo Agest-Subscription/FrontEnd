@@ -54,20 +54,9 @@ export function trimString<T>(data: T, fields: TrimmedFields<T>[]): T {
 
 export function formatDuration(duration: string): string {
   if (duration) {
-    const pluralMap: { [key: string]: string } = {
-      DAY: "days",
-      WEEK: "weeks",
-      MONTH: "months",
-      YEAR: "years",
-    };
+    const [number, unit] = duration.split(" ");
 
-    const [numberStr, unit] = duration.split(" ");
-
-    const number = parseInt(numberStr, 10);
-
-    const formattedUnit = number === 1 ? unit.toLowerCase() : pluralMap[unit];
-
-    return `${number} ${formattedUnit}`;
+    return `${number} ${unit}${number === "1" ? "" : "s"}`;
   }
 
   return "";

@@ -6,7 +6,6 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
-import { getListPricingPlansApi } from "@/api/pricingPlan";
 import {
   addSubscriptionApi,
   deleteSubscriptionApi,
@@ -16,9 +15,8 @@ import {
   getCheckFirstTime,
 } from "@/api/subscription";
 import { getListUserApi } from "@/api/user";
-import { SUBSCRIPTION, SUBSCRIPTIONS } from "@/constants/query";
+import { SUBSCRIPTION, SUBSCRIPTIONS, USERS } from "@/constants/query";
 import { CustomError } from "@/interfaces/base";
-import { PricingPlanFilterParams } from "@/interfaces/model/pricingplan.type";
 import { SubscriptionFilterParams } from "@/interfaces/model/subscription.type";
 import { UserFilterParams } from "@/interfaces/model/user";
 export const useGetListSubscription = (params: SubscriptionFilterParams) => {
@@ -45,30 +43,9 @@ export const useGetInfiniteUser = (params: UserFilterParams) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const query = useInfiniteQuery({
-    queryKey: ["USERS", searchTerm, params],
+    queryKey: [USERS, searchTerm, params],
     queryFn: ({ pageParam = 1 }) =>
       getListUserApi({
-        ...params,
-        page: pageParam,
-        search: searchTerm,
-      }),
-    getNextPageParam: (lastPage, pages) => {
-      if (lastPage.data.data.length === 0) {
-        return undefined;
-      }
-      return pages.length + 1;
-    },
-  });
-  return { ...query, setSearchTerm };
-};
-
-export const useGetInfinitePricingPlan = (params: PricingPlanFilterParams) => {
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const query = useInfiniteQuery({
-    queryKey: ["PRICING_PLANS", searchTerm, params],
-    queryFn: ({ pageParam = 1 }) =>
-      getListPricingPlansApi({
         ...params,
         page: pageParam,
         search: searchTerm,
