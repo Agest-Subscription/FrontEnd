@@ -11,7 +11,7 @@ import { Flex, Form, Select, Spin } from "antd";
 import { debounce } from "lodash";
 
 import { useGetInfiniteRecurrencePeriod } from "@/hooks/landingPage";
-import { useGetInfinitePricingPlanByRecurrencePeriod } from "@/hooks/pricingPlan";
+import { useGetInfinitePricingPlans } from "@/hooks/pricingPlan";
 import { popUpPropType } from "@/interfaces/popup";
 import { capitalize, formatDuration } from "@/utils/string";
 
@@ -50,7 +50,7 @@ const LandingPageComponent = ({
     isFetchingNextPage,
     isInitialLoading,
     setSearchTerm,
-  } = useGetInfinitePricingPlanByRecurrencePeriod({
+  } = useGetInfinitePricingPlans({
     page_size: 10,
     is_active: true,
     recurrence_period: methods.watch(`landing_page_items.${index}.period`),
