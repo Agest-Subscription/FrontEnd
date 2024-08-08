@@ -65,7 +65,7 @@ const Page: React.FC<Props> = () => {
     });
   }
 
-  const fields = useGenerateFields(methods, false, null);
+  const fields = useGenerateFields(methods, false, null,"")
 
   const handleSave = async () => {
     const isValid = await methods.trigger();

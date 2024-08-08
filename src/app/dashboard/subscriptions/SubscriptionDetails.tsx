@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { Col, Flex, Row } from "antd";
 import dayjs from "dayjs";
@@ -22,6 +22,7 @@ const SubscriptionDetails: React.FC<DetailsProp> = ({
   onDelete,
   onSave,
 }) => {
+
   const goToSubscription = useGoToDashboardTab("subscriptions");
   const { FormField } = useFormWrapperCtx<SubscriptionFormValues>();
   const methods = useFormContext<SubscriptionFormValues>();
@@ -33,6 +34,7 @@ const SubscriptionDetails: React.FC<DetailsProp> = ({
   );
   const start_date = methods.watch("start_date");
   const is_cancelled = methods.watch("is_cancelled");
+
   useEffect(() => {
     const caculateDueDateFreeTrial = () => {
       if (isLoading) return;

@@ -10,19 +10,23 @@ import { useGetInfiniteUser } from "@/hooks/subscription";
 import { FieldsData } from "@/interfaces/form";
 import { PricingPlan } from "@/interfaces/model/pricingplan.type";
 import { SubscriptionFormValues } from "@/interfaces/model/subscription.type";
-import { NEXT_CACHE_TAG_MAX_LENGTH } from "next/dist/lib/constants";
+import { isNamedImports } from "typescript/lib/tsserverlibrary";
+
 
 export const useGenerateFields = (
   methods: UseFormReturn<SubscriptionFormValues, any, undefined>,
   isEdit: boolean,
-  pricingPlan: PricingPlan | null,
+  initial_pricingPlan: PricingPlan | null,
+  initial_startDate: string | undefined,
 ) => {
   const [isPricingPlanChange, setIsPricingPlanChange] = useState(false);
-
-  if (isEdit) {
-    methods.setValue("pricing_plan", pricingPlan);
-  }
-
+ 
+  useEffect(() => {
+    if(isEdit){
+      methods.setValue("pricing_plan", initial_pricingPlan);
+    }
+  }, [])
+  
   const {
     data: usersPage,
     fetchNextPage: fetchNextUserPage,
@@ -45,6 +49,19 @@ export const useGenerateFields = (
     is_active: true,
     is_available: true,
   });
+
+  const keepInitialValue = () => {
+    const current_pricing_plan_id = methods.getValues("pricing_plan.id");
+    const current_user_id = methods.getValues("user_id");
+
+    console.log("123in",initial_userId);
+    console.log("123current", current_user_id)
+    if(isEdit && current_pricing_plan_id === initial_pricingPlan?.id 
+      && initial_startDate){
+      methods.setValue("start_date", initial_startDate);
+      setIsPricingPlanChange(false);
+    }
+  }
 
   const fields = useMemo<FieldsData<SubscriptionFormValues>>(() => {
     const mappedEmails =
@@ -74,13 +91,17 @@ export const useGenerateFields = (
         };
       } else return null;
     };
+
     const assignLocaleTimeForToday = () => {
       const now = dayjs();
       const dayPicker = methods.getValues("start_date");
-      if (dayPicker.toString() === now.format("YYYY-MM-DD")) {
-        methods.setValue("start_date", dayjs().toISOString());
+      if(dayPicker){
+        if (dayPicker.toString() === now.format("YYYY-MM-DD")) {
+          methods.setValue("start_date", dayjs().toISOString());
+        }else{
+          methods.setValue("start_date", dayjs(dayPicker).toISOString());
+        }
       }
-      methods.setValue("start_date", dayjs(dayPicker).toISOString());
     };
 
     return {
@@ -102,10 +123,12 @@ export const useGenerateFields = (
           filterOption: true,
           optionFilterProp: "label",
           style: { height: "40px" },
+          disabled: isEdit,
           onSearch: debounce((value) => setUserSearchTerm(value), 500),
           onChange: (value) => {
             setUserSearchTerm("");
             methods.setValue("user_id", value);
+            keepInitialValue();
           },
           allowClear: true,
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
@@ -140,6 +163,7 @@ export const useGenerateFields = (
             setPricingPlanSearchTerm("");
             methods.setValue("pricing_plan", getPricingPlanById(value) ?? null);
             setIsPricingPlanChange(true);
+            keepInitialValue();
           },
           allowClear: true,
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
@@ -206,15 +230,6 @@ export const useGenerateFields = (
         type: "singleCheckbox",
         componentProps: {
           disabled: !isEdit,
-          // onChange: (event) => {
-          //   if (event.target.checked) {
-          //     methods.setValue("suspended_date", dayjs().toISOString());
-          //     methods.setValue("next_billing_date", null);
-          //   } else {
-          //     methods.setValue("suspended_date", null);
-          //     methods.setValue("next_billing_date", )
-          //   }
-          // },
         },
       },
       suspended_date: {
