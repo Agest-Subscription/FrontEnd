@@ -47,5 +47,6 @@ export const config = {
     "/dashboard/overrate-fee/:path*",
     "/dashboard/subscriptions/:path*",
     "/dashboard/users/:path*",
+    "/dashboard/landing-page/:path*",
   ],
 };

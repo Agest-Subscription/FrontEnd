@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { UseFormReturn } from "react-hook-form";
 import { Spin } from "antd";
 import dayjs from "dayjs";
 import { debounce } from "lodash";
@@ -11,7 +12,10 @@ import {
 } from "@/interfaces/model/pricingplan.type";
 import { enumToSelectOptions } from "@/utils/enum";
 
-export const useGenerateFields = (start_date: string) => {
+export const useGenerateFields = (
+  start_date: string,
+  methods: UseFormReturn<PricingPlanFormValues, any, undefined>,
+) => {
   const {
     data: feePages,
     fetchNextPage,
@@ -56,6 +60,16 @@ export const useGenerateFields = (start_date: string) => {
           allowClear: true,
           style: { height: "40px" },
           maxTagCount: "responsive",
+          onChange: (value) => {
+            const selectedOption = mappedFeePages.find(
+              (item) => item.value === value,
+            );
+            if (selectedOption && value) {
+              methods.setValue("recurrence_fee", {
+                ...selectedOption?.fee,
+              });
+            }
+          },
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
             const target = event.target as HTMLDivElement;
             if (
@@ -134,6 +148,7 @@ export const useGenerateFields = (start_date: string) => {
     isFetchingNextPage,
     isInitialLoading,
     mappedFeePages,
+    methods,
     setSearchTerm,
     start_date,
   ]);
