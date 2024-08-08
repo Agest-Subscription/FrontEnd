@@ -4,10 +4,37 @@ import React, { useEffect, useState } from "react";
 import type { RadioChangeEvent } from "antd";
 import { ConfigProvider, Radio, Spin, Typography } from "antd";
 import Flex from "antd/lib/flex";
+import styled from "styled-components";
 
 import PricingCarousel from "@/components/pricing/PricingCarousel";
 import { useGetListLandingPage } from "@/hooks/landingPage";
 import { capitalize } from "@/utils/string";
+
+const CustomRadio = styled(Radio.Group)`
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .ant-radio-button-wrapper {
+    height: 44px;
+    min-width: 113px;
+    border-radius: 8px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    span {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 26px;
+    }
+
+    &::before {
+      content: none;
+    }
+  }
+`;
 
 const LandingPage = () => {
   const params = {
@@ -65,10 +92,12 @@ const LandingPage = () => {
           Pricing
         </Typography>
         <Typography style={{ fontSize: 16, fontWeight: 400 }}>
-          Officia exercitation quis voluptate elit consequat nostrud
+          {capitalize(
+            "Select the plan that best fits your needs and start enjoying our features!",
+          )}
         </Typography>
         <br />
-        {(isError || !landingPage) && !isLoading ? (
+        {(isError || landingPage?.data.length === 0) && !isLoading ? (
           <p
             style={{
               fontSize: "48px",
@@ -102,7 +131,7 @@ const LandingPage = () => {
                   },
                 }}
               >
-                <Radio.Group
+                <CustomRadio
                   options={options}
                   value={value}
                   onChange={onChange}

@@ -54,6 +54,7 @@ const LandingPageComponent = ({
   } = useGetInfinitePricingPlans({
     page_size: 10,
     is_active: true,
+    is_available: true,
     recurrence_period: methods.watch(`landing_page_items.${index}.period`),
   });
 

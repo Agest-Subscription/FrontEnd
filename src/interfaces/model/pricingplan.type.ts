@@ -70,6 +70,7 @@ export type PricingPlanLandingPage = PricingPlan;
 
 export type PricingPlanFilterParams = FilterBase<PricingPlanTableData> & {
   is_active?: boolean;
+  is_available?: boolean;
   recurrence_period?: string;
 };
 
