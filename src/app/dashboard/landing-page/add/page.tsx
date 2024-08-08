@@ -144,7 +144,11 @@ const Page: React.FC<Props> = () => {
         onClose: () => setOpenModal(false),
       });
     }
+    // else {
+    //   console.error("Validation Errors: ", methods.formState.errors);
+    // }
   };
+  console.log(methods.formState.errors);
 
   if (isError) {
     return <NotFound previousPage="landing-page" />;

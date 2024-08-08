@@ -7,13 +7,14 @@ import {
   useFormContext,
 } from "react-hook-form";
 import { DeleteOutlined } from "@ant-design/icons";
-import { Flex, Form, Select, Spin } from "antd";
+import { Alert, Flex, Form, Select, Spin } from "antd";
 import { debounce } from "lodash";
 
 import { useGetInfiniteRecurrencePeriod } from "@/hooks/landingPage";
 import { useGetInfinitePricingPlans } from "@/hooks/pricingPlan";
 import { popUpPropType } from "@/interfaces/popup";
 import { capitalize, formatDuration } from "@/utils/string";
+import { LandingPageItem } from "@/interfaces/model/landingPage.type";
 
 type Props = {
   control: Control<FieldValues, any>;
@@ -168,6 +169,15 @@ const LandingPageComponent = ({
       fetchNextRecurrencePeriodPage();
     }
   };
+  const error = methods.formState.errors.landing_page_items as
+    | any[]
+    | undefined;
+
+  if (error && error.length > 0) {
+    console.log("methods: ", error[0]?.period?.message as string);
+  } else {
+    console.log("No errors in landing_page_items or array is empty");
+  }
 
   return (
     <Flex
@@ -188,38 +198,56 @@ const LandingPageComponent = ({
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
-              <Select
-                {...field}
-                onChange={(value) => {
-                  setSearchTermRecurrencePeriod("");
-                  handlePeriodChange(value);
-                }}
-                value={methods.getValues(`landing_page_items.${index}.period`)}
-                style={{ width: 200 }}
-                options={filteredRecurrencePeriods}
-                allowClear={true}
-                showSearch={true}
-                onSearch={debounce(
-                  (value) => setSearchTermRecurrencePeriod(value),
-                  500,
-                )}
-                listHeight={125}
-                onPopupScroll={onScroll}
-                dropdownStyle={{ maxHeight: 200, overflow: "auto" }}
-                dropdownRender={(menu) => (
-                  <Spin
-                    spinning={
-                      isFetchingNextRecurrencePeriodPage ||
-                      isInitialLoadingRecurrencePeriod
-                    }
-                  >
-                    {menu}
-                  </Spin>
-                )}
-              />
+              <Flex vertical>
+                <Select
+                  {...field}
+                  onChange={(value) => {
+                    setSearchTermRecurrencePeriod("");
+                    handlePeriodChange(value);
+                  }}
+                  value={methods.getValues(
+                    `landing_page_items.${index}.period`,
+                  )}
+                  style={{
+                    width: 200,
+                    border: `${error ? "1px solid #ff4d4f" : ""}`,
+                    borderRadius: `${error ? "7px" : ""}`,
+                  }}
+                  options={filteredRecurrencePeriods}
+                  allowClear={true}
+                  showSearch={true}
+                  onSearch={debounce(
+                    (value) => setSearchTermRecurrencePeriod(value),
+                    500,
+                  )}
+                  listHeight={125}
+                  onPopupScroll={onScroll}
+                  dropdownStyle={{ maxHeight: 200, overflow: "auto" }}
+                  dropdownRender={(menu) => (
+                    <Spin
+                      spinning={
+                        isFetchingNextRecurrencePeriodPage ||
+                        isInitialLoadingRecurrencePeriod
+                      }
+                    >
+                      {menu}
+                    </Spin>
+                  )}
+                />
+                <span
+                  style={{
+                    color: "#ff4d4f",
+                    paddingLeft: "2px",
+                    paddingTop: "5px",
+                  }}
+                >
+                  {error?.[`${index}`]?.period?.message as string}
+                </span>
+              </Flex>
             )}
           />
         </Form.Item>
+
         <div style={{ width: 16, height: 18 }}>
           <DeleteOutlined
             style={{ fontSize: 18, color: "#263e56" }}

@@ -12,9 +12,12 @@ const itemSchema = yup
     "at-least-one",
     "At least one of basic, pro, or premium must be selected",
     function (value) {
-      return value.basic != null || value.pro != null || value.premium != null;
+      return (
+        value.basic !== null || value.pro !== null || value.premium !== null
+      );
     },
-  );
+  )
+  .required();
 
 const landingpageFormValuesSchema = yup.object().shape({
   landing_page_items: yup.array().of(itemSchema).nullable().default(undefined),
