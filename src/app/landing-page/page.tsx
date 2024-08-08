@@ -65,10 +65,11 @@ const LandingPage = () => {
           Pricing
         </Typography>
         <Typography style={{ fontSize: 16, fontWeight: 400 }}>
-          Officia exercitation quis voluptate elit consequat nostrud
+          Select the plan that best fits your needs and start enjoying our
+          features
         </Typography>
         <br />
-        {(isError || !landingPage) && !isLoading ? (
+        {(isError || landingPage?.data.length === 0) && !isLoading ? (
           <p
             style={{
               fontSize: "48px",
