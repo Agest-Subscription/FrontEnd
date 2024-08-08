@@ -71,10 +71,10 @@ const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
             color: styles.colorTitle,
           }}
         >
-          {PricingPlan.pricing_plan.name}
+          {capitalize(PricingPlan.priority)}
         </Typography>
         <Typography style={{ fontSize: 16, fontWeight: 400 }}>
-          {PricingPlan.pricing_plan.name}
+          {PricingPlan.pricing_plan.description}
         </Typography>
         <Typography style={{ fontSize: 40, fontWeight: 700 }}>
           ${PricingPlan.pricing_plan.recurrence_fee.price}
