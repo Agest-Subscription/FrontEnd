@@ -31,36 +31,37 @@ const Page: React.FC<Props> = () => {
   });
   const userId = methods.watch("user_id");
   const pricingPlanId = methods.watch("pricing_plan_id");
-  const  {data: isAlreadySubscribed, refetch, isLoading}  = useCheckFirstTime(userId, pricingPlanId);
-  const caculateDueDateFreeTrial = () => {
-    if (isLoading) return;
-    const pricingPlan = methods.getValues("pricing_plan");
-    const { free_trial_period: freeTrialType, free_trial_period_count: freeTrialCycle = 0 } = pricingPlan;
+  const {
+    data: isAlreadySubscribed,
+    refetch,
+    isLoading,
+  } = useCheckFirstTime(userId, pricingPlanId);
+  const start_date = methods.watch("start_date");
+  useEffect(() => {
+    const caculateDueDateFreeTrial = () => {
+      if (isLoading) return;
+      const pricingPlan = methods.getValues("pricing_plan");
       const isFirstTime = isAlreadySubscribed?.data?.is_first_time;
-      console.log("123",pricingPlan)
-      if(isFirstTime || freeTrialCycle === 0){
-        methods.setValue("due_date_free_trial", null)
+      console.log("123", pricingPlan);
+      if (isFirstTime || pricingPlan?.has_free_trial === false) {
+        methods.setValue("due_date_free_trial", null);
         return;
       }
-    
-    const start_date = methods.getValues("start_date");
-  
-    if (!start_date || !pricingPlan || isFirstTime) return;
-  
-  
-    if (freeTrialCycle === 0) return;
-  
-    const dueDateFreeTrial = dayjs(start_date)
-      .add(freeTrialCycle ?? 0, freeTrialType as ManipulateType | undefined)
-      .subtract(1, "minute")
-      .toISOString();
-  
-    methods.setValue("due_date_free_trial", dueDateFreeTrial);
-  };
 
-  useEffect(()=>{
+      if (!start_date || !pricingPlan || isFirstTime) return;
+
+      const dueDateFreeTrial = dayjs(start_date)
+        .add(
+          pricingPlan.free_trial_period_count ?? 0,
+          pricingPlan.free_trial_period as ManipulateType | undefined,
+        )
+        .subtract(1, "minute")
+        .toISOString();
+
+      methods.setValue("due_date_free_trial", dueDateFreeTrial);
+    };
     caculateDueDateFreeTrial();
-  },[isAlreadySubscribed,methods.watch("start_date")])
+  }, [isAlreadySubscribed, isLoading, methods, start_date]);
 
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "successpopup",

@@ -317,9 +317,7 @@ export const useGenerateFields = (
     isPricingPlanChange, 
     setIsPricingPlanChange,
     isEdit,
-    isAlreadySubscribed,
     methods,
-    refetch,
   ]);
 
   return fields;
