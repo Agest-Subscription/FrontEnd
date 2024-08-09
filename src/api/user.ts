@@ -18,7 +18,7 @@ export const getUserByIdApi = (id: string) => {
 };
 
 export const addUserApi = (data: AddUserPayload) => {
-  return axiosClient.post("users", data);
+  return axiosClient.post("auth/register", data);
 };
 
 export const updateUserApi = (data: UpdateUserPayload) => {
