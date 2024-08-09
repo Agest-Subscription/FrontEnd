@@ -157,7 +157,6 @@ const Page: React.FC<Props> = () => {
       }
     }
   };
-  // console.log(methods.formState.errors);
 
   if (isError) {
     return <NotFound previousPage="landing-page" />;

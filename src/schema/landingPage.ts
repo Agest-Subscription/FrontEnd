@@ -16,8 +16,8 @@ const itemSchema = yup
     },
   );
 
-const landingpageFormValuesSchema = yup.object().shape({
+const landingPageFormValuesSchema = yup.object().shape({
   landing_page_items: yup.array().of(itemSchema).nullable().default(undefined),
 });
 
-export default landingpageFormValuesSchema;
+export default landingPageFormValuesSchema;

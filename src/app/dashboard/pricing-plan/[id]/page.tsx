@@ -137,7 +137,7 @@ const Page: React.FC<Props> = () => {
 
   const handleSave = async (featureList: PricingPlanFeaturesType[]) => {
     const isValid = await methods.trigger();
-    console.log(methods.formState.errors);
+
     if (isValid) {
       showModal({
         popup_id: "confirm",
