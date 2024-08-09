@@ -32,7 +32,7 @@ const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
     padding: "24px 16px",
     borderRadius: "0px 4px 4px 0px",
     border: "none",
-    boxShadow: "",
+    boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
     color: "black",
     marginBottom: "0px",
     fontSize: "32px",
