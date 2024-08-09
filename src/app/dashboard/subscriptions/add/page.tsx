@@ -17,6 +17,7 @@ import subscriptionFormValuesSchema from "@/schema/subscription";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
+
 type Props = {};
 const Page: React.FC<Props> = () => {
   const goToSubscription = useGoToDashboardTab("subscriptions");
@@ -63,7 +64,7 @@ const Page: React.FC<Props> = () => {
     });
   }
 
-  const fields = useGenerateFields(methods, false, null);
+  const fields = useGenerateFields(methods, false, null, "");
 
   const handleSave = async () => {
     const isValid = await methods.trigger();

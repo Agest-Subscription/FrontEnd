@@ -34,6 +34,7 @@ const Page: React.FC<Props> = () => {
   const goToSubscription = useGoToDashboardTab("subscriptions");
   const id = useGetId();
   const [openModal, setOpenModal] = useState(false);
+
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "",
     popup_text: "",
@@ -53,7 +54,9 @@ const Page: React.FC<Props> = () => {
     methods,
     true,
     Subscription?.pricing_plan ?? null,
+    Subscription?.start_date,
   );
+
   useEffect(() => {
     if (Subscription) {
       methods.setValue("user_id", Subscription.users.id);
