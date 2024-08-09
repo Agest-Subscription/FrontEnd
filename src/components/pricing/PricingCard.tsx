@@ -54,7 +54,7 @@ const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
         backgroundColor: styles.backgroundColor,
         width: styles.outerWidth,
         padding: styles.padding,
-        height: styles.outerHeight,
+        minHeight: styles.outerHeight,
         borderRadius: styles.borderRadius,
         border: styles.border,
         boxShadow: styles.boxShadow,
@@ -99,7 +99,7 @@ const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
         style={{
           backgroundColor: styles.buttonBackgroundColor,
           color: styles.buttonTextColor,
-          marginTop: "5rem",
+          marginTop: "1rem",
           border: "1px solid #2F80ED",
           padding: "24px 20px",
           borderRadius: 4,

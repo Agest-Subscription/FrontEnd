@@ -7,14 +7,13 @@ import {
   useFormContext,
 } from "react-hook-form";
 import { DeleteOutlined } from "@ant-design/icons";
-import { Alert, Flex, Form, Select, Spin } from "antd";
+import { Flex, Form, Select, Spin } from "antd";
 import { debounce } from "lodash";
 
 import { useGetInfiniteRecurrencePeriod } from "@/hooks/landingPage";
 import { useGetInfinitePricingPlans } from "@/hooks/pricingPlan";
 import { popUpPropType } from "@/interfaces/popup";
 import { capitalize, formatDuration } from "@/utils/string";
-import { LandingPageItem } from "@/interfaces/model/landingPage.type";
 
 type Props = {
   control: Control<FieldValues, any>;
@@ -173,12 +172,14 @@ const LandingPageComponent = ({
   const error = methods.formState.errors.landing_page_items as
     | any[]
     | undefined;
+  console.log("error methods: ", error);
 
-  if (error && error.length > 0) {
-    console.log("methods: ", error[0]?.period?.message as string);
-  } else {
-    console.log("No errors in landing_page_items or array is empty");
-  }
+  // if (error && error.length > 0) {
+  //   console.log("methods: ", error[0]?.period?.message as string);
+  //   console.log("error map: ");
+  // } else {
+  //   console.log("No errors in landing_page_items or array is empty");
+  // }
 
   return (
     <Flex
@@ -211,8 +212,9 @@ const LandingPageComponent = ({
                   )}
                   style={{
                     width: 200,
-                    border: `${error ? "1px solid #ff4d4f" : ""}`,
-                    borderRadius: `${error ? "7px" : ""}`,
+                    // eslint-disable-next-line max-len
+                    border: `${error?.[`${index}`]?.period?.message ? "1px solid #ff4d4f" : "none"}`,
+                    borderRadius: `${error?.[`${index}`]?.period?.message ? "7px" : "4px"}`,
                   }}
                   options={filteredRecurrencePeriods}
                   allowClear={true}
@@ -330,6 +332,15 @@ const LandingPageComponent = ({
           </Form.Item>
         ))}
       </Flex>
+      <span
+        style={{
+          color: "#ff4d4f",
+          paddingLeft: "2px",
+          paddingTop: "5px",
+        }}
+      >
+        {error?.[`${index}`]?.message as string}
+      </span>
     </Flex>
   );
 };

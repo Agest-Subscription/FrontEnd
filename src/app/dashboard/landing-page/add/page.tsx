@@ -17,7 +17,7 @@ import {
   LandingPagePayload,
 } from "@/interfaces/model/landingPage.type";
 import { popUpPropType } from "@/interfaces/popup";
-import landingpageFormValuesSchema from "@/schema/landingPage";
+import landingPageFormValuesSchema from "@/schema/landingPage";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
@@ -29,7 +29,7 @@ const Page: React.FC<Props> = () => {
   const { mutate: addLandingPage, isLoading: isAdding } = useAddLandingPage();
   const methods = useForm<LandingPageFormValues>({
     mode: "onBlur",
-    resolver: yupResolver(landingpageFormValuesSchema),
+    resolver: yupResolver(landingPageFormValuesSchema),
   });
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "successpopup",
@@ -136,19 +136,10 @@ const Page: React.FC<Props> = () => {
         onClose: () => setOpenModal(false),
       });
     } else {
-      showModal({
-        popup_id: "error",
-        popup_text: `${capitalize("At least one of basic, pro, or premium must be selected")}`,
-        popup_type: "Fail",
-        onConfirm: () => {},
-        onClose: () => setOpenModal(false),
-      });
+      console.error("Validation Errors: ", methods.formState.errors);
     }
-    // else {
-    //   console.error("Validation Errors: ", methods.formState.errors);
-    // }
   };
-  console.log(methods.formState.errors);
+  // console.log(methods.formState.errors);
 
   if (isError) {
     return <NotFound previousPage="landing-page" />;
