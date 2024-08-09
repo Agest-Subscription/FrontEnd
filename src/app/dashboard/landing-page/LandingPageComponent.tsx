@@ -43,6 +43,7 @@ const LandingPageComponent = ({
   });
 
   const methods = useFormContext();
+  const errors = methods.formState.errors;
 
   const {
     data: pricingPlanPage,
@@ -87,10 +88,13 @@ const LandingPageComponent = ({
 
   const onChangePricingPlan = (value: string, priority: string) => {
     methods.setValue(`landing_page_items.${index}.${priority}`, value);
+    clearErrors(priority);
+    methods.trigger(`landing_page_items.${index}`);
   };
 
   const onClearPricingPlan = (priority: string) => {
     methods.setValue(`landing_page_items.${index}.${priority}`, null);
+    methods.trigger(`landing_page_items.${index}`);
   };
 
   const isPeriodEmpty = !methods.watch(`landing_page_items.${index}.period`);
@@ -112,6 +116,11 @@ const LandingPageComponent = ({
       });
     } else {
       methods.setValue(`landing_page_items.${index}.period`, value);
+      methods.setValue(`landing_page_items.${index}.basic`, null);
+      methods.setValue(`landing_page_items.${index}.pro`, null);
+      methods.setValue(`landing_page_items.${index}.premium`, null);
+      clearErrors("period");
+      methods.trigger(`landing_page_items.${index}`);
     }
   };
 
@@ -169,17 +178,11 @@ const LandingPageComponent = ({
       fetchNextRecurrencePeriodPage();
     }
   };
-  const error = methods.formState.errors.landing_page_items as
-    | any[]
-    | undefined;
-  console.log("error methods: ", error);
 
-  // if (error && error.length > 0) {
-  //   console.log("methods: ", error[0]?.period?.message as string);
-  //   console.log("error map: ");
-  // } else {
-  //   console.log("No errors in landing_page_items or array is empty");
-  // }
+  const clearErrors = (field: string) => {
+    methods.clearErrors(`landing_page_items.${index}.${field}`);
+    methods.clearErrors(`landing_page_items.${index}`);
+  };
 
   return (
     <Flex
@@ -194,63 +197,56 @@ const LandingPageComponent = ({
               Period<span style={{ color: "red", marginLeft: "3px" }}>*</span>
             </span>
           }
+          validateStatus={
+            (errors?.landing_page_items as Record<number, any>)?.[index]?.period
+              ? "error"
+              : ""
+          }
+          help={
+            (errors?.landing_page_items as Record<number, any>)?.[index]?.period
+              ?.message
+          }
         >
           <Controller
             name={`landing_page_items.${index}.period`}
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
-              <Flex vertical>
-                <Select
-                  {...field}
-                  onChange={(value) => {
-                    setSearchTermRecurrencePeriod("");
-                    handlePeriodChange(value);
-                  }}
-                  value={methods.getValues(
-                    `landing_page_items.${index}.period`,
-                  )}
-                  style={{
-                    width: 200,
-                    // eslint-disable-next-line max-len
-                    border: `${error?.[`${index}`]?.period?.message ? "1px solid #ff4d4f" : "none"}`,
-                    borderRadius: `${error?.[`${index}`]?.period?.message ? "7px" : "4px"}`,
-                  }}
-                  options={filteredRecurrencePeriods}
-                  allowClear={true}
-                  showSearch={true}
-                  onSearch={debounce(
-                    (value) => setSearchTermRecurrencePeriod(value),
-                    500,
-                  )}
-                  listHeight={125}
-                  onPopupScroll={onScroll}
-                  dropdownStyle={{ maxHeight: 200, overflow: "auto" }}
-                  dropdownRender={(menu) => (
-                    <Spin
-                      spinning={
-                        isFetchingNextRecurrencePeriodPage ||
-                        isInitialLoadingRecurrencePeriod
-                      }
-                    >
-                      {menu}
-                    </Spin>
-                  )}
-                />
-                <span
-                  style={{
-                    color: "#ff4d4f",
-                    paddingLeft: "2px",
-                    paddingTop: "5px",
-                  }}
-                >
-                  {error?.[`${index}`]?.period?.message as string}
-                </span>
-              </Flex>
+              <Select
+                {...field}
+                onChange={(value) => {
+                  setSearchTermRecurrencePeriod("");
+                  handlePeriodChange(value);
+                }}
+                onBlur={() =>
+                  methods.trigger(`landing_page_items.${index}.period`)
+                }
+                value={methods.getValues(`landing_page_items.${index}.period`)}
+                style={{ width: 200 }}
+                options={filteredRecurrencePeriods}
+                allowClear={true}
+                showSearch={true}
+                onSearch={debounce(
+                  (value) => setSearchTermRecurrencePeriod(value),
+                  500,
+                )}
+                listHeight={125}
+                onPopupScroll={onScroll}
+                dropdownStyle={{ maxHeight: 200, overflow: "auto" }}
+                dropdownRender={(menu) => (
+                  <Spin
+                    spinning={
+                      isFetchingNextRecurrencePeriodPage ||
+                      isInitialLoadingRecurrencePeriod
+                    }
+                  >
+                    {menu}
+                  </Spin>
+                )}
+              />
             )}
           />
         </Form.Item>
-
         <div style={{ width: 16, height: 18 }}>
           <DeleteOutlined
             style={{ fontSize: 18, color: "#263e56" }}
@@ -263,6 +259,18 @@ const LandingPageComponent = ({
           <Form.Item
             key={type}
             label={type.charAt(0).toUpperCase() + type.slice(1)}
+            validateStatus={
+              (errors?.landing_page_items as Record<number, any>)?.[index]?.[
+                type
+              ]
+                ? "error"
+                : ""
+            }
+            help={
+              (errors?.landing_page_items as Record<number, any>)?.[index]?.[
+                type
+              ]?.message
+            }
           >
             <Controller
               name={`landing_page_items.${index}.${type}`}
@@ -332,15 +340,19 @@ const LandingPageComponent = ({
           </Form.Item>
         ))}
       </Flex>
-      <span
-        style={{
-          color: "#ff4d4f",
-          paddingLeft: "2px",
-          paddingTop: "5px",
-        }}
-      >
-        {error?.[`${index}`]?.message as string}
-      </span>
+      {(errors.landing_page_items as Record<number, any>)?.[index] &&
+        typeof ((errors.landing_page_items as Record<number, any>) ?? {})[
+          index
+        ] === "object" &&
+        "message" in
+          ((errors.landing_page_items as Record<number, any>) ?? {})[index] && (
+          <div style={{ color: "red", fontSize: "13px" }}>
+            {
+              ((errors.landing_page_items as Record<number, any>) ?? {})[index]
+                .message as string
+            }
+          </div>
+        )}
     </Flex>
   );
 };

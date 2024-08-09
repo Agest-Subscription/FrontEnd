@@ -141,7 +141,7 @@ const Page: React.FC<Props> = () => {
     if (isValid) {
       showModal({
         popup_id: "confirm",
-        popup_text: `${capitalize("Are you sure to create a new Pricing Plan?")}`,
+        popup_text: `${capitalize("Are you sure to update a new Pricing Plan?")}`,
         popup_type: "Confirm",
         onConfirm: methods.handleSubmit((data) =>
           handleSubmit(data, featureList),
