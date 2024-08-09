@@ -160,6 +160,7 @@ export const useGenerateFields = (
             setPricingPlanSearchTerm("");
             methods.setValue("pricing_plan", getPricingPlanById(value) ?? null);
             setIsPricingPlanChange(true);
+            methods.setValue("start_date", dayjs().toISOString());
             keepInitialValue();
           },
           allowClear: true,

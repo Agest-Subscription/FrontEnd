@@ -32,6 +32,11 @@ const UserDetails: React.FC<DetailsProp> = ({
           <Col span={6}>
             <FormField name="email" />
           </Col>
+          {!edit && (
+            <Col span={6}>
+              <FormField name="password" />
+            </Col>
+          )}
         </Row>
         <FormField name="is_admin" />
         <FormField name="is_active" />
