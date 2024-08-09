@@ -21,11 +21,12 @@ export const addInterceptor = (
       return response;
     },
     async (error) => {
-      const { detail } = error.response.data;
+      // const { detail } = error.response.data;
 
       if (
-        error?.response?.status === 401 &&
-        detail === "Fail!, Refresh token expired"
+        error?.response?.status === 401
+        // &&
+        // detail === "Fail!, Refresh token expired"
       ) {
         console.log("refresh token expired");
 
