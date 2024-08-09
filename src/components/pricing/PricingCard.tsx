@@ -88,7 +88,7 @@ const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
             <Flex gap={8} key={index}>
               <CheckCircleOutlined style={{ color: "green" }} />
               <Typography style={{ fontSize: 16, fontWeight: 400 }}>
-                {capitalize(feature.feature?.description ?? "")}
+                {capitalize(feature.feature?.name)}
               </Typography>
             </Flex>
           ))}

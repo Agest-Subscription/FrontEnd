@@ -9,6 +9,7 @@ import {
 import {
   addSubscriptionApi,
   deleteSubscriptionApi,
+  getCheckFirstTime,
   getListSubscriptionApi,
   getSubscriptionByIdApi,
   updateSubscriptionApi,
@@ -93,5 +94,13 @@ export const useDeleteSubscription = () => {
     onError: (error: CustomError) => {
       return error;
     },
+  });
+};
+
+export const useCheckFirstTime = (user_id: string, pricing_plan_id: string) => {
+  return useQuery({
+    queryKey: ["checkFirstTime", user_id, pricing_plan_id],
+    queryFn: () => getCheckFirstTime(user_id, pricing_plan_id),
+    enabled: !!user_id && !!pricing_plan_id,
   });
 };

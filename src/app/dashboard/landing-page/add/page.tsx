@@ -67,6 +67,13 @@ const Page: React.FC<Props> = () => {
     if (LandingPage) {
       const transformData = transformResponse(LandingPage?.data ?? []);
       methods.setValue("landing_page_items", transformData);
+      const initializedData = transformData.map((item) => ({
+        ...item,
+        basic: item.basic || null,
+        pro: item.pro || null,
+        premium: item.premium || null,
+      }));
+      methods.setValue("landing_page_items", initializedData);
     }
   }, [LandingPage, methods]);
 
@@ -127,7 +134,12 @@ const Page: React.FC<Props> = () => {
 
   const handleSave = async () => {
     const isValid = await methods.trigger();
-    if (isValid) {
+    const formValues = methods.getValues();
+    const hasAtLeastOnePlan = formValues.landing_page_items?.every(
+      (item) => item.basic != null || item.pro != null || item.premium != null,
+    );
+
+    if (isValid && hasAtLeastOnePlan) {
       showModal({
         popup_id: "confirm",
         popup_text: `${capitalize("Are you sure to create a new Landing Page?")}`,
@@ -136,7 +148,13 @@ const Page: React.FC<Props> = () => {
         onClose: () => setOpenModal(false),
       });
     } else {
-      console.error("Validation Errors: ", methods.formState.errors);
+      const firstError = Object.keys(methods.formState.errors)[0];
+      if (firstError) {
+        const errorElement = document.getElementsByName(firstError)[0];
+        if (errorElement) {
+          errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
     }
   };
   // console.log(methods.formState.errors);

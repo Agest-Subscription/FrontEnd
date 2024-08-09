@@ -32,3 +32,19 @@ export const updateSubscriptionApi = (data: UpdateSubscriptionPayload) => {
 export const deleteSubscriptionApi = (id: string) => {
   return axiosClient.delete(`subscriptions/${id}`);
 };
+
+type response = {
+  is_first_time: boolean;
+};
+export const getCheckFirstTime = async (
+  user_id: string,
+  pricing_plan_id: string,
+) => {
+  const response = await axiosClient.get<response>(
+    `subscriptions/check-first-time?user_id=${user_id}&pricing_plan_id=${pricing_plan_id}`,
+  );
+  if (response !== undefined) {
+    return response;
+  }
+  throw new Error("No valid data received");
+};
