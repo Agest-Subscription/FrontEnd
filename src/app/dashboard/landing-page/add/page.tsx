@@ -17,7 +17,7 @@ import {
   LandingPagePayload,
 } from "@/interfaces/model/landingPage.type";
 import { popUpPropType } from "@/interfaces/popup";
-import landingpageFormValuesSchema from "@/schema/landingPage";
+import landingPageFormValuesSchema from "@/schema/landingPage";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
@@ -29,7 +29,7 @@ const Page: React.FC<Props> = () => {
   const { mutate: addLandingPage, isLoading: isAdding } = useAddLandingPage();
   const methods = useForm<LandingPageFormValues>({
     mode: "onBlur",
-    resolver: yupResolver(landingpageFormValuesSchema),
+    resolver: yupResolver(landingPageFormValuesSchema),
   });
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "successpopup",
