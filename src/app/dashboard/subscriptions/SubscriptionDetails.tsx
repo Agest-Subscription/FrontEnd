@@ -117,10 +117,6 @@ const SubscriptionDetails: React.FC<DetailsProp> = ({
           methods.setValue("next_billing_date", null);
         } else {
           const next_billing_date = dayjs(end_date)
-            .add(
-              recurrence_cycle,
-              recurrence_type as ManipulateType | undefined,
-            )
             .subtract(2, "day")
             .toISOString();
           methods.setValue("next_billing_date", next_billing_date);

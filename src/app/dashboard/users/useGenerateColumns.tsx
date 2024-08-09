@@ -61,7 +61,12 @@ const useGenerateColumns = () => {
         width: 200,
         render: (value) => {
           return (
-            <LongText text={dayjs(value).format(DATE_FORMAT)} width={450} />
+            <LongText
+              text={
+                value !== null ? dayjs(value).format(DATE_FORMAT) : "Not Login"
+              }
+              width={450}
+            />
           );
         },
       },

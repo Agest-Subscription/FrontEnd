@@ -27,7 +27,7 @@ const Page: React.FC<Props> = () => {
   const { mutate: deleteUser, isLoading: isDeleting } = useDeleteUser();
   const goToUser = useGoToDashboardTab("users");
   const id = useGetId();
-  const fields = useGenerateFields();
+  const fields = useGenerateFields(true);
   const [openModal, setOpenModal] = useState(false);
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "",
