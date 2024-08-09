@@ -66,11 +66,12 @@ const PricingCarousel = ({ PricingList, pricingPeriod }: Props) => {
     const priorities = ["basic", "pro", "premium"];
 
     if (filterList.length === 3) {
-      filterList.sort(
-        (a, b) =>
-          priorities.indexOf(a.priority) - priorities.indexOf(b.priority),
-      );
-    } else if (filterList.length === 2) {
+      filterList.sort((a, b) => {
+        if (a.priority === "premium") return 1;
+        if (b.priority === "premium") return -1;
+        return priorities.indexOf(a.priority) - priorities.indexOf(b.priority);
+      });
+    } else {
       filterList.sort(
         (a, b) =>
           priorities.indexOf(a.priority) - priorities.indexOf(b.priority),
