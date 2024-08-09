@@ -5,14 +5,13 @@ import styled, { css, keyframes } from "styled-components";
 
 import PricingCard from "./PricingCard";
 
-import { PricingPlan } from "@/interfaces/model/pricingplan.type";
+import { LandingPage } from "@/interfaces/model/landingPage.type";
 
 type Props = {
-  PricingList: PricingPlan[];
+  PricingList: LandingPage[];
   pricingPeriod: string;
 };
 
-// Step 1: Define keyframes for animation
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -24,7 +23,6 @@ const fadeIn = keyframes`
   }
 `;
 
-//Create a styled component with conditional animation
 const AnimatedFlex = styled(Flex)<{ animate: boolean }>`
   ${({ animate }) =>
     animate &&
@@ -34,7 +32,7 @@ const AnimatedFlex = styled(Flex)<{ animate: boolean }>`
 `;
 
 const PricingCarousel = ({ PricingList, pricingPeriod }: Props) => {
-  const [mapPeriod, setMapPeriod] = useState<PricingPlan[]>([]);
+  const [mapPeriod, setMapPeriod] = useState<LandingPage[]>([]);
   const [animate, setAnimate] = useState(false);
   const containerRef = useRef(null);
 
@@ -62,8 +60,23 @@ const PricingCarousel = ({ PricingList, pricingPeriod }: Props) => {
 
   useEffect(() => {
     const filterList = PricingList.filter(
-      (plan) => plan.recurrence_fee_name === pricingPeriod,
+      (plan) => plan.pricing_plan.recurrence_period === pricingPeriod,
     );
+
+    const priorities = ["basic", "pro", "premium"];
+
+    if (filterList.length === 3) {
+      filterList.sort(
+        (a, b) =>
+          priorities.indexOf(a.priority) - priorities.indexOf(b.priority),
+      );
+    } else if (filterList.length === 2) {
+      filterList.sort(
+        (a, b) =>
+          priorities.indexOf(a.priority) - priorities.indexOf(b.priority),
+      );
+    }
+
     setMapPeriod(filterList);
     setAnimate(true);
     setAnimate(false);
@@ -73,13 +86,17 @@ const PricingCarousel = ({ PricingList, pricingPeriod }: Props) => {
     <div ref={containerRef}>
       <AnimatedFlex animate={animate}>
         <Flex justify={"center"} align={"center"}>
-          {mapPeriod.map((plan) =>
-            plan.name === "Premium" ? (
-              <PricingCard isPrimary key={plan.id} PricingPlan={plan} />
-            ) : (
-              <PricingCard key={plan.id} PricingPlan={plan} />
-            ),
-          )}
+          {mapPeriod.map((plan) => {
+            if (plan.priority === "premium") {
+              return <PricingCard isPrimary key={plan.id} PricingPlan={plan} />;
+            } else if (mapPeriod.length === 1) {
+              return <PricingCard isPrimary key={plan.id} PricingPlan={plan} />;
+            } else if (mapPeriod.length === 2 && plan.priority === "pro") {
+              return <PricingCard isPrimary key={plan.id} PricingPlan={plan} />;
+            } else {
+              return <PricingCard key={plan.id} PricingPlan={plan} />;
+            }
+          })}
         </Flex>
       </AnimatedFlex>
     </div>

@@ -1,12 +1,13 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { EditOutlined } from "@ant-design/icons";
-import { Checkbox } from "antd";
+import { Checkbox, Tag } from "antd";
 import { ColumnType } from "antd/es/table";
+import dayjs from "dayjs";
 
-import { PRICING_PlANS } from "@/constants/routes";
+import { DATE_FORMAT } from "@/constants/date";
+import { PRICING_PLANS } from "@/constants/routes";
 import { PricingPlanTableData } from "@/interfaces/model/pricingplan.type";
-
 const useGenerateColumns = () => {
   return useMemo<ColumnType<PricingPlanTableData>[]>(
     () => [
@@ -17,14 +18,23 @@ const useGenerateColumns = () => {
         align: "center",
       },
       {
+        title: "Name",
+        dataIndex: "name",
+        key: "name",
+      },
+      {
         title: "Start date",
         dataIndex: "start_date",
         key: "start_date",
+        width: 120,
+        render: (value) => <p>{dayjs(value).format(DATE_FORMAT)}</p>,
       },
       {
         title: "End date",
         dataIndex: "end_date",
         key: "end_date",
+        width: 120,
+        render: (value) => <p>{dayjs(value).format(DATE_FORMAT)}</p>,
       },
       {
         title: "Price",
@@ -40,6 +50,29 @@ const useGenerateColumns = () => {
         title: "Feature",
         dataIndex: "features",
         key: "features",
+        render: (_, record) => {
+          return (
+            <div>
+              {record.features?.slice(0, 3).map((feature) => (
+                <Tag
+                  style={{
+                    textAlign: "center",
+                    color: "#15ABFF",
+                    borderRadius: 14,
+                    fontSize: 12,
+                    borderColor: "transparent",
+                    fontWeight: 400,
+                    background: "#F0F9FF",
+                    padding: "4px 8px",
+                  }}
+                  key={feature.id}
+                >
+                  {feature.name}
+                </Tag>
+              ))}
+            </div>
+          );
+        },
       },
       {
         title: "Active",
@@ -52,8 +85,8 @@ const useGenerateColumns = () => {
       },
       {
         title: "Free trial",
-        dataIndex: "is_free_trial",
-        key: "is_free_trial",
+        dataIndex: "has_free_trial",
+        key: "has_free_trial",
         align: "center",
         render: (is_overrate: boolean) => {
           return <Checkbox checked={is_overrate}></Checkbox>;
@@ -65,9 +98,10 @@ const useGenerateColumns = () => {
         key: "action",
         width: 150,
         align: "center",
+        fixed: "right",
         render: (_, record) => {
           return (
-            <Link href={`${PRICING_PlANS}/${record.id}`}>
+            <Link href={`${PRICING_PLANS}/${record.id}`}>
               <EditOutlined size={100} />
             </Link>
           );

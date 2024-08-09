@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
-import Link from "next/link";
-import { EditOutlined } from "@ant-design/icons";
 import { ColumnType } from "antd/es/table";
+import dayjs from "dayjs";
 
 import LongText from "@/components/table/LongText";
-import { LANDING_PAGE } from "@/constants/routes";
+import { DATE_FORMAT } from "@/constants/date";
 import { LandingPageTableData } from "@/interfaces/model/landingPage.type";
+import { capitalize, formatDuration } from "@/utils/string";
 
 const useGenerateColumns = () => {
   return useMemo<ColumnType<LandingPageTableData>[]>(
@@ -22,17 +22,50 @@ const useGenerateColumns = () => {
         dataIndex: "name",
         key: "name",
         width: 350,
-        render: (value) => {
-          return <LongText text={value} width={350} />;
+        render: (_, record) => {
+          return <LongText text={record?.pricing_plan?.name} width={350} />;
         },
       },
       {
-        title: "Display Name",
-        dataIndex: "display_name",
-        key: "display_name",
-        width: 350,
-        render: (value) => {
-          return <LongText text={value} width={350} />;
+        title: "Start Date",
+        dataIndex: "start_date",
+        key: "start_date",
+        render: (_, record) => {
+          return dayjs(record?.pricing_plan?.start_date).format(DATE_FORMAT);
+        },
+      },
+      {
+        title: "End Date",
+        dataIndex: "end_date",
+        key: "end_date",
+        render: (_, record) => {
+          return dayjs(record?.pricing_plan?.end_date).format(DATE_FORMAT);
+        },
+      },
+      {
+        title: "Fee",
+        dataIndex: "price",
+        key: "price",
+        render: (_, record) => {
+          return record?.pricing_plan?.recurrence_fee?.price;
+        },
+      },
+      {
+        title: "Period",
+        dataIndex: "recurrence_period",
+        key: "recurrence_period",
+        render: (_, record) => {
+          return capitalize(
+            formatDuration(record?.pricing_plan?.recurrence_period),
+          );
+        },
+      },
+      {
+        title: "Level",
+        dataIndex: "priority",
+        key: "priority",
+        render: (_, record) => {
+          return capitalize(record?.priority);
         },
       },
       {
@@ -40,21 +73,12 @@ const useGenerateColumns = () => {
         dataIndex: "description",
         key: "description",
         width: 350,
-        render: (value) => {
-          return <LongText text={value} width={350} />;
-        },
-      },
-      {
-        title: "Action",
-        dataIndex: "action",
-        key: "action",
-        align: "center",
-        width: 150,
         render: (_, record) => {
           return (
-            <Link href={`${LANDING_PAGE}/${record.id}`}>
-              <EditOutlined size={100} />
-            </Link>
+            <LongText
+              text={record?.pricing_plan?.description ?? ""}
+              width={350}
+            />
           );
         },
       },

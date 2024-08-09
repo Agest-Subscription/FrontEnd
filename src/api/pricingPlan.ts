@@ -4,12 +4,13 @@ import {
   AddPricingPlanPayload,
   PricingPlanFilterParams,
   PricingPlanResponseItem,
+  PricingPlanTableData,
   UpdatePricingPlanPayload,
 } from "@/interfaces/model/pricingplan.type";
 
 export const getListPricingPlansApi = (params: PricingPlanFilterParams) => {
-  return axiosClient.get<GetListResponse<PricingPlanResponseItem>>(
-    "pricingplans",
+  return axiosClient.get<GetListResponse<PricingPlanTableData>>(
+    "pricing-plans",
     {
       params,
     },
@@ -17,18 +18,18 @@ export const getListPricingPlansApi = (params: PricingPlanFilterParams) => {
 };
 
 export const getPricingPlanbyIdApi = (id: string) => {
-  return axiosClient.get<PricingPlanResponseItem>(`pricingplans/${id}`);
+  return axiosClient.get<PricingPlanResponseItem>(`pricing-plans/${id}`);
 };
 
 export const addPricingPlanApi = (data: AddPricingPlanPayload) => {
-  return axiosClient.post("pricingplans", data);
+  return axiosClient.post("pricing-plans", data);
 };
 
 export const updatePricingPlanApi = (data: UpdatePricingPlanPayload) => {
   const { id, ...rest } = data;
-  return axiosClient.put(`pricingplans/${id}`, rest);
+  return axiosClient.put(`pricing-plans/${id}`, rest);
 };
 
 export const deletePricingPlanApi = (id: string) => {
-  return axiosClient.delete(`pricingplans/${id}`);
+  return axiosClient.delete(`pricing-plans/${id}`);
 };

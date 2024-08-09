@@ -52,7 +52,7 @@ const PermissionDetails: React.FC<DetailsProp> = ({
           <ButtonV1
             title="Cancel"
             customType="cancel"
-            onClick={() => goToPermission}
+            onClick={() => goToPermission()}
           />
           <ButtonV1
             title="Save"

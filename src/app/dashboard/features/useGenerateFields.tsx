@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { Spin } from "antd";
+import { debounce } from "lodash";
 
 import { useGetInfinitePermission } from "@/hooks/permission";
 import { FieldsData } from "@/interfaces/form";
@@ -42,7 +43,6 @@ export const useGenerateFields = (
         type: "text",
         componentProps: {
           isRequired: true,
-          style: { width: "250px", height: "40px" },
         },
       },
       permissions: {
@@ -54,13 +54,9 @@ export const useGenerateFields = (
           isRequired: true,
           filterOption: true,
           optionFilterProp: "label",
-          onSearch: (searchTerm) => {
-            setSearchTerm(searchTerm);
-          },
+          onSearch: debounce((value) => setSearchTerm(value), 500),
           onChange: () => setSearchTerm(""),
           allowClear: true,
-          style: { width: "250px" },
-          maxTagCount: "responsive",
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
             const target = event.target as HTMLDivElement;
             if (
@@ -83,7 +79,7 @@ export const useGenerateFields = (
         label: "Description",
         type: "textarea",
         componentProps: {
-          style: { width: "500px", height: "95px" },
+          rows: 3,
         },
       },
       is_active: {

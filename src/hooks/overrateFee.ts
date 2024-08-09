@@ -14,7 +14,7 @@ import {
   getOverrateFeeByIdApi,
   updateOverrateFeeApi,
 } from "@/api/overrateFee";
-import { OVERRATE_FEE, OVERRATE_FEES } from "@/constants/query";
+import { FEES, OVERRATE_FEE, OVERRATE_FEES } from "@/constants/query";
 import { CustomError } from "@/interfaces/base";
 import { FeeFilterParams } from "@/interfaces/model/fee.type";
 import { OverrateFeeFilterParams } from "@/interfaces/model/overrateFee.type";
@@ -79,7 +79,7 @@ export const useGetInfiniteIsOverrateFee = (params: FeeFilterParams) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const query = useInfiniteQuery({
-    queryKey: ["FEES", searchTerm, params],
+    queryKey: [FEES, searchTerm, params],
     queryFn: ({ pageParam = 1 }) =>
       getListIsOverrateFeesApi({
         ...params,

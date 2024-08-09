@@ -7,6 +7,7 @@ import { ColumnType } from "antd/es/table";
 import LongText from "@/components/table/LongText";
 import { FEES } from "@/constants/routes";
 import { FeeTableData } from "@/interfaces/model/fee.type";
+import { capitalize } from "@/utils/string";
 
 const useGenerateColumns = () => {
   return useMemo<ColumnType<FeeTableData>[]>(
@@ -17,6 +18,7 @@ const useGenerateColumns = () => {
         key: "no",
         align: "center",
       },
+
       {
         title: "Name",
         dataIndex: "name",
@@ -29,24 +31,30 @@ const useGenerateColumns = () => {
         title: "Type",
         dataIndex: "fee_type",
         key: "fee_type",
+        render: (value) => {
+          return capitalize(value);
+        },
       },
       {
         title: "Fee",
-        dataIndex: "fee_price",
-        key: "fee_price",
+        dataIndex: "price",
+        key: "price",
       },
       {
         title: "Transaction Unit",
         dataIndex: "transaction_unit",
         key: "transaction_unit",
         render: (value) => {
-          return <LongText text={value} />;
+          return <LongText text={capitalize(value)} />;
         },
       },
       {
         title: "Recurrence Type",
         dataIndex: "recurrence_type",
         key: "recurrence_type",
+        render: (value) => {
+          return capitalize(value);
+        },
       },
       {
         title: "Recurrence Cycle Count",
@@ -71,20 +79,21 @@ const useGenerateColumns = () => {
           return <Checkbox checked={is_active}></Checkbox>;
         },
       },
-      {
-        title: "Overrate Fee",
-        dataIndex: "is_overrate",
-        key: "is_overrate",
-        align: "center",
-        render: (is_overrate: boolean) => {
-          return <Checkbox checked={is_overrate}></Checkbox>;
-        },
-      },
+      // {
+      //   title: "Overrate Fee",
+      //   dataIndex: "is_overrate",
+      //   key: "is_overrate",
+      //   align: "center",
+      //   render: (is_overrate: boolean) => {
+      //     return <Checkbox checked={is_overrate}></Checkbox>;
+      //   },
+      // },
       {
         title: "Action",
         dataIndex: "action",
         key: "action",
         align: "center",
+        fixed: "right",
         render: (_, record) => {
           return (
             <Link href={`${FEES}/${record.id}`}>

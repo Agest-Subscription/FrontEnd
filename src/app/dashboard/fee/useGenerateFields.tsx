@@ -8,9 +8,9 @@ import {
 } from "@/interfaces/model/fee.type";
 import { enumToSelectOptions } from "@/utils/enum";
 
-export const useGenerateFields = () => {
-  const fields = useMemo<FieldsData<FeeFormValues>>(() => {
-    return {
+export const useGenerateFields = (): FieldsData<FeeFormValues> => {
+  return useMemo<FieldsData<FeeFormValues>>(
+    () => ({
       name: {
         label: "Name",
         type: "text",
@@ -36,13 +36,13 @@ export const useGenerateFields = () => {
           style: { width: "100%" },
         },
       },
-      fee_price: {
+      price: {
         label: "Price ($)",
         type: "text",
         componentProps: {
           isRequired: true,
-          type: "number",
           min: 0,
+          type: "number",
         },
       },
       recurrence_type: {
@@ -74,11 +74,24 @@ export const useGenerateFields = () => {
         label: "Is Active",
         type: "singleCheckbox",
       },
-      is_overrate: {
-        label: "Overrate Fee",
-        type: "singleCheckbox",
+      "overrate_fees.[].price": {
+        label: "Price ($)",
+        type: "text",
+        componentProps: {
+          isRequired: true,
+          type: "number",
+          min: 1,
+        },
       },
-    };
-  }, []);
-  return fields;
+      "overrate_fees.[].threshold": {
+        label: "Threshold",
+        type: "text",
+        componentProps: {
+          isRequired: true,
+          type: "number",
+        },
+      },
+    }),
+    [],
+  );
 };

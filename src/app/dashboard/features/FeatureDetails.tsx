@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex } from "antd";
+import { Col, Flex, Row } from "antd";
 
 import ButtonV1 from "@/components/button/CustomButton";
 import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
@@ -28,13 +28,20 @@ const FeatureDetails: React.FC<DetailsProp> = ({
         gap={24}
         style={{ border: "1px solid #BDC1CA", padding: "16px" }}
       >
-        <Flex gap={24}>
-          <FormField name="name" />
-          <FormField name="permissions" />
-        </Flex>
-        <Flex>
-          <FormField name="description" />
-        </Flex>
+        <Row gutter={24}>
+          <Col span={6}>
+            <FormField name="name" />
+          </Col>
+          <Col span={18}>
+            <FormField name="permissions" />
+          </Col>
+        </Row>
+        <Row gutter={24}>
+          <Col span={24}>
+            <FormField name="description" />
+          </Col>
+        </Row>
+
         <FormField name="is_active" />
       </Flex>
       <Flex

@@ -16,21 +16,25 @@ const useGenerateColumns = () => {
         title: "No",
         dataIndex: "no",
         key: "no",
+        align: "center",
+        width: "50px",
       },
+
       {
         title: "Name",
         dataIndex: "name",
         key: "name",
-        width: 250,
+        width: "100px",
+
         render: (value) => {
-          return <LongText text={value} width={250} />;
+          return <LongText wrap={false} text={value} width={250} />;
         },
       },
       {
         title: "Permission",
         dataIndex: "permissions",
         key: "permissions",
-        width: 250,
+        width: "700px",
         render: (_, record) => {
           return <TableTag permissions={record.permissions}></TableTag>;
         },
@@ -39,9 +43,9 @@ const useGenerateColumns = () => {
         title: "Description",
         dataIndex: "description",
         key: "description",
-        width: 450,
+        width: "400px",
         render: (value) => {
-          return <LongText text={value} width={450} />;
+          return <LongText wrap={false} text={value} width={300} />;
         },
       },
       {
@@ -52,13 +56,15 @@ const useGenerateColumns = () => {
         render: (_, record) => {
           return <Checkbox checked={record.is_active}></Checkbox>;
         },
+        width: "1px",
       },
       {
         title: "Action",
         dataIndex: "action",
         key: "action",
-        width: 150,
-        align: "center" as const,
+        align: "center",
+        fixed: "right",
+        width: "20px",
         render: (_, record) => {
           return (
             <Link href={`${FEATURES}/${record.id}`}>

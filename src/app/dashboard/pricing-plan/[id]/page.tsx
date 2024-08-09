@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
 
-import AddFeature from "../AddFeature";
 import PricingPlanDetails from "../PricingPlanDetails";
 import { useGenerateFields } from "../useGenerateFields";
 
@@ -17,8 +17,14 @@ import {
 } from "@/hooks/pricingPlan";
 import useGetId from "@/hooks/useGetId";
 import { CustomError } from "@/interfaces/base";
-import { PricingPlanFormValues } from "@/interfaces/model/pricingplan.type";
+import {
+  PricingPlanFeaturesType,
+  PricingPlanFormValues,
+  PricingPlanResponseItem,
+  UpdatePricingPlanPayload,
+} from "@/interfaces/model/pricingplan.type";
 import { popUpPropType } from "@/interfaces/popup";
+import pricingplanFormValuesSchema from "@/schema/pricingPlan";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
@@ -32,8 +38,12 @@ const Page: React.FC<Props> = () => {
     useDeletePricingPlan();
   const goToPricingPlan = useGoToDashboardTab("pricing-plan");
   const id = useGetId();
-
+  const methods = useForm<PricingPlanFormValues>({
+    mode: "onBlur",
+    resolver: yupResolver(pricingplanFormValuesSchema),
+  });
   const [openModal, setOpenModal] = useState(false);
+  const has_free_trial = methods.watch("has_free_trial");
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "",
     popup_text: "",
@@ -42,18 +52,32 @@ const Page: React.FC<Props> = () => {
     onClose: () => setOpenModal(false),
   });
 
-  const methods = useForm<PricingPlanFormValues>({
-    mode: "onBlur",
-  });
-
   const { data: PricingPlan, isError } = useGetPricingPlanById(id);
   const start_date = methods.watch("start_date");
-  const fields = useGenerateFields(start_date);
+  const fields = useGenerateFields(start_date, methods);
   useEffect(() => {
     if (PricingPlan) {
       methods.setValue("description", PricingPlan.description);
       methods.setValue("name", PricingPlan.name);
       methods.setValue("is_active", PricingPlan.is_active);
+      methods.setValue("start_date", PricingPlan.start_date);
+      methods.setValue("end_date", PricingPlan.end_date);
+      methods.setValue("free_trial_period", PricingPlan.free_trial_period);
+      methods.setValue(
+        "free_trial_period_count",
+        PricingPlan.free_trial_period_count,
+      );
+      methods.setValue("has_free_trial", PricingPlan.has_free_trial);
+      methods.setValue(
+        "recurrence_fee_id",
+        PricingPlan.recurrence_fee?.id ?? null,
+      );
+      if (PricingPlan.recurrence_fee) {
+        methods.setValue("recurrence_fee", {
+          ...PricingPlan?.recurrence_fee,
+          fee_type: "recurrence",
+        });
+      }
     }
   }, [PricingPlan, methods]);
 
@@ -65,33 +89,29 @@ const Page: React.FC<Props> = () => {
     setOpenModal(true);
   };
 
-  const handleSubmit = (data: PricingPlanFormValues) => {
-    updatePricingPlan(
-      {
-        id,
-        ...data,
-        price: 0,
-        features: [],
-      },
-      {
-        onSuccess: () =>
-          showModal({
-            popup_id: "successpopup",
-            popup_text: capitalize("Pricing plan is updated successfully!"),
-            popup_type: "Success",
-            onConfirm: () => {},
-            onClose: () => goToPricingPlan(),
-          }),
-        onError: (err: CustomError) =>
-          showModal({
-            popup_id: "fail",
-            popup_text: `${capitalize(getErrorDetail(err) ?? "Pricing plan update failed")}`,
-            popup_type: "Fail",
-            onConfirm: () => {},
-            onClose: () => setOpenModal(false),
-          }),
-      },
-    );
+  const handleSubmit = (
+    data: PricingPlanFormValues,
+    featureList: PricingPlanFeaturesType[] = [],
+  ) => {
+    const categorizedData = categorizePayload(PricingPlan, data, featureList);
+    updatePricingPlan(categorizedData, {
+      onSuccess: () =>
+        showModal({
+          popup_id: "successpopup",
+          popup_text: capitalize("Pricing plan is updated successfully!"),
+          popup_type: "Success",
+          onConfirm: () => goToPricingPlan(),
+          onClose: () => goToPricingPlan(),
+        }),
+      onError: (err: CustomError) =>
+        showModal({
+          popup_id: "fail",
+          popup_text: `${capitalize(getErrorDetail(err) ?? "Pricing plan update failed")}`,
+          popup_type: "Fail",
+          onConfirm: () => {},
+          onClose: () => setOpenModal(false),
+        }),
+    });
   };
 
   const handleDelete = () => {
@@ -101,7 +121,7 @@ const Page: React.FC<Props> = () => {
           popup_id: "successpopup",
           popup_text: capitalize("This Pricing plan is successfully deleted!"),
           popup_type: "Success",
-          onConfirm: () => {},
+          onConfirm: () => goToPricingPlan(),
           onClose: () => goToPricingPlan(),
         }),
       onError: (err: CustomError) =>
@@ -115,28 +135,67 @@ const Page: React.FC<Props> = () => {
     });
   };
 
-  const handleSave = async () => {
+  const handleSave = async (featureList: PricingPlanFeaturesType[]) => {
     const isValid = await methods.trigger();
+    console.log(methods.formState.errors);
     if (isValid) {
       showModal({
-        popup_id: "update",
-        popup_text: `${capitalize("Are you sure to update this pricing plan?")}`,
+        popup_id: "confirm",
+        popup_text: `${capitalize("Are you sure to create a new Pricing Plan?")}`,
         popup_type: "Confirm",
-        onConfirm: methods.handleSubmit(handleSubmit),
+        onConfirm: methods.handleSubmit((data) =>
+          handleSubmit(data, featureList),
+        ),
         onClose: () => setOpenModal(false),
       });
     }
   };
 
-  function handleAddFeature() {
-    showModal({
-      popup_id: "addfeature",
-      popup_type: "Confirm",
-      width: "1408px",
-      pop_up_content: <AddFeature handleCancel={() => setOpenModal(false)} />,
-      onConfirm: () => setOpenModal(false),
-      onClose: () => setOpenModal(false),
+  function categorizePayload(
+    editRecord: PricingPlanResponseItem | undefined,
+    data: PricingPlanFormValues,
+    featureList: PricingPlanFeaturesType[],
+  ): UpdatePricingPlanPayload {
+    const getFeatureAssociation = (item: PricingPlanFeaturesType) => ({
+      feature_id: item.id,
+      fee_id: item.fee?.id ?? null,
+      new_price: item.new_price,
+      overrate_fee_associations:
+        item.children?.map((child) => ({
+          fee_overrate_id: child.id,
+          new_overrate_price: child.new_price ?? null,
+        })) ?? null,
     });
+    const deleteIds =
+      editRecord?.feature_plan_fees
+        .filter(
+          (item) =>
+            !featureList.some(
+              (feature) =>
+                feature.id === item.feature.id &&
+                "feature_plan_fee_id" in feature,
+            ),
+        )
+        .map((item) => item.id) ?? null;
+    const add = featureList
+      .filter((item) => !("feature_plan_fee_id" in item))
+      .map(getFeatureAssociation);
+    const update = featureList
+      .filter(
+        (item) =>
+          item.feature_plan_fee_id !== null && "feature_plan_fee_id" in item,
+      )
+      .map(getFeatureAssociation);
+
+    return {
+      id: id, // Assuming 'id' is a part of 'data'
+      ...data,
+      features: {
+        add,
+        update,
+        delete: deleteIds,
+      },
+    };
   }
 
   return (
@@ -149,9 +208,10 @@ const Page: React.FC<Props> = () => {
           <Form
             style={{ display: "flex", flexDirection: "column", gap: "20px" }}
             layout="vertical"
-            onFinish={methods.handleSubmit(handleSubmit)}
           >
             <PricingPlanDetails
+              has_free_trial={has_free_trial}
+              selectedRows={PricingPlan?.feature_plan_fees}
               edit
               onDelete={() =>
                 showModal({
@@ -162,7 +222,6 @@ const Page: React.FC<Props> = () => {
                   onClose: () => setOpenModal(false),
                 })
               }
-              onAddFeature={handleAddFeature}
               onSave={handleSave}
             />
             <PopUp popupProps={modalProp} isOpen={openModal} />

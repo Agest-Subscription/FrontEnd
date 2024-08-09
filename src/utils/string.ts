@@ -51,3 +51,13 @@ export function trimString<T>(data: T, fields: TrimmedFields<T>[]): T {
 
   return trimmedData;
 }
+
+export function formatDuration(duration: string): string {
+  if (duration) {
+    const [number, unit] = duration.split(" ");
+
+    return `${number} ${unit}${number === "1" ? "" : "s"}`;
+  }
+
+  return "";
+}

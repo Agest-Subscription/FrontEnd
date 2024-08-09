@@ -4,34 +4,28 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
 
-import LandingPageDetails from "../LandingPageDetails";
 import { useGenerateFields } from "../useGenerateFields";
+import UserDetails from "../UserDetails";
 
 import NotFound from "@/app/not-found";
 import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
 import PopUp from "@/components/popup/Popup";
-import {
-  useDeleteLandingPage,
-  useGetLandingPageById,
-  useUpdateLandingPage,
-} from "@/hooks/landingPage";
 import useGetId from "@/hooks/useGetId";
+import { useDeleteUser, useGetUserById, useUpdateUser } from "@/hooks/user";
 import { CustomError } from "@/interfaces/base";
-import { LandingPageFormValues } from "@/interfaces/model/landingPage.type";
+import { UserFormValues } from "@/interfaces/model/user";
 import { popUpPropType } from "@/interfaces/popup";
-import landingPageFormValuesSchema from "@/schema/landingPage";
+import userFormValuesSchema from "@/schema/user";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
-import { capitalize, trimString } from "@/utils/string";
+import { capitalize } from "@/utils/string";
 
 type Props = {};
 
 const Page: React.FC<Props> = () => {
-  const { mutate: updateLandingPage, isLoading: isUpdating } =
-    useUpdateLandingPage();
-  const { mutate: deleteLandingPage, isLoading: isDeleting } =
-    useDeleteLandingPage();
-  const goToLandingPage = useGoToDashboardTab("landing-page");
+  const { mutate: updateUser, isLoading: isUpdating } = useUpdateUser();
+  const { mutate: deleteUser, isLoading: isDeleting } = useDeleteUser();
+  const goToUser = useGoToDashboardTab("users");
   const id = useGetId();
   const fields = useGenerateFields();
   const [openModal, setOpenModal] = useState(false);
@@ -43,47 +37,45 @@ const Page: React.FC<Props> = () => {
     onClose: () => setOpenModal(false),
   });
 
-  const methods = useForm<LandingPageFormValues>({
+  const methods = useForm<UserFormValues>({
     mode: "onBlur",
-    resolver: yupResolver(landingPageFormValuesSchema),
+    resolver: yupResolver(userFormValuesSchema),
   });
 
-  const { data: LandingPage, isError } = useGetLandingPageById(id);
+  const { data: User, isError } = useGetUserById(id);
 
   useEffect(() => {
-    if (LandingPage) {
-      methods.setValue("description", LandingPage.description);
-      methods.setValue("display_name", LandingPage.display_name);
-      methods.setValue("name", LandingPage.name);
-      methods.setValue("is_active", LandingPage.is_active);
+    if (User) {
+      methods.setValue("email", User.email);
+      methods.setValue("is_admin", User.is_admin);
+      methods.setValue("is_active", User.is_active);
     }
-  }, [LandingPage, methods]);
+  }, [User, methods]);
 
   if (isError) {
-    return <NotFound previousPage="landing-page" />;
+    return <NotFound previousPage="users" />;
   }
   const showModal = (prop: popUpPropType) => {
     setModalProp(prop);
     setOpenModal(true);
   };
 
-  const handleSubmit = (data: LandingPageFormValues) => {
-    const trimmed = trimString(data, ["name", "display_name"]);
-    updateLandingPage(
-      { id, ...trimmed },
+  const handleSubmit = (data: UserFormValues) => {
+    updateUser(
+      { id, ...data },
       {
         onSuccess: () =>
           showModal({
             popup_id: "successpopup",
-            popup_text: capitalize("Landing Page is updated successfully!"),
+            popup_text: capitalize("User is updated successfully!"),
             popup_type: "Success",
             onConfirm: () => {},
-            onClose: () => goToLandingPage(),
+            onClose: () => goToUser(),
           }),
         onError: (err: CustomError) =>
           showModal({
             popup_id: "fail",
-            popup_text: `${capitalize(getErrorDetail(err) ?? "Landing Page update failed")}`,
+            popup_text: `${capitalize(getErrorDetail(err) ?? "User update failed")}`,
             popup_type: "Fail",
             onConfirm: () => {},
             onClose: () => setOpenModal(false),
@@ -93,19 +85,19 @@ const Page: React.FC<Props> = () => {
   };
 
   const handleDelete = () => {
-    deleteLandingPage(id, {
+    deleteUser(id, {
       onSuccess: () =>
         showModal({
           popup_id: "successpopup",
-          popup_text: capitalize("This Landing Page is successfully deleted!"),
+          popup_text: capitalize("This User is successfully deleted!"),
           popup_type: "Success",
           onConfirm: () => {},
-          onClose: () => goToLandingPage(),
+          onClose: () => goToUser(),
         }),
       onError: (err: CustomError) =>
         showModal({
           popup_id: "fail",
-          popup_text: `${capitalize(getErrorDetail(err) ?? "LandingPage delete failed")}`,
+          popup_text: `${capitalize(getErrorDetail(err) ?? "User delete failed")}`,
           popup_type: "Fail",
           onConfirm: () => {},
           onClose: () => setOpenModal(false),
@@ -118,7 +110,7 @@ const Page: React.FC<Props> = () => {
     if (isValid) {
       showModal({
         popup_id: "update",
-        popup_text: `${capitalize("Are you sure to update this landing page?")}`,
+        popup_text: `${capitalize("Are you sure to update this user?")}`,
         popup_type: "Confirm",
         onConfirm: methods.handleSubmit(handleSubmit),
         onClose: () => setOpenModal(false),
@@ -129,7 +121,7 @@ const Page: React.FC<Props> = () => {
   return (
     <Flex vertical gap={24}>
       <Typography style={{ fontSize: 24, fontWeight: 600, color: "#2F80ED" }}>
-        {capitalize("LandingPage Detail")}
+        {capitalize("User Detail")}
       </Typography>
       <Spin spinning={isUpdating || isDeleting}>
         <FormWrapperV2 methods={methods} fields={fields}>
@@ -138,12 +130,12 @@ const Page: React.FC<Props> = () => {
             layout="vertical"
             onFinish={methods.handleSubmit(handleSubmit)}
           >
-            <LandingPageDetails
+            <UserDetails
               edit
               onDelete={() =>
                 showModal({
                   popup_id: "delete",
-                  popup_text: `${capitalize("Are you sure to delete this landing page?")}`,
+                  popup_text: `${capitalize("Are you sure to delete this user?")}`,
                   popup_type: "Confirm",
                   onConfirm: handleDelete,
                   onClose: () => setOpenModal(false),

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
+import { omit } from "lodash";
 
 import FeesDetails from "../FeesDetails";
 import { useGenerateFields } from "../useGenerateFields";
@@ -13,7 +14,7 @@ import PopUp from "@/components/popup/Popup";
 import { useDeleteFee, useGetFeeById, useUpdateFee } from "@/hooks/fee";
 import useGetId from "@/hooks/useGetId";
 import { CustomError } from "@/interfaces/base";
-import { FeeFormValues } from "@/interfaces/model/fee.type";
+import { Delete, FeeFormValues, Update } from "@/interfaces/model/fee.type";
 import { popUpPropType } from "@/interfaces/popup";
 import feeFormValuesSchema from "@/schema/fee";
 import { getErrorDetail } from "@/utils/error";
@@ -42,18 +43,51 @@ const Page: React.FC<Props> = () => {
   });
 
   function formatPayload(data: FeeFormValues) {
+    const update: Update[] = [];
+    const deleteItems: Delete[] = [];
+
+    const feeReduceDelete = Fee?.overrate_fees?.reduce(
+      (acc, item) => {
+        if (!data.overrate_fees?.some((fee) => fee.id === item.id)) {
+          acc.deleteItems.push(item);
+        }
+        return acc;
+      },
+      { deleteItems },
+    );
+
+    const feeReduceUpdate = data.overrate_fees?.reduce(
+      (acc, item) => {
+        if (Fee?.overrate_fees?.some((fee) => fee.id === item.id)) {
+          acc.update.push(item);
+        }
+
+        return acc;
+      },
+      { update },
+    );
+
+    const createItems = data.overrate_fees?.filter((item) => !item.id) || [];
+
     if (data.fee_type === "transaction") {
       return {
         ...data,
         recurrence_cycle_count: null,
         recurrence_type: null,
+        create: createItems.map((item) => omit(item, "isTransaction")) || [],
+        update:
+          feeReduceUpdate?.update.map((item) => omit(item, "isTransaction")) ||
+          [],
+        delete:
+          feeReduceDelete?.deleteItems.map((item) =>
+            omit(item, "isTransaction"),
+          ) || [],
       };
     }
     if (data.fee_type === "onetime") {
       return {
         ...data,
         transaction_unit: null,
-        is_overrate: null,
         recurrence_cycle_count: null,
         recurrence_type: null,
       };
@@ -62,7 +96,6 @@ const Page: React.FC<Props> = () => {
       return {
         ...data,
         transaction_unit: null,
-        is_overrate: null,
       };
     }
     return data; // or handle other fee_type cases if necessary
@@ -73,6 +106,7 @@ const Page: React.FC<Props> = () => {
   }
   function onSubmit(data: FeeFormValues) {
     const newData = formatPayload(data);
+
     const trimmed = trimString(newData, ["name"]);
     updateFee(
       { id, ...trimmed },
@@ -101,6 +135,7 @@ const Page: React.FC<Props> = () => {
 
   const handleSave = async () => {
     const isValid = await methods.trigger();
+
     if (isValid) {
       showModal({
         popup_id: "confirm",
@@ -109,6 +144,8 @@ const Page: React.FC<Props> = () => {
         onConfirm: methods.handleSubmit(onSubmit),
         onClose: () => setOpenModal(false),
       });
+    } else {
+      console.error("Validation Errors: ", methods.formState.errors);
     }
   };
 
@@ -137,15 +174,16 @@ const Page: React.FC<Props> = () => {
     if (Fee) {
       methods.setValue("name", Fee.name);
       methods.setValue("fee_type", Fee.fee_type);
-      methods.setValue("fee_price", Fee.fee_price);
+      methods.setValue("price", Fee.price);
       methods.setValue("description", Fee.description);
       methods.setValue("transaction_unit", Fee.transaction_unit);
-      methods.setValue("is_overrate", Fee.is_overrate);
       methods.setValue("recurrence_cycle_count", Fee.recurrence_cycle_count);
       methods.setValue("recurrence_type", Fee.recurrence_type);
       methods.setValue("is_active", Fee.is_active);
+      methods.setValue("overrate_fees", Fee.overrate_fees || []);
     }
   }, [Fee, methods]);
+
   if (isError) {
     return <NotFound previousPage="fee" />;
   }

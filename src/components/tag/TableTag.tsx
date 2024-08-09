@@ -2,12 +2,11 @@ import { useState } from "react";
 import { CaretUpOutlined, EllipsisOutlined } from "@ant-design/icons";
 import { Button, ConfigProvider, Flex, Tag } from "antd";
 
-import LongText from "../table/LongText";
-
 import { Permission } from "@/interfaces/model/permission.type";
 
 type Props = {
   permissions: Permission[];
+  width?: string;
 };
 
 const TableTag = ({ permissions }: Props) => {
@@ -35,24 +34,26 @@ const TableTag = ({ permissions }: Props) => {
         },
       }}
     >
-      <Flex wrap gap="small" style={{ width: "360px" }}>
+      <Flex wrap gap="small" style={{ width: "100%" }}>
         {isLoadMore
           ? permissions.map((permission) => (
               <Tag key={permission.id} bordered={false}>
-                <LongText
+                {/* <LongText
                   text={permission.display_name}
                   centerText
-                  width={80}
-                />
+                  width={width}
+                /> */}
+                {permission.display_name}
               </Tag>
             ))
           : permissions.slice(0, 3).map((permission) => (
               <Tag key={permission.id} bordered={false}>
-                <LongText
+                {/* <LongText
                   text={permission.display_name}
                   centerText
-                  width={80}
-                />
+                  width={width}
+                /> */}
+                {permission.display_name}
               </Tag>
             ))}
         {permissions.length > 3 ? (

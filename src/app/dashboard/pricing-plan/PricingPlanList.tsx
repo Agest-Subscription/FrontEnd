@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import useGenerateColumns from "./useGenerateColumns";
 
 import TableV1 from "@/components/table/TableV1";
-import { PRICING_PlANS } from "@/constants/routes";
+import { PRICING_PLANS } from "@/constants/routes";
 import { useGetListPricingPlans } from "@/hooks/pricingPlan";
 import useSearchSync from "@/hooks/useSearchSync";
 import {
@@ -21,7 +21,7 @@ type Props = {};
 
 const PermissionList: React.FC<Props> = () => {
   const router = useRouter();
-  const { searchQuery, handleSearch } = useSearchSync();
+  const { searchQuery, handleSearch } = useSearchSync(resetPagination);
   const [tableParams, setTableParams] = useState<
     TableParams<PricingPlanTableData>
   >({
@@ -58,6 +58,15 @@ const PermissionList: React.FC<Props> = () => {
     });
   };
 
+  function resetPagination() {
+    setTableParams((prev) => ({
+      ...prev,
+      pagination: {
+        ...prev.pagination,
+        current: 1,
+      },
+    }));
+  }
   useEffect(() => {
     if (!PricingPlanTableData) return;
     setTableParams((prev) => {
@@ -84,6 +93,7 @@ const PermissionList: React.FC<Props> = () => {
         ...pricingPlan,
         key: pricingPlan.id,
         no: index + 1 + ((params.page ?? 1) - 1) * (params?.page_size ?? 5),
+        features: pricingPlan.features,
       })) ?? []
     );
   }, [PricingPlanTableData?.data, params.page, params?.page_size]);
@@ -100,9 +110,10 @@ const PermissionList: React.FC<Props> = () => {
           handleTableChange({ pagination, filters })
         }
         pagination={tableParams.pagination}
-        addItem={() => router.push(`${PRICING_PlANS}/add`)}
+        addItem={() => router.push(`${PRICING_PLANS}/add`)}
         onSearch={handleSearch}
         searchValue={searchQuery}
+        scroll={{ x: "max-content" }}
       />
     </div>
   );

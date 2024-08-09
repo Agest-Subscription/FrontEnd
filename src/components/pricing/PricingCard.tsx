@@ -2,12 +2,11 @@ import React from "react";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { Button, Flex, Typography } from "antd";
 
-import { PricingPlan } from "@/interfaces/model/pricingplan.type";
-import { capitalize } from "@/utils/string";
-
+import { LandingPage } from "@/interfaces/model/landingPage.type";
+import { capitalize, formatDuration } from "@/utils/string";
 type Props = {
   isPrimary?: boolean;
-  PricingPlan: PricingPlan;
+  PricingPlan: LandingPage;
 };
 
 const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
@@ -72,41 +71,42 @@ const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
             color: styles.colorTitle,
           }}
         >
-          {PricingPlan.name}
+          {capitalize(PricingPlan.priority)}
         </Typography>
         <Typography style={{ fontSize: 16, fontWeight: 400 }}>
-          {PricingPlan.description}
+          {PricingPlan.pricing_plan.description}
         </Typography>
         <Typography style={{ fontSize: 40, fontWeight: 700 }}>
-          ${PricingPlan.price}
-          <sup style={{ fontSize: 14, fontWeight: 400 }}>/month</sup>
+          ${PricingPlan.pricing_plan.recurrence_fee.price}
+          <sup style={{ fontSize: 14, fontWeight: 400 }}>
+            /{formatDuration(PricingPlan.pricing_plan.recurrence_period)}
+          </sup>
         </Typography>
 
         <Flex vertical>
-          {PricingPlan.features.map((feature) => (
-            <Flex gap={8} key={feature.id}>
+          {PricingPlan.pricing_plan.feature_plan_fees.map((feature, index) => (
+            <Flex gap={8} key={index}>
               <CheckCircleOutlined style={{ color: "green" }} />
               <Typography style={{ fontSize: 16, fontWeight: 400 }}>
-                {capitalize(feature.name)}
+                {capitalize(feature.feature?.name)}
               </Typography>
             </Flex>
           ))}
         </Flex>
       </Flex>
- 
-        <Button
-          style={{
-            backgroundColor: styles.buttonBackgroundColor,
-            color: styles.buttonTextColor,
-            marginTop: "5rem",
-            border: "1px solid #2F80ED",
-            padding: "24px 20px",
-            borderRadius: 4,
-          }}
-        >
-          Get Started
-        </Button>
 
+      <Button
+        style={{
+          backgroundColor: styles.buttonBackgroundColor,
+          color: styles.buttonTextColor,
+          marginTop: "5rem",
+          border: "1px solid #2F80ED",
+          padding: "24px 20px",
+          borderRadius: 4,
+        }}
+      >
+        Get Started
+      </Button>
     </Flex>
   );
 };

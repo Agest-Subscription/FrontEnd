@@ -1,32 +1,28 @@
 import { useMemo } from "react";
 
 import { FieldsData } from "@/interfaces/form";
-import { LandingPageFormValues } from "@/interfaces/model/landingPage.type";
+import { UserFormValues } from "@/interfaces/model/user";
 
 export const useGenerateFields = () => {
-  const fields = useMemo<FieldsData<LandingPageFormValues>>(() => {
+  const fields = useMemo<FieldsData<UserFormValues>>(() => {
     return {
-      name: {
-        label: "Name",
+      email: {
+        label: "Email",
         type: "text",
         componentProps: {
           isRequired: true,
         },
       },
-      display_name: {
-        label: "Display Name",
+      password: {
+        label: "Password",
         type: "text",
         componentProps: {
           isRequired: true,
         },
       },
-      description: {
-        label: "Description",
-        type: "textarea",
-        componentProps: {
-          style: { width: "100%" },
-          rows: 3,
-        },
+      is_admin: {
+        label: "Is Admin",
+        type: "singleCheckbox",
       },
       is_active: {
         label: "Is Active",

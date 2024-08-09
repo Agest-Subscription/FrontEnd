@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-const useSearchSync = () => {
+const useSearchSync = (resetPagination: () => void) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -19,13 +19,14 @@ const useSearchSync = () => {
     } else {
       router.replace(pathname);
     }
+    resetPagination(); // Reset pagination to page 1
   };
 
   useEffect(() => {
     setSearchQuery(searchParams.get("search") || "");
   }, [searchParams]);
 
-  return { searchQuery, handleSearch };
+  return { searchQuery, handleSearch, setSearchQuery };
 };
 
 export default useSearchSync;

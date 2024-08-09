@@ -6,7 +6,6 @@ import useGenerateColumns from "./useGenerateColumns";
 import TableV1 from "@/components/table/TableV1";
 import { LANDING_PAGE } from "@/constants/routes";
 import { useGetListLandingPage } from "@/hooks/landingPage";
-import useSearchSync from "@/hooks/useSearchSync";
 import {
   DataSourceItem,
   TableChangeParams,
@@ -21,7 +20,6 @@ type Props = {};
 
 const LandingPageList: React.FC<Props> = () => {
   const router = useRouter();
-  const { searchQuery, handleSearch } = useSearchSync();
   const [tableParams, setTableParams] = useState<
     TableParams<LandingPageTableData>
   >({
@@ -36,9 +34,8 @@ const LandingPageList: React.FC<Props> = () => {
     () => ({
       page: tableParams.pagination.current,
       page_size: tableParams.pagination?.pageSize,
-      search: searchQuery,
     }),
-    [searchQuery, tableParams.pagination],
+    [tableParams.pagination],
   );
 
   const { data: LandingPageTableData, isFetching } =
@@ -87,14 +84,12 @@ const LandingPageList: React.FC<Props> = () => {
       })) ?? []
     );
   }, [LandingPageTableData?.data, params.page, params?.page_size]);
-
   return (
     <div>
       <TableV1
         scroll={{ x: "max-content" }}
         loading={isFetching}
-        tableTitle="landingpage"
-        showSearchBar={true}
+        tableTitle="Landing Page"
         columns={columns}
         dataSource={dataSource}
         onChange={(pagination, filters) =>
@@ -102,9 +97,7 @@ const LandingPageList: React.FC<Props> = () => {
         }
         pagination={tableParams.pagination}
         addItem={() => router.push(`${LANDING_PAGE}/add`)}
-        onSearch={handleSearch}
-        searchValue={searchQuery}
-        addButtonLabel="Config"
+        addButtonLabel="Configurate"
       />
     </div>
   );

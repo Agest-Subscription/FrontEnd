@@ -28,7 +28,7 @@ export const useGetInfinitePermission = (params: PermissionFilterParams) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const query = useInfiniteQuery({
-    queryKey: ["PERMISSIONS", searchTerm, params],
+    queryKey: [PERMISSIONS, searchTerm, params],
     queryFn: ({ pageParam = 1 }) =>
       getListPermissionApi({
         ...params,

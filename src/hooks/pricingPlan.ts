@@ -1,4 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 import {
   addPricingPlanApi,
@@ -66,4 +72,25 @@ export const useDeletePricingPlan = () => {
       return error;
     },
   });
+};
+
+export const useGetInfinitePricingPlans = (params: PricingPlanFilterParams) => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const query = useInfiniteQuery({
+    queryKey: [PRICING_PLANS, searchTerm, params],
+    queryFn: ({ pageParam = 1 }) =>
+      getListPricingPlansApi({
+        ...params,
+        page: pageParam,
+        search: searchTerm,
+      }),
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.data.data.length === 0) {
+        return undefined;
+      }
+      return pages.length + 1;
+    },
+  });
+  return { ...query, setSearchTerm };
 };

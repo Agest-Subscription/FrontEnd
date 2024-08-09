@@ -60,6 +60,7 @@ const useGenerateColumns = () => {
         dataIndex: "action",
         key: "action",
         align: "center",
+        fixed: "right",
         width: 150,
         render: (_, record) => {
           return (
