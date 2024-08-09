@@ -1,7 +1,7 @@
 import { FilterBase } from "../base";
 
 export type Feature = {
-  feature: { description: string };
+  feature: { name: string };
 };
 
 export type recurrenceFee = {

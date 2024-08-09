@@ -11,7 +11,7 @@ const itemSchema = yup
   .test(
     "at-least-one",
     "At least one of basic, pro, or premium must be selected",
-    function (value) {
+    async function (value) {
       return value.basic != null || value.pro != null || value.premium != null;
     },
   );
