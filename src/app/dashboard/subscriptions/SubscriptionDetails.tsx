@@ -68,11 +68,7 @@ const SubscriptionDetails: React.FC<DetailsProp> = ({
 
         if (due_date_free_trial) {
           const end_date = dayjs(due_date_free_trial)
-            .add(
-              recurrence_cycle,
-              recurrence_type as ManipulateType | undefined,
-            )
-            .subtract(1, "minute")
+            .add(1, "minute")
             .toISOString();
           methods.setValue("end_date", end_date);
         } else {
@@ -81,7 +77,7 @@ const SubscriptionDetails: React.FC<DetailsProp> = ({
               recurrence_cycle,
               recurrence_type as ManipulateType | undefined,
             )
-            .subtract(1, "minute")
+            .date(dayjs(start_date).date())
             .toISOString();
           methods.setValue("end_date", end_date);
         }
@@ -102,6 +98,12 @@ const SubscriptionDetails: React.FC<DetailsProp> = ({
     const caculateNextBillingDate = () => {
       const pricingPlan = methods.getValues("pricing_plan");
       const end_date = methods.getValues("end_date");
+      const due_date_free_trial = methods.getValues("due_date_free_trial");
+
+      if(due_date_free_trial){
+        methods.setValue("next_billing_date", end_date);
+        return
+      }
 
       if (end_date && pricingPlan && pricingPlan.recurrence_period) {
         const recurrence_period = pricingPlan.recurrence_period.split(" ");

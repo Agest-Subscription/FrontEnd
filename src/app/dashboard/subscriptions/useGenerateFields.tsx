@@ -161,6 +161,7 @@ export const useGenerateFields = (
             methods.setValue("pricing_plan", getPricingPlanById(value) ?? null);
             setIsPricingPlanChange(true);
             methods.setValue("start_date", dayjs().toISOString());
+
             keepInitialValue();
           },
           allowClear: true,
@@ -224,7 +225,7 @@ export const useGenerateFields = (
         },
       },
       is_cancelled: {
-        label: "Is Cancelled",
+        label: "Suspended",
         type: "singleCheckbox",
         componentProps: {
           disabled: !isEdit,
