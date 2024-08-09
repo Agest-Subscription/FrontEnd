@@ -96,7 +96,7 @@ const SubscriptionList: React.FC<Props> = () => {
       })) ?? []
     );
   }, [SubscriptionTableData?.data, params.page, params?.page_size]);
-  
+
   return (
     <div>
       <TableV1

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { Col, Flex, Row } from "antd";
 import dayjs from "dayjs";
@@ -22,7 +22,6 @@ const SubscriptionDetails: React.FC<DetailsProp> = ({
   onDelete,
   onSave,
 }) => {
-
   const goToSubscription = useGoToDashboardTab("subscriptions");
   const { FormField } = useFormWrapperCtx<SubscriptionFormValues>();
   const methods = useFormContext<SubscriptionFormValues>();
@@ -90,7 +89,7 @@ const SubscriptionDetails: React.FC<DetailsProp> = ({
     };
     const suspendedDate = () => {
       const is_cancelled = methods.getValues("is_cancelled");
-      console.log(is_cancelled)
+      console.log(is_cancelled);
       if (is_cancelled) {
         methods.setValue("suspended_date", dayjs().toISOString());
         methods.setValue("next_billing_date", null);

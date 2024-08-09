@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
@@ -9,7 +9,7 @@ import { useGenerateFields } from "../useGenerateFields";
 
 import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
 import PopUp from "@/components/popup/Popup";
-import { useAddSubscription, useCheckFirstTime } from "@/hooks/subscription";
+import { useAddSubscription } from "@/hooks/subscription";
 import { CustomError } from "@/interfaces/base";
 import { SubscriptionFormValues } from "@/interfaces/model/subscription.type";
 import { popUpPropType } from "@/interfaces/popup";
@@ -17,7 +17,6 @@ import subscriptionFormValuesSchema from "@/schema/subscription";
 import { getErrorDetail } from "@/utils/error";
 import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
-
 
 type Props = {};
 const Page: React.FC<Props> = () => {
@@ -65,7 +64,7 @@ const Page: React.FC<Props> = () => {
     });
   }
 
-  const fields = useGenerateFields(methods, false, null,"")
+  const fields = useGenerateFields(methods, false, null, "");
 
   const handleSave = async () => {
     const isValid = await methods.trigger();

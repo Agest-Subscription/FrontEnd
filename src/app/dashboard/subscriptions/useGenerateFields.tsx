@@ -10,8 +10,6 @@ import { useGetInfiniteUser } from "@/hooks/subscription";
 import { FieldsData } from "@/interfaces/form";
 import { PricingPlan } from "@/interfaces/model/pricingplan.type";
 import { SubscriptionFormValues } from "@/interfaces/model/subscription.type";
-import { isNamedImports } from "typescript/lib/tsserverlibrary";
-
 
 export const useGenerateFields = (
   methods: UseFormReturn<SubscriptionFormValues, any, undefined>,
@@ -20,13 +18,13 @@ export const useGenerateFields = (
   initial_startDate: string | undefined,
 ) => {
   const [isPricingPlanChange, setIsPricingPlanChange] = useState(false);
- 
+
   useEffect(() => {
-    if(isEdit){
+    if (isEdit) {
       methods.setValue("pricing_plan", initial_pricingPlan);
     }
-  }, [])
-  
+  }, [isEdit, initial_pricingPlan, methods]);
+
   const {
     data: usersPage,
     fetchNextPage: fetchNextUserPage,
@@ -50,19 +48,6 @@ export const useGenerateFields = (
     is_available: true,
   });
 
-  const keepInitialValue = () => {
-    const current_pricing_plan_id = methods.getValues("pricing_plan.id");
-    const current_user_id = methods.getValues("user_id");
-
-    console.log("123in",initial_userId);
-    console.log("123current", current_user_id)
-    if(isEdit && current_pricing_plan_id === initial_pricingPlan?.id 
-      && initial_startDate){
-      methods.setValue("start_date", initial_startDate);
-      setIsPricingPlanChange(false);
-    }
-  }
-
   const fields = useMemo<FieldsData<SubscriptionFormValues>>(() => {
     const mappedEmails =
       usersPage?.pages.flatMap((page) =>
@@ -81,6 +66,18 @@ export const useGenerateFields = (
         })),
       ) ?? [];
 
+    const keepInitialValue = () => {
+      const current_pricing_plan_id = methods.getValues("pricing_plan.id");
+      if (
+        isEdit &&
+        current_pricing_plan_id === initial_pricingPlan?.id &&
+        initial_startDate
+      ) {
+        methods.setValue("start_date", initial_startDate);
+        setIsPricingPlanChange(false);
+      }
+    };
+
     const getPricingPlanById = (id: string): PricingPlan | null => {
       const item = mappedPricingPlans.find((item) => item.value === id);
       if (item) {
@@ -95,10 +92,10 @@ export const useGenerateFields = (
     const assignLocaleTimeForToday = () => {
       const now = dayjs();
       const dayPicker = methods.getValues("start_date");
-      if(dayPicker){
+      if (dayPicker) {
         if (dayPicker.toString() === now.format("YYYY-MM-DD")) {
           methods.setValue("start_date", dayjs().toISOString());
-        }else{
+        } else {
           methods.setValue("start_date", dayjs(dayPicker).toISOString());
         }
       }
@@ -256,6 +253,8 @@ export const useGenerateFields = (
     setIsPricingPlanChange,
     isEdit,
     methods,
+    initial_pricingPlan,
+    initial_startDate,
   ]);
 
   return fields;

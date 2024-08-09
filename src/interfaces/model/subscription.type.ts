@@ -1,5 +1,5 @@
 import { FilterBase } from "../base";
-import { PricingPlan, PricingPlanTableData } from "./pricingplan.type";
+import { PricingPlan } from "./pricingplan.type";
 
 export type Subscription = {
   id: string;
