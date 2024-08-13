@@ -15,12 +15,10 @@ import { SubscriptionFormValues } from "@/interfaces/model/subscription.type";
 import { popUpPropType } from "@/interfaces/popup";
 import subscriptionFormValuesSchema from "@/schema/subscription";
 import { getErrorDetail } from "@/utils/error";
-import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
-  const goToSubscription = useGoToDashboardTab("subscriptions");
   const [openModal, setOpenModal] = useState(false);
   const { mutate: addSubscription, isLoading: isAdding } = useAddSubscription();
   const methods = useForm<SubscriptionFormValues>({
@@ -49,7 +47,7 @@ const Page: React.FC<Props> = () => {
           popup_text: `${capitalize("This Subscription is successfully created!")}`,
           popup_type: "Success",
           onConfirm: () => {},
-          onClose: () => goToSubscription(),
+          onClose: () => setOpenModal(false),
         });
       },
       onError: (err: CustomError) => {

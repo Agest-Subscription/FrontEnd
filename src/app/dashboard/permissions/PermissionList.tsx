@@ -50,7 +50,9 @@ const PermissionList: React.FC<Props> = () => {
   const [openModal, setOpenModal] = useState(false);
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "successpopup",
-    popup_text: `${capitalize("Are you sure to add new permissions to this table?")}`,
+    popup_text: `${capitalize(
+      "Are you sure to sync permissions from the database into this table?",
+    )}`,
     popup_type: "Confirm",
     onConfirm: () => onAddPermissons(),
     onClose: () => setOpenModal(false),
@@ -157,6 +159,7 @@ const PermissionList: React.FC<Props> = () => {
         addItem={() => showModal(modalProp)}
         onSearch={handleSearch}
         searchValue={searchQuery}
+        addButtonLabel="Sync Data"
       />
       <PopUp popupProps={modalProp} isOpen={openModal} />
     </div>

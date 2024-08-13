@@ -15,12 +15,10 @@ import { FeatureFormValues } from "@/interfaces/model/feature.type";
 import { popUpPropType } from "@/interfaces/popup";
 import featureFormValuesSchema from "@/schema/feature";
 import { getErrorDetail } from "@/utils/error";
-import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize, trimString } from "@/utils/string";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
-  const goToFeature = useGoToDashboardTab("features");
   const [openModal, setOpenModal] = useState(false);
   const { mutate: addFeature, isLoading: isAdding } = useAddFeature();
   const methods = useForm<FeatureFormValues>({
@@ -50,7 +48,7 @@ const Page: React.FC<Props> = () => {
           popup_text: `${capitalize("This Feature is successfully created!")}`,
           popup_type: "Success",
           onConfirm: () => {},
-          onClose: () => goToFeature(),
+          onClose: () => setOpenModal(false),
         });
       },
       onError: (err: CustomError) => {
