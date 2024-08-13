@@ -90,7 +90,7 @@ const Page: React.FC<Props> = () => {
             popup_text: capitalize("Subscription is updated successfully!"),
             popup_type: "Success",
             onConfirm: () => {},
-            onClose: () => goToSubscription(),
+            onClose: () => setOpenModal(false),
           }),
         onError: (err: CustomError) =>
           showModal({

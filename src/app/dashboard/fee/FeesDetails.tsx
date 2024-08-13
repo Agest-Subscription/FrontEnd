@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from "react";
 import { useFieldArray, useFormContext, UseFormReturn } from "react-hook-form";
-import { DeleteOutlined } from "@ant-design/icons";
-import { Col, Flex, Row, Typography } from "antd";
+import { DeleteOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import { Col, Flex, Row, Tooltip, Typography } from "antd";
 
 import ButtonV1 from "@/components/button/CustomButton";
 import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
@@ -165,7 +165,23 @@ export default function FeeDetails({
                 fontSize: 16,
               }}
             >
-              Overate Fee
+              Overate Fee{" "}
+              <Tooltip
+                title="The transaction will be charged at the set price if the number of 
+  transactions is equal to or greater than the threshold."
+                color="#15ABFF"
+                overlayInnerStyle={{
+                  minWidth: "400px",
+                  minHeight: "45px",
+                  fontSize: "14px",
+                  fontWeight: "400",
+                  lineHeight: "20px",
+                  color: "white",
+                  textAlign: "center",
+                }}
+              >
+                <InfoCircleOutlined style={{ color: "#62CD14" }} />
+              </Tooltip>
             </Typography>
 
             {fields.map((item, index) => (

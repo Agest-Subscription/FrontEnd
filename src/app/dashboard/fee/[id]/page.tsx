@@ -117,7 +117,7 @@ const Page: React.FC<Props> = () => {
             popup_text: `${capitalize("This Fee is successfully updated!")}`,
             popup_type: "Success",
             onConfirm: () => {},
-            onClose: () => goToFee(),
+            onClose: () => setOpenModal(false),
           });
         },
         onError: (err: CustomError) => {

@@ -177,7 +177,7 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
         {recurrenceFee && dataSource.length > 0 && (
           <Flex justify="end">
             <span style={{ color: "#9095A1", fontWeight: 700, fontSize: 16 }}>
-              Total Fee:{" "}
+              Recurrence fee:{" "}
               <span style={{ color: "#62CD14" }}>
                 $
                 {formatPrice(
