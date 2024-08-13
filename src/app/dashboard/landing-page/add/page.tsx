@@ -19,12 +19,10 @@ import {
 import { popUpPropType } from "@/interfaces/popup";
 import landingPageFormValuesSchema from "@/schema/landingPage";
 import { getErrorDetail } from "@/utils/error";
-import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
-  const goToLandingPage = useGoToDashboardTab("landing-page");
   const [openModal, setOpenModal] = useState(false);
   const { mutate: addLandingPage, isLoading: isAdding } = useAddLandingPage();
   const methods = useForm<LandingPageFormValues>({
@@ -117,7 +115,7 @@ const Page: React.FC<Props> = () => {
           popup_text: `${capitalize("This Landing Page is successfully created!")}`,
           popup_type: "Success",
           onConfirm: () => {},
-          onClose: () => goToLandingPage(),
+          onClose: () => setOpenModal(false),
         });
       },
       onError: (error: CustomError) => {

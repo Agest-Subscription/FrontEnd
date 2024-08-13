@@ -7,9 +7,14 @@ import { capitalize, formatDuration } from "@/utils/string";
 type Props = {
   isPrimary?: boolean;
   PricingPlan: LandingPage;
+  smallestPeriod: string;
 };
 
-const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
+const PricingCard = ({
+  PricingPlan,
+  isPrimary = false,
+  smallestPeriod,
+}: Props) => {
   const primaryStyles = {
     backgroundColor: "white",
     padding: "32px 16px",
@@ -79,7 +84,12 @@ const PricingCard = ({ PricingPlan, isPrimary = false }: Props) => {
         <Typography style={{ fontSize: 40, fontWeight: 700 }}>
           ${PricingPlan.pricing_plan.recurrence_fee.price}
           <sup style={{ fontSize: 14, fontWeight: 400 }}>
-            /{formatDuration(PricingPlan.pricing_plan.recurrence_period)}
+            /
+            {formatDuration(
+              PricingPlan.pricing_plan.recurrence_period == smallestPeriod
+                ? PricingPlan.pricing_plan.recurrence_period
+                : smallestPeriod,
+            )}
           </sup>
         </Typography>
 
