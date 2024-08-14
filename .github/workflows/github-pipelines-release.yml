@@ -27,7 +27,7 @@ jobs:
 
       - name: Set environment variables
         run: |
-          if [[ ${{ github.base_ref }} == 'main' ]]; then
+          if [[ ${{ github.ref == 'refs/heads/main' }} ]]; then
             echo "DOCKER_TAG=subscription-main-frontend-${{ env.GIT_TAG }}" >> $GITHUB_ENV
             echo "API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}" >> $GITHUB_ENV
             echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}" >> $GITHUB_ENV
