@@ -1,11 +1,10 @@
 name: CI/CD Pipeline
  
 on:
-  pull_request:
-    branches:
-      - "main"
-      - "dev"
- 
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -20,20 +19,16 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
- 
-      - uses: benjlevesque/short-sha@v3.0
-        id: short-sha
-        with:
-          length: 6
+
  
       - name: Set environment variables
         run: |
           if [[ ${{ github.base_ref }} == 'main' ]]; then
-            echo "DOCKER_TAG=frontend" >> $GITHUB_ENV
+            echo "DOCKER_TAG=subscription-main-frontend-${{ github.action_ref }}" >> $GITHUB_ENV
             echo "API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}" >> $GITHUB_ENV
             echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}" >> $GITHUB_ENV
           else
-            echo "DOCKER_TAG=frontend-test" >> $GITHUB_ENV
+            echo "DOCKER_TAG=subscription-dev-frontend-${{ github.action_ref }}" >> $GITHUB_ENV
             echo "API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL_DEV }}" >> $GITHUB_ENV
             echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL_DEV }}" >> $GITHUB_ENV
           fi
