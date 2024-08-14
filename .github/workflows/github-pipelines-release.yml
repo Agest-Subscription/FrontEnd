@@ -20,15 +20,19 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
- 
+      - name: Get Git Tag
+        run: |
+            GIT_TAG=$(git describe --tags --abbrev=0)
+            echo "GIT_TAG=$GIT_TAG" >> $GITHUB_ENV
+
       - name: Set environment variables
         run: |
           if [[ ${{ github.base_ref }} == 'main' ]]; then
-            echo "DOCKER_TAG=subscription-main-frontend-${{ github.action_ref }}" >> $GITHUB_ENV
+            echo "DOCKER_TAG=subscription-main-frontend-${{ env.GIT_TAG }}" >> $GITHUB_ENV
             echo "API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}" >> $GITHUB_ENV
             echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}" >> $GITHUB_ENV
           else
-            echo "DOCKER_TAG=subscription-dev-frontend-${{ github.action_ref }}" >> $GITHUB_ENV
+            echo "DOCKER_TAG=subscription-dev-frontend-${{ env.GIT_TAG }}" >> $GITHUB_ENV
             echo "API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL_DEV }}" >> $GITHUB_ENV
             echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL_DEV }}" >> $GITHUB_ENV
           fi
