@@ -23,10 +23,12 @@ jobs:
       - name: Get Git Tag
         run: |
             GIT_TAG=$(git describe --tags --abbrev=0)
+            GIT_TAG=${GIT_TAG::-1} 
             echo "GIT_TAG=$GIT_TAG" >> $GITHUB_ENV
 
       - name: Set environment variables
         run: |
+          echo "123123213=${{github.ref}}"
           if [[ ${{ github.ref == 'refs/heads/main' }} ]]; then
             echo "DOCKER_TAG=subscription-main-frontend-${{ env.GIT_TAG }}" >> $GITHUB_ENV
             echo "API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}" >> $GITHUB_ENV
