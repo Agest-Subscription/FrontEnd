@@ -21,6 +21,7 @@ const FeatureDetails: React.FC<DetailsProp> = ({
 }) => {
   const goToFeature = useGoToDashboardTab("features");
   const { FormField } = useFormWrapperCtx<FeatureFormValues>();
+  console.log(FormField);
   return (
     <>
       <Flex

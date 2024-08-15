@@ -5,7 +5,7 @@ import useGenerateColumns from "./useGenerateColumns";
 
 import TableV1 from "@/components/table/TableV1";
 import { ACTIVITY } from "@/constants/routes";
-import { useGetListActivities } from "@/hooks/activity";
+import { useGetListActivity } from "@/hooks/activity";
 import useSearchSync from "@/hooks/useSearchSync";
 import {
   DataSourceItem,
@@ -41,7 +41,7 @@ const ActivityList: React.FC<Props> = () => {
     [searchQuery, tableParams.pagination],
   );
 
-  const { data: ActivityTableData, isFetching } = useGetListActivities(params);
+  const { data: ActivityTableData, isFetching } = useGetListActivity(params);
   const columns = useGenerateColumns();
 
   const handleTableChange = ({

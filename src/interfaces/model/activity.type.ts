@@ -16,6 +16,12 @@ export type Activity = {
   description: string;
 };
 
+export type ActivityFormType = {
+  user_id: string;
+  subscription_id: string;
+  description?: string | null;
+};
+
 export type ActivityTableData = Activity & {
   no: number;
 };
@@ -29,8 +35,14 @@ export type ActivityItem = Pick<
   "feature" | "quantity" | "activity_date" | "fee_name" | "fee_type"
 >;
 
-export type ActivityFormValues = {
-  active_items?: ActivityItem[] | null;
+export type FeaturePlanFeeActivityItem = {
+  feature_plan_fee_id: string;
+  quantity: number;
+  activity_date: string;
+};
+
+export type ActivityFormValues = ActivityFormType & {
+  feature_plan_fee_activities: FeaturePlanFeeActivityItem[];
 };
 
 export type ActivityPayload = {

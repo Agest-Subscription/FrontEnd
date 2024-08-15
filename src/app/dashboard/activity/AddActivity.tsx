@@ -1,9 +1,11 @@
 import React from "react";
-import { Flex } from "antd";
+import { Col, Flex, Row } from "antd";
 
 import AddMultipleItems from "./AddMultipleItems";
 
 import ButtonV1 from "@/components/button/CustomButton";
+import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
+import { ActivityFormValues } from "@/interfaces/model/activity.type";
 import { useGoToDashboardTab } from "@/utils/navigate";
 
 interface DetailsProp {
@@ -12,19 +14,30 @@ interface DetailsProp {
   onSave: any;
 }
 
-const ActivityDetails: React.FC<DetailsProp> = ({
+const AddActivity: React.FC<DetailsProp> = ({
   edit = false,
   disableSaveBtn = false,
   onSave,
 }) => {
+  const { FormField } = useFormWrapperCtx<ActivityFormValues>();
   const goToActivity = useGoToDashboardTab("activity");
+
+  console.log(FormField);
+
   return (
     <>
       <Flex
         vertical
         gap={24}
-        style={{ border: "1px solid #BDC1CA", padding: "16px" }}
+        style={{
+          border: "1px solid #BDC1CA",
+          padding: "16px",
+          borderRadius: "4px",
+        }}
       >
+        <Row gutter={16}>
+          <Col span={4}>{/* <FormField name="description" /> */}</Col>
+        </Row>
         <AddMultipleItems />
       </Flex>
       <Flex
@@ -48,4 +61,4 @@ const ActivityDetails: React.FC<DetailsProp> = ({
   );
 };
 
-export default ActivityDetails;
+export default AddActivity;
