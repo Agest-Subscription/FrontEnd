@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import _ from "lodash";
 
 import { FieldsData } from "@/interfaces/form";
 import {
@@ -8,7 +9,7 @@ import {
 } from "@/interfaces/model/fee.type";
 import { enumToSelectOptions } from "@/utils/enum";
 
-export const useGenerateFields = (): FieldsData<FeeFormValues> => {
+export const useGenerateFields = (methods: any): FieldsData<FeeFormValues> => {
   return useMemo<FieldsData<FeeFormValues>>(
     () => ({
       name: {
@@ -84,14 +85,19 @@ export const useGenerateFields = (): FieldsData<FeeFormValues> => {
         },
       },
       "overrate_fees.[].threshold": {
-        label: "Threshold",
+        label: "",
         type: "text",
         componentProps: {
           isRequired: true,
           type: "number",
+          onBlur: () => {
+            const data = methods.getValues("overrate_fees");
+            const sortedData = _.orderBy(data, ["threshold"], ["asc"]);
+            methods.setValue("overrate_fees", sortedData);
+          },
         },
       },
     }),
-    [],
+    [methods],
   );
 };
