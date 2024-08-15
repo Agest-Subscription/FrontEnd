@@ -98,12 +98,6 @@ const SubscriptionDetails: React.FC<DetailsProp> = ({
     const caculateNextBillingDate = () => {
       const pricingPlan = methods.getValues("pricing_plan");
       const end_date = methods.getValues("end_date");
-      const due_date_free_trial = methods.getValues("due_date_free_trial");
-
-      if(due_date_free_trial){
-        methods.setValue("next_billing_date", end_date);
-        return
-      }
 
       if (end_date && pricingPlan && pricingPlan.recurrence_period) {
         const recurrence_period = pricingPlan.recurrence_period.split(" ");
@@ -125,7 +119,6 @@ const SubscriptionDetails: React.FC<DetailsProp> = ({
         }
       }
     };
-
     caculateDueDateFreeTrial();
     caculateEndDate();
     caculateNextBillingDate();
@@ -140,9 +133,6 @@ const SubscriptionDetails: React.FC<DetailsProp> = ({
         style={{ border: "1px solid #BDC1CA", padding: "16px" }}
       >
         <Row gutter={24}>
-          <Col span={6}>
-            <FormField name="user_id" />
-          </Col>
           <Col span={6}>
             <FormField name="email" />
           </Col>
@@ -175,11 +165,8 @@ const SubscriptionDetails: React.FC<DetailsProp> = ({
       </Flex>
       <Flex
         style={{ width: "100%" }}
-        justify={`${edit ? "space-between" : "flex-end"}`}
+        justify={"flex-end"}
       >
-        {edit && (
-          <ButtonV1 title="Delete" customType="danger" onClick={onDelete} />
-        )}
         <Flex gap={12}>
           <ButtonV1
             title="Cancel"

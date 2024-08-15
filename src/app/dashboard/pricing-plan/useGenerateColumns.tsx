@@ -1,14 +1,38 @@
 import { useMemo } from "react";
-import Link from "next/link";
-import { EditOutlined } from "@ant-design/icons";
-import { Checkbox, Tag } from "antd";
+import { EditOutlined, EyeOutlined, DashOutlined } from "@ant-design/icons";
+import { Checkbox, Dropdown, MenuProps, Tag } from "antd";
+import { MenuInfo } from "rc-menu/lib/interface";
 import { ColumnType } from "antd/es/table";
 import dayjs from "dayjs";
 
 import { DATE_FORMAT } from "@/constants/date";
 import { PRICING_PLANS } from "@/constants/routes";
 import { PricingPlanTableData } from "@/interfaces/model/pricingplan.type";
+import { useRouter } from "next/navigation";
+
 const useGenerateColumns = () => {
+  const router = useRouter();
+
+  const onClick = (record: PricingPlanTableData) => (info: MenuInfo) => {
+    const { key } = info;
+    if (key === '1') {
+      router.push(`${PRICING_PLANS}/${record.id}`);
+    } else {
+      router.push(`${PRICING_PLANS}/${record.id}/view`);
+    }
+  };
+
+  const items: MenuProps['items'] = [
+    {
+      key: '1',
+      label: <p><EditOutlined size={100} /> Edit</p>
+    },
+    {
+      key: '2',
+      label:  <p><EyeOutlined size={100} /> View</p>
+    },
+  ];
+
   return useMemo<ColumnType<PricingPlanTableData>[]>(
     () => [
       {
@@ -101,9 +125,11 @@ const useGenerateColumns = () => {
         fixed: "right",
         render: (_, record) => {
           return (
-            <Link href={`${PRICING_PLANS}/${record.id}`}>
-              <EditOutlined size={100} />
-            </Link>
+            <Dropdown menu={{ items, onClick: onClick(record) }}>
+              <a onClick={(e) => e.preventDefault()}>
+              <DashOutlined />
+              </a>
+            </Dropdown>
           );
         },
       },

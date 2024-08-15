@@ -38,25 +38,15 @@ const TableTag = ({ permissions }: Props) => {
         {isLoadMore
           ? permissions.map((permission) => (
               <Tag key={permission.id} bordered={false}>
-                {/* <LongText
-                  text={permission.display_name}
-                  centerText
-                  width={width}
-                /> */}
                 {permission.display_name}
               </Tag>
             ))
-          : permissions.slice(0, 3).map((permission) => (
+          : permissions? permissions.slice(0, 3).map((permission) => (
               <Tag key={permission.id} bordered={false}>
-                {/* <LongText
-                  text={permission.display_name}
-                  centerText
-                  width={width}
-                /> */}
                 {permission.display_name}
               </Tag>
-            ))}
-        {permissions.length > 3 ? (
+            )): null}
+        {permissions? permissions.length > 3 ? (
           !isLoadMore ? (
             <Button
               size="small"
@@ -76,7 +66,7 @@ const TableTag = ({ permissions }: Props) => {
               onClick={hiddenData}
             />
           )
-        ) : null}
+        ) : null : null}
       </Flex>
     </ConfigProvider>
   );
