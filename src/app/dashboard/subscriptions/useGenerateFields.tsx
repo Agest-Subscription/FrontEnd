@@ -71,7 +71,7 @@ export const useGenerateFields = (
       const today = dayjs();
       const isStarted = startDate.isBefore(today);
       return isStarted;
-    }
+    };
 
     const keepInitialValue = () => {
       const current_pricing_plan_id = methods.getValues("pricing_plan.id");

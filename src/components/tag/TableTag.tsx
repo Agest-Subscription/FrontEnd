@@ -41,32 +41,36 @@ const TableTag = ({ permissions }: Props) => {
                 {permission.display_name}
               </Tag>
             ))
-          : permissions? permissions.slice(0, 3).map((permission) => (
-              <Tag key={permission.id} bordered={false}>
-                {permission.display_name}
-              </Tag>
-            )): null}
-        {permissions? permissions.length > 3 ? (
-          !isLoadMore ? (
-            <Button
-              size="small"
-              type="primary"
-              ghost={true}
-              style={{ borderColor: "transparent" }}
-              icon={<EllipsisOutlined />}
-              onClick={loadMoreData}
-            />
-          ) : (
-            <Button
-              size="small"
-              type="primary"
-              ghost={true}
-              style={{ borderColor: "transparent" }}
-              icon={<CaretUpOutlined />}
-              onClick={hiddenData}
-            />
-          )
-        ) : null : null}
+          : permissions
+            ? permissions.slice(0, 3).map((permission) => (
+                <Tag key={permission.id} bordered={false}>
+                  {permission.display_name}
+                </Tag>
+              ))
+            : null}
+        {permissions ? (
+          permissions.length > 3 ? (
+            !isLoadMore ? (
+              <Button
+                size="small"
+                type="primary"
+                ghost={true}
+                style={{ borderColor: "transparent" }}
+                icon={<EllipsisOutlined />}
+                onClick={loadMoreData}
+              />
+            ) : (
+              <Button
+                size="small"
+                type="primary"
+                ghost={true}
+                style={{ borderColor: "transparent" }}
+                icon={<CaretUpOutlined />}
+                onClick={hiddenData}
+              />
+            )
+          ) : null
+        ) : null}
       </Flex>
     </ConfigProvider>
   );

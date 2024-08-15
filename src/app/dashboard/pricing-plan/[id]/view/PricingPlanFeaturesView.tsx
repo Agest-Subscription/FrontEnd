@@ -1,13 +1,14 @@
 import React, { useMemo } from "react";
 import { Flex, Table, Typography } from "antd";
+import { ColumnType } from "antd/es/table";
+
+import TableTag from "@/components/tag/TableTag";
+import { Permission } from "@/interfaces/model/permission.type";
 import {
   FeaturePlanFee,
   OverrateFeeAssociation,
 } from "@/interfaces/model/pricingplan.type";
 import { capitalize } from "@/utils/string";
-import { ColumnType } from "antd/es/table";
-import TableTag from "@/components/tag/TableTag";
-import { Permission } from "@/interfaces/model/permission.type";
 
 type Props = {
   FeaturePlanList: FeaturePlanFee[] | null;
@@ -25,40 +26,35 @@ type FeaturePlanItem = {
   children?: OverrateFeeAssociation[];
 };
 
-const PricingPlanFeaturesView: React.FC<Props> = ({
-  FeaturePlanList,
-}) => {
+const PricingPlanFeaturesView: React.FC<Props> = ({ FeaturePlanList }) => {
+  const dataSource =
+    FeaturePlanList?.map((feature_plan, index) => ({
+      id: feature_plan.id,
+      key: feature_plan.id,
+      no: index + 1,
+      feature_name: feature_plan.feature.name,
+      fee_name: feature_plan.fee?.name,
+      price: feature_plan.fee?.price,
+      new_price: feature_plan.new_price,
+      permissions: feature_plan.feature.permissions,
+      children: feature_plan.overrate_fees,
+    })) ?? [];
 
-  const dataSource = FeaturePlanList?.map((feature_plan, index) => (
-  {
-    id: feature_plan.id,
-    key: feature_plan.id,
-    no: index + 1,
-    feature_name: feature_plan.feature.name,
-    fee_name: feature_plan.fee?.name,
-    price: feature_plan.fee?.price,
-    new_price: feature_plan.new_price,
-    permissions: feature_plan.feature.permissions,
-    children: feature_plan.overrate_fees,
-  })) ?? []
-
-
-  
   const filterDataSource: FeaturePlanItem[] = [];
 
-  for(const item of dataSource){
-    if(item.children !== null){
+  for (const item of dataSource) {
+    if (item.children !== null) {
       const childrenData = item.children;
-      const newChildrenData = childrenData.map(item => {
-        return {...item, new_price: item.new_overrate_price}
-      })
-      filterDataSource.push({...item, children: [...newChildrenData]})
-    }else{
-      filterDataSource.push(item)
+      const newChildrenData = childrenData.map((item) => {
+        return { ...item, new_price: item.new_overrate_price };
+      });
+      filterDataSource.push({ ...item, children: [...newChildrenData] });
+    } else {
+      filterDataSource.push(item);
     }
   }
 
-  const columns  = useMemo<ColumnType<FeaturePlanItem>[]>(
+  const columns = useMemo<ColumnType<FeaturePlanItem>[]>(
     () => [
       {
         title: "No",
@@ -90,7 +86,7 @@ const PricingPlanFeaturesView: React.FC<Props> = ({
       {
         title: "New Price",
         dataIndex: "new_price",
-      }
+      },
     ],
     [],
   );

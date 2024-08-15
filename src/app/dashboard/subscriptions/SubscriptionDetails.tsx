@@ -17,9 +17,7 @@ interface DetailsProp {
 }
 
 const SubscriptionDetails: React.FC<DetailsProp> = ({
-  edit = false,
   disableSaveBtn = false,
-  onDelete,
   onSave,
 }) => {
   const goToSubscription = useGoToDashboardTab("subscriptions");
@@ -163,10 +161,7 @@ const SubscriptionDetails: React.FC<DetailsProp> = ({
           </Col>
         </Row>
       </Flex>
-      <Flex
-        style={{ width: "100%" }}
-        justify={"flex-end"}
-      >
+      <Flex style={{ width: "100%" }} justify={"flex-end"}>
         <Flex gap={12}>
           <ButtonV1
             title="Cancel"
