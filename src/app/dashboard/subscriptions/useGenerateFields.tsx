@@ -66,6 +66,13 @@ export const useGenerateFields = (
         })),
       ) ?? [];
 
+    const checkAlreadyStart = () => {
+      const startDate = dayjs(initial_startDate);
+      const today = dayjs();
+      const isStarted = startDate.isBefore(today);
+      return isStarted;
+    };
+
     const keepInitialValue = () => {
       const current_pricing_plan_id = methods.getValues("pricing_plan.id");
       if (
@@ -102,15 +109,6 @@ export const useGenerateFields = (
     };
 
     return {
-      user_id: {
-        label: "User ID",
-        type: "text",
-        componentProps: {
-          isRequired: true,
-          disabled: true,
-          style: { height: "40px" },
-        },
-      },
       email: {
         label: "Email",
         type: "select",
@@ -153,6 +151,7 @@ export const useGenerateFields = (
         componentProps: {
           isRequired: true,
           filterOption: true,
+          disabled: checkAlreadyStart(),
           style: { height: "40px" },
           optionFilterProp: "label",
           onSearch: debounce((value) => setPricingPlanSearchTerm(value), 500),
@@ -161,6 +160,7 @@ export const useGenerateFields = (
             methods.setValue("pricing_plan", getPricingPlanById(value) ?? null);
             setIsPricingPlanChange(true);
             methods.setValue("start_date", dayjs().toISOString());
+
             keepInitialValue();
           },
           allowClear: true,
@@ -224,7 +224,7 @@ export const useGenerateFields = (
         },
       },
       is_cancelled: {
-        label: "Is Cancelled",
+        label: "Suspended",
         type: "singleCheckbox",
         componentProps: {
           disabled: !isEdit,

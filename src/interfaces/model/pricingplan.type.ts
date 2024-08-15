@@ -3,6 +3,7 @@ import { EnumStruct } from "../enum";
 import { Feature } from "./feature.type";
 import { Fee } from "./fee.type";
 import { OverrateFee } from "./overrateFee.type";
+import { Permission } from "./permission.type";
 
 export type FreeTrialPeriod = "day" | "week" | "month";
 
@@ -19,12 +20,14 @@ export type OverrateFeeWithNewPrice = OverrateFee & {
 
 export type OverrateFeeAssociation = OverrateFee & {
   new_overrate_price: number | null;
+  new_price?: number | null;
 };
 
 export type PricingPlanFeature = {
   feature: Feature;
   new_price: number | null;
   fee: Fee | null;
+  permissions?: Permission[];
   feature_plan_fee_new_overrate: OverrateFeeWithNewPrice[] | null;
 };
 
