@@ -50,31 +50,6 @@ const feeFormValuesSchema: ObjectSchema<FeeFormValues> = object({
 
             return !isDuplicate;
           },
-        )
-        .test(
-          "ascending-thresholds",
-          "Thresholds must be greater than previous",
-          function (value) {
-            const index = parseInt(this.path.split("[")[1].split("]")[0], 10);
-
-            const arr =
-              (this.from?.[1].value.overrate_fees as OverateFeeArrItems[]) ??
-              [];
-
-            const thresholds = arr.map((item) => {
-              return item.threshold;
-            });
-
-            if (index > 0) {
-              const previousThreshold = thresholds[index - 1];
-              if (value == null) return true;
-              if (previousThreshold != null && value <= previousThreshold) {
-                return false;
-              }
-            }
-
-            return true;
-          },
         ),
     }),
   )
