@@ -1,0 +1,51 @@
+import React from "react";
+import { Flex } from "antd";
+
+import AddMultipleItems from "./AddMultipleItems";
+
+import ButtonV1 from "@/components/button/CustomButton";
+import { useGoToDashboardTab } from "@/utils/navigate";
+
+interface DetailsProp {
+  edit?: boolean;
+  disableSaveBtn?: boolean;
+  onSave: any;
+}
+
+const ActivityDetails: React.FC<DetailsProp> = ({
+  edit = false,
+  disableSaveBtn = false,
+  onSave,
+}) => {
+  const goToActivity = useGoToDashboardTab("activity");
+  return (
+    <>
+      <Flex
+        vertical
+        gap={24}
+        style={{ border: "1px solid #BDC1CA", padding: "16px" }}
+      >
+        <AddMultipleItems />
+      </Flex>
+      <Flex
+        style={{ width: "100%" }}
+        justify={`${edit ? "space-between" : "flex-end"}`}
+      >
+        <Flex gap={12}>
+          <ButtonV1
+            title="Cancel"
+            customType="cancel"
+            onClick={() => goToActivity()}
+          />
+          <ButtonV1
+            title="Save"
+            onClick={onSave}
+            customDisabled={disableSaveBtn}
+          />
+        </Flex>
+      </Flex>
+    </>
+  );
+};
+
+export default ActivityDetails;
