@@ -17,9 +17,7 @@ interface DetailsProp {
 }
 
 const SubscriptionDetails: React.FC<DetailsProp> = ({
-  edit = false,
   disableSaveBtn = false,
-  onDelete,
   onSave,
 }) => {
   const goToSubscription = useGoToDashboardTab("subscriptions");
@@ -68,11 +66,7 @@ const SubscriptionDetails: React.FC<DetailsProp> = ({
 
         if (due_date_free_trial) {
           const end_date = dayjs(due_date_free_trial)
-            .add(
-              recurrence_cycle,
-              recurrence_type as ManipulateType | undefined,
-            )
-            .subtract(1, "minute")
+            .add(1, "minute")
             .toISOString();
           methods.setValue("end_date", end_date);
         } else {
@@ -81,7 +75,7 @@ const SubscriptionDetails: React.FC<DetailsProp> = ({
               recurrence_cycle,
               recurrence_type as ManipulateType | undefined,
             )
-            .subtract(1, "minute")
+            .date(dayjs(start_date).date())
             .toISOString();
           methods.setValue("end_date", end_date);
         }
@@ -123,7 +117,6 @@ const SubscriptionDetails: React.FC<DetailsProp> = ({
         }
       }
     };
-
     caculateDueDateFreeTrial();
     caculateEndDate();
     caculateNextBillingDate();
@@ -138,9 +131,6 @@ const SubscriptionDetails: React.FC<DetailsProp> = ({
         style={{ border: "1px solid #BDC1CA", padding: "16px" }}
       >
         <Row gutter={24}>
-          <Col span={6}>
-            <FormField name="user_id" />
-          </Col>
           <Col span={6}>
             <FormField name="email" />
           </Col>
@@ -171,13 +161,7 @@ const SubscriptionDetails: React.FC<DetailsProp> = ({
           </Col>
         </Row>
       </Flex>
-      <Flex
-        style={{ width: "100%" }}
-        justify={`${edit ? "space-between" : "flex-end"}`}
-      >
-        {edit && (
-          <ButtonV1 title="Delete" customType="danger" onClick={onDelete} />
-        )}
+      <Flex style={{ width: "100%" }} justify={"flex-end"}>
         <Flex gap={12}>
           <ButtonV1
             title="Cancel"
