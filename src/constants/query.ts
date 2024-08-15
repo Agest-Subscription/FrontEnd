@@ -22,3 +22,6 @@ export const LANDING_PAGE = "landing-page";
 
 export const SUBSCRIPTION = "subscription";
 export const SUBSCRIPTIONS = "subscriptions";
+
+export const ACTIVITY = "activity";
+export const ACTIVITIES = "activities";

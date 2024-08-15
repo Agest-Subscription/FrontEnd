@@ -15,6 +15,10 @@ interface CustomTableProps<T> extends TableProps<T> {
   searchValue?: string;
   showSearchBar?: boolean;
   addButtonLabel?: string;
+  isSecondButton?: boolean;
+  secondButonLabel?: string;
+  secondButonColor?: string;
+  secondButonOnClick?: () => void;
 }
 const { Search } = Input;
 
@@ -27,6 +31,10 @@ const TableV1 = <T extends Record<string, any>>({
   onSearch,
   searchValue = "",
   addButtonLabel = "Add New",
+  isSecondButton = false,
+  secondButonLabel = "Invoice",
+  secondButonColor = "#17A948",
+  secondButonOnClick,
   ...rest
 }: CustomTableProps<T>) => {
   return (
@@ -38,9 +46,20 @@ const TableV1 = <T extends Record<string, any>>({
           >
             {capitalize(tableTitle ?? "")}
           </Typography>
-          <ButtonV1 onClick={addItem} customSize="small">
-            {addButtonLabel}
-          </ButtonV1>
+          <Flex gap={32}>
+            {isSecondButton && (
+              <ButtonV1
+                onClick={secondButonOnClick}
+                customSize="small"
+                customBackgroundColor="#17A948"
+              >
+                {secondButonLabel}
+              </ButtonV1>
+            )}
+            <ButtonV1 onClick={addItem} customSize="small">
+              {addButtonLabel}
+            </ButtonV1>
+          </Flex>
         </Flex>
       )}
       {showSearchBar && (

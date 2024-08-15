@@ -5,7 +5,7 @@ import FeaturesList from "./FeaturesList";
 
 type Props = {};
 
-const FeaturesManagementPage: React.FC<Props> = () => {
+const Page: React.FC<Props> = () => {
   return (
     <div>
       <FeaturesList />
@@ -13,4 +13,4 @@ const FeaturesManagementPage: React.FC<Props> = () => {
   );
 };
 
-export default FeaturesManagementPage;
+export default Page;

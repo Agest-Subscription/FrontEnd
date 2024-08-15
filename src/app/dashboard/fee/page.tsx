@@ -3,7 +3,7 @@ import React from "react";
 
 import FeeList from "./FeeList";
 
-const PricingPlansPage = () => {
+const Page = () => {
   return (
     <div>
       <FeeList />
@@ -11,4 +11,4 @@ const PricingPlansPage = () => {
   );
 };
 
-export default PricingPlansPage;
+export default Page;

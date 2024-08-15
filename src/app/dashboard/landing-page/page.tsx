@@ -5,7 +5,7 @@ import LandingPageList from "./LandingPageList";
 
 type Props = {};
 
-const PricingPlansPage: React.FC<Props> = () => {
+const Page: React.FC<Props> = () => {
   return (
     <div>
       <LandingPageList />
@@ -13,4 +13,4 @@ const PricingPlansPage: React.FC<Props> = () => {
   );
 };
 
-export default PricingPlansPage;
+export default Page;

@@ -15,6 +15,7 @@ import {
   PRICING_PLANS,
   SUBSCRIPTIONS,
   USERS,
+  ACTIVITY,
 } from "@/constants/routes";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getUserMe } from "@/redux/Me/slice";
@@ -47,6 +48,7 @@ const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
       { path: PERMISSIONS, key: PERMISSIONS },
       { path: USERS, key: USERS },
       { path: LANDING_PAGE, key: LANDING_PAGE },
+      { path: ACTIVITY, key: ACTIVITY },
     ];
 
     const matchedRoute = routeToKeyMap.find((route) =>
@@ -118,6 +120,14 @@ const DashboardLayout: FC<{ children?: React.ReactNode }> = ({ children }) => {
         </>
       ),
       key: LANDING_PAGE,
+    },
+    {
+      label: (
+        <>
+          <Link href={ACTIVITY}>Activity</Link>
+        </>
+      ),
+      key: ACTIVITY,
     },
   ];
   const onClick: MenuProps["onClick"] = (e) => {

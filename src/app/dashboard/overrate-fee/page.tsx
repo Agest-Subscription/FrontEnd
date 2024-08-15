@@ -5,7 +5,7 @@ import OverrateFeeList from "./OverrateFeeList";
 
 type Props = {};
 
-const PricingPlansPage: React.FC<Props> = () => {
+const Page: React.FC<Props> = () => {
   return (
     <div>
       <OverrateFeeList />
@@ -13,4 +13,4 @@ const PricingPlansPage: React.FC<Props> = () => {
   );
 };
 
-export default PricingPlansPage;
+export default Page;
