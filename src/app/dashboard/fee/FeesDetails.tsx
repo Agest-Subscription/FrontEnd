@@ -19,15 +19,20 @@ type DetailsProp = {
 type OverateFeeItemProps = {
   onDelete: () => void;
   index: number;
+  nextThreshold?: number | null;
+  currentThreshold?: number | null;
   showDelete: boolean;
 };
 
 const OverrateFeeItemField: FC<OverateFeeItemProps> = ({
   index,
   onDelete,
+  nextThreshold,
+  currentThreshold,
   showDelete,
 }) => {
   const { FormField } = useFormWrapperCtx<FeeFormValues>();
+  console.log(nextThreshold);
 
   return (
     <>
@@ -39,14 +44,49 @@ const OverrateFeeItemField: FC<OverateFeeItemProps> = ({
             key={index + "price"}
           />
         </Col>
-        <Col span={4}>
+        <Col
+          span={4}
+          style={{ gap: "8px", display: "flex", flexDirection: "column" }}
+        >
+          <div
+            className="form-item-label"
+            style={{
+              lineHeight: "18px",
+              fontWeight: 500,
+              color: "#263e56",
+              visibility: "visible",
+            }}
+          >
+            Threshold
+            <span style={{ color: "red", margin: "0 3px" }}>*</span>
+            <Tooltip
+              title={`The price will be applied when user's activity exceeds
+              threshold ${
+                nextThreshold
+                  ? `from ${currentThreshold}`
+                  : `more than ${currentThreshold}`
+              } 
+              ${nextThreshold ? `to ${nextThreshold - 1}` : ""}`}
+              color="#15ABFF"
+              overlayInnerStyle={{
+                minWidth: "400px",
+                minHeight: "45px",
+                fontSize: "14px",
+                fontWeight: "400",
+                lineHeight: "20px",
+                color: "white",
+                textAlign: "center",
+              }}
+            >
+              <InfoCircleOutlined style={{ color: "#15ABFF" }} />
+            </Tooltip>
+          </div>
           <FormField
             name={"overrate_fees.[].threshold"}
             index={[index]}
             key={index + "threshold"}
           />
         </Col>
-
         {showDelete && (
           <Col
             style={{
@@ -64,6 +104,7 @@ const OverrateFeeItemField: FC<OverateFeeItemProps> = ({
             />
           </Col>
         )}
+        <p></p>
       </Row>
     </>
   );
@@ -185,14 +226,16 @@ export default function FeeDetails({
             </Typography>
 
             {fields.map((item, index) => (
-              <>
+              <div key={item.id}>
                 <OverrateFeeItemField
-                  key={item.id}
+                  // price={item.price}
+                  currentThreshold={item.threshold ?? null}
+                  nextThreshold={fields[index + 1]?.threshold ?? null}
                   index={index}
                   onDelete={() => handleDelete(index)}
                   showDelete={fields.length > 1}
                 />
-              </>
+              </div>
             ))}
             <Typography
               style={{
