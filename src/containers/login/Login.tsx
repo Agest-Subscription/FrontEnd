@@ -120,8 +120,8 @@ const LoginContainer = () => {
               },
               {
                 pattern: passwordPattern,
-                message:
-                  "Invalid password at least 8 characters long and one special character",
+                message: `Invalid password at least 8 characters long, 
+                  one special character and one number`,
               },
             ]}
           >

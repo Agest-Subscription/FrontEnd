@@ -18,7 +18,8 @@ export type DashboardTab =
   | "features"
   | "users"
   | "landing-page"
-  | "activity";
+  | "activity"
+  | "activity/invoice";
 
 export interface FilterBase<T extends Record<string, any>> {
   page?: number;

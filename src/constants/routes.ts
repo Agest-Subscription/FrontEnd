@@ -7,4 +7,5 @@ export const DASHBOARD = "/dashboard",
   PERMISSIONS = `${DASHBOARD}/permissions`,
   USERS = `${DASHBOARD}/users`,
   LANDING_PAGE = `${DASHBOARD}/landing-page`,
-  ACTIVITY = `${DASHBOARD}/activity`;
+  ACTIVITY = `${DASHBOARD}/activity`,
+  INVOICE = `${DASHBOARD}/activity/invoice`;
