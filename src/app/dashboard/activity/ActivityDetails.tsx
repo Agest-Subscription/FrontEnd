@@ -73,7 +73,7 @@ const FeaturePlanItemField: FC<FeaturePlanItemProps> = ({
             key={index + "quantity"}
           />
         </Col>
-        <Col span={4}>
+        <Col span={6}>
           <FormField
             name={"feature_plan_fee_activities.[].activity_date"}
             index={[index]}
@@ -168,7 +168,7 @@ const ActivityDetails: React.FC<DetailsProp> = ({
             <FormField name="user_id" />
           </Col>
           <Col span={5}>
-            <FormField name="subscription" />
+            <FormField name="subscription_id" />
           </Col>
           <Col span={5}>
             <FormField name="start_date" />

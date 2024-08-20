@@ -84,7 +84,7 @@ const Page: React.FC<Props> = () => {
       } else {
         setSubscriptionsList([]);
         setFeaturesList([]);
-        methods.setValue("subscription", "");
+        methods.setValue("subscription_id", "");
         methods.setValue("pricing_plan", "");
         methods.setValue("feature_plan_fee_activities", []);
       }

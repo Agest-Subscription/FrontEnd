@@ -7,7 +7,7 @@ import {
 
 const activityFormValuesSchema: ObjectSchema<ActivityFormValues> = object({
   user_id: string().required("User is required"),
-  subscription: string().required("Subscription is required"),
+  subscription_id: string().required("Subscription is required"),
   start_date: string().required("start_date is required"),
   end_date: string().required("end_date is required"),
   description: string()

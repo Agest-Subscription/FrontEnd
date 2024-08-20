@@ -18,7 +18,7 @@ export type Activity = {
 
 export type ActivityFormType = {
   user_id: string;
-  subscription: string;
+  subscription_id: string;
   start_date: string;
   end_date: string;
   pricing_plan: string;
