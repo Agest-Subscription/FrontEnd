@@ -29,18 +29,18 @@ const PermissionDetails: React.FC<DetailsProp> = ({
         style={{ border: "1px solid #BDC1CA", padding: "16px" }}
       >
         <Row gutter={24}>
-          <Col span={6}>
+          <Col span={8}>
             <FormField name="name" />
           </Col>
-          <Col span={6}>
+          <Col span={8}>
             <FormField name="display_name" />
           </Col>
         </Row>
-        <Col span={6}>
-          <FormField name="description" />
-        </Col>
+        <FormField name="description" />
+
         <FormField name="is_active" />
       </Flex>
+
       <Flex
         style={{ width: "100%" }}
         justify={`${edit ? "space-between" : "flex-end"}`}

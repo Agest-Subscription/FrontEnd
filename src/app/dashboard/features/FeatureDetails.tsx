@@ -29,19 +29,14 @@ const FeatureDetails: React.FC<DetailsProp> = ({
         style={{ border: "1px solid #BDC1CA", padding: "16px" }}
       >
         <Row gutter={24}>
-          <Col span={6}>
+          <Col span={8}>
             <FormField name="name" />
           </Col>
-          <Col span={18}>
+          <Col span={16}>
             <FormField name="permissions" />
           </Col>
         </Row>
-        <Row gutter={24}>
-          <Col span={10}>
-            <FormField name="description" />
-          </Col>
-        </Row>
-
+        <FormField name="description" />
         <FormField name="is_active" />
       </Flex>
       <Flex
