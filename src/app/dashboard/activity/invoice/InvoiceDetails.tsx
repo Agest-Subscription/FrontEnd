@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Col, Flex, Row } from "antd";
 
+import InvoiceModal from "./InvoiceModal";
 import useGenerateColumns from "./useGenerateColumns";
 
 import ButtonV1 from "@/components/button/CustomButton";
@@ -26,6 +27,7 @@ interface DetailsProp {
 }
 
 const InvoiceDetails: React.FC<DetailsProp> = ({ onSave }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [tableParams, setTableParams] = useState<TableParams<InvoiceTableData>>(
     {
       pagination: {
@@ -106,7 +108,12 @@ const InvoiceDetails: React.FC<DetailsProp> = ({ onSave }) => {
               <FormField name="next_billing_date" />
             </Col>
           </Row>
-          <ButtonV1 customBackgroundColor="#17A948">View Invoice</ButtonV1>
+          <ButtonV1
+            customBackgroundColor="#17A948"
+            onClick={() => setIsModalOpen(true)}
+          >
+            View Invoice
+          </ButtonV1>
         </Flex>
         <TableV1
           scroll={{ x: "max-content" }}
@@ -120,6 +127,11 @@ const InvoiceDetails: React.FC<DetailsProp> = ({ onSave }) => {
           pagination={tableParams.pagination}
         />
       </Flex>
+      <InvoiceModal
+        isModalOpen={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        onSave={() => setIsModalOpen(false)}
+      />
     </>
   );
 };

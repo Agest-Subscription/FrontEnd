@@ -12,7 +12,6 @@ const Invoice: React.FC = () => {
       vertical
       gap={24}
       style={{
-        width: "50%",
         padding: "20px",
         backgroundColor: "#f9fafc",
         border: "0.5px solid #D7DAE0",
