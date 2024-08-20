@@ -12,6 +12,7 @@ import {
   getCheckFirstTime,
   getListSubscriptionApi,
   getSubscriptionByIdApi,
+  getSubscriptionsByUserId,
   updateSubscriptionApi,
 } from "@/api/subscription";
 import { getListUserApi } from "@/api/user";
@@ -33,6 +34,18 @@ export const useGetSubscriptionById = (id: string) => {
     queryFn: () => {
       if (!id) return Promise.reject(new Error("Invalid id"));
       return getSubscriptionByIdApi(id);
+    },
+    select: ({ data }) => data,
+    enabled: !!id,
+  });
+};
+
+export const useGetSubscriptionsByUserId = (id: string) => {
+  return useQuery({
+    queryKey: [SUBSCRIPTIONS, id],
+    queryFn: () => {
+      if (!id) return Promise.reject(new Error("Invalid id"));
+      return getSubscriptionsByUserId(id);
     },
     select: ({ data }) => data,
     enabled: !!id,

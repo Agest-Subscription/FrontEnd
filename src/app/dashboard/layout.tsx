@@ -7,6 +7,7 @@ import { Button, Flex, Layout, MenuProps, Spin, theme, Typography } from "antd";
 
 import MenuCustom from "@/components/Menu/MenuCustom";
 import {
+  ACTIVITY,
   FEATURES,
   FEES,
   LANDING_PAGE,
@@ -15,7 +16,6 @@ import {
   PRICING_PLANS,
   SUBSCRIPTIONS,
   USERS,
-  ACTIVITY,
 } from "@/constants/routes";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getUserMe } from "@/redux/Me/slice";

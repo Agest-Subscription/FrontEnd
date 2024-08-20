@@ -1,126 +1,122 @@
 "use client";
-import React, { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Flex, Form, Spin, Typography } from "antd";
 
-import AddActivity from "../AddActivity";
+import ActivityDetails from "../ActivityDetails";
+import { useGenerateFields } from "../useGenerateFields";
 
+import FormWrapperV2 from "@/components/formV2/FormWrapperV2";
+import PopUp from "@/components/popup/Popup";
 import { useAddActivity } from "@/hooks/activity";
+import { useGetPricingPlanById } from "@/hooks/pricingPlan";
+import { useGetSubscriptionsByUserId } from "@/hooks/subscription";
+import { CustomError } from "@/interfaces/base";
 import { ActivityFormValues } from "@/interfaces/model/activity.type";
+import { FeaturePlanFee } from "@/interfaces/model/pricingplan.type";
+import { SubscriptionResponseItem } from "@/interfaces/model/subscription.type";
+import { popUpPropType } from "@/interfaces/popup";
 import activityFormValuesSchema from "@/schema/activity";
+import { getErrorDetail } from "@/utils/error";
 import { capitalize } from "@/utils/string";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
   const [openModal, setOpenModal] = useState(false);
+  const [subscriptionsList, setSubscriptionsList] = useState<
+    SubscriptionResponseItem[]
+  >([]);
+  const [FeaturesList, setFeaturesList] = useState<FeaturePlanFee[]>([]);
   const { mutate: addActivity, isLoading: isAdding } = useAddActivity();
   const methods = useForm<ActivityFormValues>({
     mode: "onBlur",
     resolver: yupResolver(activityFormValuesSchema),
   });
-  // const [modalProp, setModalProp] = useState<popUpPropType>({
-  //   popup_id: "successpopup",
-  //   popup_text: `${capitalize("Are you sure to create a new Activty?")}`,
-  //   popup_type: "Confirm",
-  //   onConfirm: methods.handleSubmit(onSubmit),
-  //   onClose: () => setOpenModal(false),
-  // });
 
-  const params = {
-    page_size: 12,
-  };
+  const [modalProp, setModalProp] = useState<popUpPropType>({
+    popup_id: "successpopup",
+    popup_text: `${capitalize("Are you sure to create a new activity?")}`,
+    popup_type: "Confirm",
+    onConfirm: methods.handleSubmit(onSubmit),
+    onClose: () => setOpenModal(false),
+  });
 
-  // const { data: Activity, isError } = useGetListActivity(params);
-
-  // function transformResponse(data: Activity[]): ActivityItem[] {
-  //   const transformedData: Record<string, Record<string, string>> = {};
-
-  //   data.forEach((item) => {
-  //     const period = item.pricing_plan.recurrence_period;
-  //     const priority = item.priority;
-  //     const id = item.pricing_plan.id;
-
-  //     if (!transformedData[period]) {
-  //       transformedData[period] = { period };
-  //     }
-
-  //     transformedData[period][priority] = id;
-  //   });
-
-  //   return Object.values(transformedData) as ActivityItem[];
-  // }
-
-  // useEffect(() => {
-  //   if (Activity) {
-  //     const transformData = transformResponse(Activity?.data ?? []);
-  //     methods.setValue("activity_items", transformData);
-  //     const initializedData = transformData.map((item) => ({
-  //       ...item,
-  //       basic: item.basic || null,
-  //       pro: item.pro || null,
-  //       premium: item.premium || null,
-  //     }));
-  //     methods.setValue("activity_items", initializedData);
-  //   }
-  // }, [Activity, methods]);
-
-  // function showModal(modalProp: popUpPropType) {
-  //   setModalProp(modalProp);
-  //   setOpenModal(true);
-  // }
-
-  function onSubmit(data: ActivityFormValues) {
-    // addActivity(data, {
-    //   onSuccess: () => {
-    //     showModal({
-    //       popup_id: "successpopup",
-    //       popup_text: `${capitalize("This Activty is successfully created!")}`,
-    //       popup_type: "Success",
-    //       onConfirm: () => {},
-    //       onClose: () => setOpenModal(false),
-    //     });
-    //   },
-    //   onError: (error: CustomError) => {
-    //     showModal({
-    //       popup_id: "fail",
-    //       popup_text: `${capitalize(getErrorDetail(error) ?? "Activty creation failed!")}`,
-    //       popup_type: "Fail",
-    //       onConfirm: () => {},
-    //       onClose: () => setOpenModal(false),
-    //     });
-    //   },
-    // });
+  function showModal(modalProp: popUpPropType) {
+    setModalProp(modalProp);
+    setOpenModal(true);
   }
 
+  function onSubmit(data: ActivityFormValues) {
+    addActivity(data, {
+      onSuccess: () => {
+        showModal({
+          popup_id: "successpopup",
+          popup_text: `${capitalize("This Activity is successfully created!")}`,
+          popup_type: "Success",
+          onConfirm: () => {},
+          onClose: () => setOpenModal(false),
+        });
+      },
+      onError: (err: CustomError) => {
+        showModal({
+          popup_id: "fail",
+          popup_text: `${getErrorDetail(err) ?? "Activity Creation failed"}`,
+          popup_type: "Fail",
+          onConfirm: () => {},
+          onClose: () => setOpenModal(false),
+        });
+      },
+    });
+  }
+
+  const userId = methods.watch("user_id");
+  const pricingPlanId = methods.watch("pricing_plan");
+
+  const { data: subscriptionsData } = useGetSubscriptionsByUserId(userId);
+
+  const { data: pricingPlanData } = useGetPricingPlanById(pricingPlanId);
+
+  useEffect(() => {
+    if (subscriptionsData) {
+      if (subscriptionsData.length > 0) {
+        setSubscriptionsList(subscriptionsData);
+      } else {
+        setSubscriptionsList([]);
+        setFeaturesList([]);
+        methods.setValue("subscription", "");
+        methods.setValue("pricing_plan", "");
+        methods.setValue("feature_plan_fee_activities", []);
+      }
+    }
+
+    if (pricingPlanData) {
+      setFeaturesList(pricingPlanData.feature_plan_fees);
+    }
+  }, [userId, subscriptionsData, pricingPlanId, pricingPlanData, methods]);
+
+  const fields = useGenerateFields(methods, subscriptionsList, FeaturesList);
+
   const handleSave = async () => {
-    // const isValid = await methods.trigger();
-    // if (isValid) {
-    //   showModal({
-    //     popup_id: "confirm",
-    //     popup_text: `${capitalize("Are you sure to create a new Activty?")}`,
-    //     popup_type: "Confirm",
-    //     onConfirm: methods.handleSubmit(onSubmit),
-    //     onClose: () => setOpenModal(false),
-    //   });
-    // } else {
-    //   const firstError = Object.keys(methods.formState.errors)[0];
-    //   if (firstError) {
-    //     const errorElement = document.getElementsByName(firstError)[0];
-    //     if (errorElement) {
-    //       errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
-    //     }
-    //   }
-    // }
+    const isValid = await methods.trigger();
+    if (isValid) {
+      showModal({
+        popup_id: "confirm",
+        popup_text: `${capitalize("Are you sure to create a new Activity?")}`,
+        popup_type: "Confirm",
+        onConfirm: methods.handleSubmit(onSubmit),
+        onClose: () => setOpenModal(false),
+      });
+    }
   };
 
   return (
     <Flex vertical gap={24}>
       <Typography style={{ fontSize: 24, fontWeight: 600, color: "#2F80ED" }}>
-        {capitalize("Activity Configuration")}
+        {capitalize("Activity Creation")}
       </Typography>
       <Spin spinning={isAdding}>
-        <FormProvider {...methods}>
+        <FormWrapperV2 methods={methods} fields={fields}>
           <Form
             style={{
               display: "flex",
@@ -130,10 +126,10 @@ const Page: React.FC<Props> = () => {
             layout="vertical"
             onFinish={methods.handleSubmit(onSubmit)}
           >
-            <AddActivity onSave={handleSave} />
-            {/* <PopUp popupProps={modalProp} isOpen={openModal} /> */}
+            <ActivityDetails onSave={handleSave} featuresData={FeaturesList} />
+            <PopUp popupProps={modalProp} isOpen={openModal} />
           </Form>
-        </FormProvider>
+        </FormWrapperV2>
       </Spin>
     </Flex>
   );

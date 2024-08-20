@@ -1,7 +1,9 @@
 import { useMemo } from "react";
 import { ColumnType } from "antd/es/table";
+import dayjs from "dayjs";
 
 import LongText from "@/components/table/LongText";
+import { DATE_FORMAT } from "@/constants/date";
 import { ActivityTableData } from "@/interfaces/model/activity.type";
 import { capitalize } from "@/utils/string";
 
@@ -35,11 +37,17 @@ const useGenerateColumns = () => {
         title: "Subs Start Date",
         dataIndex: "subs_start_date",
         key: "subs_start_date",
+        render: (value) => {
+          return dayjs(value).format(DATE_FORMAT);
+        },
       },
       {
         title: "Subs End Date",
         dataIndex: "subs_end_date",
         key: "subs_end_date",
+        render: (value) => {
+          return dayjs(value).format(DATE_FORMAT);
+        },
       },
       {
         title: "Pricing Plan",
@@ -74,6 +82,9 @@ const useGenerateColumns = () => {
         title: "Activity Date",
         dataIndex: "activity_date",
         key: "activity_date",
+        render: (value) => {
+          return dayjs(value).format(DATE_FORMAT);
+        },
       },
       {
         title: "Transaction Unit",

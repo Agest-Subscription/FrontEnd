@@ -20,6 +20,12 @@ export const getSubscriptionByIdApi = (id: string) => {
   return axiosClient.get<SubscriptionResponseItem>(`subscriptions/${id}`);
 };
 
+export const getSubscriptionsByUserId = (id: string) => {
+  return axiosClient.get<SubscriptionResponseItem[]>(
+    `subscriptions/user/${id}`,
+  );
+};
+
 export const addSubscriptionApi = (data: AddSubscriptionPayload) => {
   return axiosClient.post("subscriptions", data);
 };

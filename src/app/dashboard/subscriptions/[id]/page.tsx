@@ -59,16 +59,22 @@ const Page: React.FC<Props> = () => {
 
   useEffect(() => {
     if (Subscription) {
-      methods.setValue("user_id", Subscription.users.id);
-      methods.setValue("email", Subscription.users.email);
-      methods.setValue("start_date", Subscription.start_date);
-      methods.setValue("end_date", Subscription.end_date);
-      methods.setValue("due_date_free_trial", Subscription.due_date_free_trial);
-      methods.setValue("suspended_date", Subscription.suspended_date);
-      methods.setValue("next_billing_date", Subscription.next_billing_date);
-      methods.setValue("auto_renew", Subscription.auto_renew);
-      methods.setValue("is_cancelled", Subscription.is_cancelled);
-      methods.setValue("pricing_plan_id", Subscription.pricing_plan.id);
+      methods.setValue("user_id", Subscription.users?.id ?? "");
+      methods.setValue("email", Subscription.users?.email ?? "");
+      methods.setValue("start_date", Subscription.start_date ?? "");
+      methods.setValue("end_date", Subscription.end_date ?? "");
+      methods.setValue(
+        "due_date_free_trial",
+        Subscription.due_date_free_trial ?? "",
+      );
+      methods.setValue("suspended_date", Subscription.suspended_date ?? "");
+      methods.setValue(
+        "next_billing_date",
+        Subscription.next_billing_date ?? "",
+      );
+      methods.setValue("auto_renew", Subscription.auto_renew ?? false);
+      methods.setValue("is_cancelled", Subscription.is_cancelled ?? false);
+      methods.setValue("pricing_plan_id", Subscription.pricing_plan?.id ?? "");
     }
   }, [Subscription, methods]);
 

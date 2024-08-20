@@ -51,7 +51,7 @@ const TableV1 = <T extends Record<string, any>>({
               <ButtonV1
                 onClick={secondButonOnClick}
                 customSize="small"
-                customBackgroundColor="#17A948"
+                customBackgroundColor={secondButonColor}
               >
                 {secondButonLabel}
               </ButtonV1>

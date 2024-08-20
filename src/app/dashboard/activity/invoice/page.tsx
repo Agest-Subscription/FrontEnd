@@ -1,14 +1,12 @@
-// "use client";
-// import React from "react";
+"use client";
+import React from "react";
 
-// import InvoiceList from "./InvoiceList";
+const Page = () => {
+  return (
+    <div>
+      <p>Invoice</p>
+    </div>
+  );
+};
 
-// const Page = () => {
-//   return (
-//     <div>
-//       <InvoiceList />
-//     </div>
-//   );
-// };
-
-// export default Page;
+export default Page;

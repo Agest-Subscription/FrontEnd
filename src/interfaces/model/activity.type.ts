@@ -18,7 +18,10 @@ export type Activity = {
 
 export type ActivityFormType = {
   user_id: string;
-  subscription_id: string;
+  subscription: string;
+  start_date: string;
+  end_date: string;
+  pricing_plan: string;
   description?: string | null;
 };
 
@@ -36,16 +39,16 @@ export type ActivityItem = Pick<
 >;
 
 export type FeaturePlanFeeActivityItem = {
-  feature_plan_fee_id: string;
-  quantity: number;
-  activity_date: string;
+  index?: number;
+  feature_plan_fee_id: string | null;
+  quantity: number | null;
+  activity_date: string | null;
+  fee: string | null;
+  fee_type: string | null;
 };
 
 export type ActivityFormValues = ActivityFormType & {
   feature_plan_fee_activities: FeaturePlanFeeActivityItem[];
 };
 
-export type ActivityPayload = {
-  pricing_plan_id: string;
-  priority: string;
-};
+export type AddActivityPayload = ActivityFormValues;

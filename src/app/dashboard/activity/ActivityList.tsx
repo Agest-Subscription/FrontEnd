@@ -88,14 +88,15 @@ const ActivityList: React.FC<Props> = () => {
 
   const dataSource = useMemo<DataSourceItem<ActivityTableData>[]>(() => {
     return (
-      ActivityTableData?.data.map((permission, index) => ({
-        ...permission,
-        key: permission.id,
+      ActivityTableData?.data.map((activity, index) => ({
+        ...activity,
+        key: activity.id,
         no: index + 1 + ((params.page ?? 1) - 1) * (params?.page_size ?? 5),
       })) ?? []
     );
   }, [ActivityTableData?.data, params.page, params?.page_size]);
 
+  console.log("123", dataSource);
   return (
     <div>
       <TableV1
