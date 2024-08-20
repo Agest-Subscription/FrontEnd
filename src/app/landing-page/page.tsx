@@ -36,7 +36,7 @@ const CustomRadio = styled(Radio.Group)`
   }
 `;
 
-const LandingPage = () => {
+const Page = () => {
   const params = {
     page_size: 12,
   };
@@ -151,4 +151,4 @@ const LandingPage = () => {
   );
 };
 
-export default LandingPage;
+export default Page;

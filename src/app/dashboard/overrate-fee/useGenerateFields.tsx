@@ -96,8 +96,8 @@ export const useGenerateFields = (initialSelectedFees?: IsOverrateFee) => {
         label: "Description",
         type: "textarea",
         componentProps: {
-          style: { width: "100%" },
           rows: 3,
+          style: { width: "100%" },
         },
       },
     };

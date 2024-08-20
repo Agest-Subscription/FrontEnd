@@ -1,12 +1,12 @@
 "use client";
 import React from "react";
 
-import PricingPlanList from "./PricingPlanList";
+import ActivityList from "./ActivityList";
 
 const Page = () => {
   return (
     <div>
-      <PricingPlanList />
+      <ActivityList />
     </div>
   );
 };

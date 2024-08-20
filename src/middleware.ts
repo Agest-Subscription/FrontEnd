@@ -8,6 +8,7 @@ const adminRoutes = [
   "/dashboard/fee-overate",
   "/dashboard/subscriptions",
   "/dashboard/users",
+  "/dashboard/activity",
 ];
 
 export default withAuth(
@@ -48,5 +49,6 @@ export const config = {
     "/dashboard/subscriptions/:path*",
     "/dashboard/users/:path*",
     "/dashboard/landing-page/:path*",
+    "/dashboard/activity/:path*",
   ],
 };

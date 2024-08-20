@@ -3,8 +3,8 @@ import React from "react";
 
 import SubscriptionList from "./SubscriptionList";
 
-const PricingPlansPage = () => {
+const Page = () => {
   return <SubscriptionList />;
 };
 
-export default PricingPlansPage;
+export default Page;

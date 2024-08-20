@@ -32,7 +32,6 @@ const OverrateFeeItemField: FC<OverateFeeItemProps> = ({
   showDelete,
 }) => {
   const { FormField } = useFormWrapperCtx<FeeFormValues>();
-  console.log(nextThreshold);
 
   return (
     <>

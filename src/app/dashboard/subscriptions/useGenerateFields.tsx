@@ -115,6 +115,8 @@ export const useGenerateFields = (
         options: mappedEmails,
         componentProps: {
           isRequired: true,
+          showSearch: true,
+          allowClear: true,
           filterOption: true,
           optionFilterProp: "label",
           style: { height: "40px" },
@@ -125,7 +127,6 @@ export const useGenerateFields = (
             methods.setValue("user_id", value);
             keepInitialValue();
           },
-          allowClear: true,
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
             const target = event.target as HTMLDivElement;
             if (
@@ -150,6 +151,8 @@ export const useGenerateFields = (
         options: mappedPricingPlans,
         componentProps: {
           isRequired: true,
+          showSearch: true,
+          allowClear: true,
           filterOption: true,
           disabled: checkAlreadyStart(),
           style: { height: "40px" },
@@ -163,7 +166,6 @@ export const useGenerateFields = (
 
             keepInitialValue();
           },
-          allowClear: true,
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
             const target = event.target as HTMLDivElement;
             if (

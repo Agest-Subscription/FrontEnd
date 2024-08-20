@@ -79,8 +79,8 @@ export const useGenerateFields = (
         label: "Description",
         type: "textarea",
         componentProps: {
-          style: { height: 150 },
           rows: 3,
+          style: { width: "100%" },
         },
       },
       is_active: {

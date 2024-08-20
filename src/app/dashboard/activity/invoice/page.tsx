@@ -1,12 +1,10 @@
 "use client";
 import React from "react";
 
-import PricingPlanList from "./PricingPlanList";
-
 const Page = () => {
   return (
     <div>
-      <PricingPlanList />
+      <p>Invoice</p>
     </div>
   );
 };

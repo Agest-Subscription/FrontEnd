@@ -24,11 +24,11 @@ export type SubscriptionTableData = Omit<Subscription, "user_id" | "email"> & {
 };
 
 export type SubscriptionResponseItem = Subscription & {
-  users: {
+  users?: {
     id: string;
     email: string;
   };
-  pricing_plan: PricingPlan;
+  pricing_plan?: PricingPlan;
 };
 
 export type SubscriptionFilterParams = FilterBase<SubscriptionResponseItem>;
