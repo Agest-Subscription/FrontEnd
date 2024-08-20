@@ -164,7 +164,7 @@ export default function FeeDetails({
         gap={24}
         style={{ border: "1px solid #BDC1CA", padding: "16px" }}
       >
-        <Row gutter={16}>
+        <Row gutter={20}>
           <Col span={4}>
             <FormField name="name" />
           </Col>
@@ -190,11 +190,7 @@ export default function FeeDetails({
             </>
           )}
         </Row>
-        <Row gutter={16}>
-          <Col span={8}>
-            <FormField name="description" />
-          </Col>
-        </Row>
+        <FormField name="description" />
 
         <FormField name="is_active" />
         {fee_type === "transaction" && (

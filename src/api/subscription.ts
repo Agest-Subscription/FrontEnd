@@ -22,7 +22,7 @@ export const getSubscriptionByIdApi = (id: string) => {
 
 export const getSubscriptionsByUserId = (id: string) => {
   return axiosClient.get<SubscriptionResponseItem[]>(
-    `users/${id}/subscriptions`, 
+    `users/${id}/subscriptions`,
   );
 };
 
