@@ -44,8 +44,8 @@ const ActivityList: React.FC<Props> = () => {
   const { data: ActivityTableData, isFetching } = useGetListActivity(params);
   const columns = useGenerateColumns();
 
-  if(ActivityTableData){
-    console.log("123Activity", ActivityTableData)
+  if (ActivityTableData) {
+    console.log("123Activity", ActivityTableData);
   }
 
   const handleTableChange = ({

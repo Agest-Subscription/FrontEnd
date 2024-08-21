@@ -83,7 +83,7 @@ export const useGenerateFields = (
             methods.setValue("subscription_id", "");
             methods.setValue("start_date", "");
             methods.setValue("end_date", "");
-            methods.setValue("feature_plan_fee_activities", [])
+            methods.setValue("feature_plan_fee_activities", []);
           },
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
             const target = event.target as HTMLDivElement;

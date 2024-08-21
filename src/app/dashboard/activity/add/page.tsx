@@ -80,7 +80,7 @@ const Page: React.FC<Props> = () => {
   useEffect(() => {
     if (subscriptionsData) {
       setSubscriptionsList(subscriptionsData);
-    }else {
+    } else {
       setSubscriptionsList([]);
       setFeaturesList([]);
       methods.setValue("subscription_id", "");
@@ -91,7 +91,7 @@ const Page: React.FC<Props> = () => {
     if (pricingPlanData) {
       setFeaturesList(pricingPlanData.feature_plan_fees);
     }
-  }, [userId, subscriptionsData, pricingPlanId, pricingPlanData]);
+  }, [userId, subscriptionsData, pricingPlanId, pricingPlanData, methods]);
 
   const fields = useGenerateFields(methods, subscriptionsList, FeaturesList);
 
