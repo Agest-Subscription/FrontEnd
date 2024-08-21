@@ -25,6 +25,7 @@ export const useGenerateFields = (
   } = useGetInfiniteUser({
     page_size: 10,
     is_active: true,
+    had_subscriptions: true,
   });
 
   const fields = useMemo<FieldsData<ActivityFormValues>>(() => {
@@ -79,6 +80,10 @@ export const useGenerateFields = (
           onSearch: debounce((value) => setUserSearchTerm(value), 500),
           onChange: () => {
             setUserSearchTerm("");
+            methods.setValue("subscription_id", "");
+            methods.setValue("start_date", "");
+            methods.setValue("end_date", "");
+            methods.setValue("feature_plan_fee_activities", [])
           },
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
             const target = event.target as HTMLDivElement;

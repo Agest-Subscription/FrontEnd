@@ -79,21 +79,19 @@ const Page: React.FC<Props> = () => {
 
   useEffect(() => {
     if (subscriptionsData) {
-      if (subscriptionsData.length > 0) {
-        setSubscriptionsList(subscriptionsData);
-      } else {
-        setSubscriptionsList([]);
-        setFeaturesList([]);
-        methods.setValue("subscription_id", "");
-        methods.setValue("pricing_plan", "");
-        methods.setValue("feature_plan_fee_activities", []);
-      }
+      setSubscriptionsList(subscriptionsData);
+    }else {
+      setSubscriptionsList([]);
+      setFeaturesList([]);
+      methods.setValue("subscription_id", "");
+      methods.setValue("pricing_plan", "");
+      methods.setValue("feature_plan_fee_activities", []);
     }
 
     if (pricingPlanData) {
       setFeaturesList(pricingPlanData.feature_plan_fees);
     }
-  }, [userId, subscriptionsData, pricingPlanId, pricingPlanData, methods]);
+  }, [userId, subscriptionsData, pricingPlanId, pricingPlanData]);
 
   const fields = useGenerateFields(methods, subscriptionsList, FeaturesList);
 
