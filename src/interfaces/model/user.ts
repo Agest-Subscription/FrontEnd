@@ -21,6 +21,7 @@ export type UserFormValues = Omit<UserResponseItem, "id"> & {
 
 export type UserFilterParams = FilterBase<UserResponseItem> & {
   is_active?: boolean;
+  had_subscriptions?: boolean;
 };
 
 export type AddUserPayload = UserFormValues;

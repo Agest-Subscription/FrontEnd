@@ -18,7 +18,11 @@ const activityFormValuesSchema: ObjectSchema<ActivityFormValues> = object({
   feature_plan_fee_activities: array<FeaturePlanFeeActivityItem>(
     object<FeaturePlanFeeActivityItem>().shape({
       feature_plan_fee_id: string().nullable().default(null),
-      quantity: number().nullable().default(null).min(1, "Quantity cannot be smaller than 1").max(9999999999, "Quantity cannot exceed 9999999999"),
+      quantity: number()
+        .nullable()
+        .default(null)
+        .min(1, "Quantity cannot be smaller than 1")
+        .max(9999999999, "Quantity cannot exceed 9999999999"),
       activity_date: string().nullable().default(null),
       fee: string().nullable().default(null),
       fee_type: string().nullable().default(null),
