@@ -15,6 +15,7 @@ interface CustomTableProps<T> extends TableProps<T> {
   searchValue?: string;
   showSearchBar?: boolean;
   addButtonLabel?: string;
+  addButtonColor?: string;
   isSecondButton?: boolean;
   secondButonLabel?: string;
   secondButonColor?: string;
@@ -31,6 +32,7 @@ const TableV1 = <T extends Record<string, any>>({
   onSearch,
   searchValue = "",
   addButtonLabel = "Add New",
+  addButtonColor = "#2F80ED",
   isSecondButton = false,
   secondButonLabel = "Invoice",
   secondButonColor = "#17A948",
@@ -56,7 +58,11 @@ const TableV1 = <T extends Record<string, any>>({
                 {secondButonLabel}
               </ButtonV1>
             )}
-            <ButtonV1 onClick={addItem} customSize="small">
+            <ButtonV1
+              onClick={addItem}
+              customSize="small"
+              customBackgroundColor={addButtonColor}
+            >
               {addButtonLabel}
             </ButtonV1>
           </Flex>

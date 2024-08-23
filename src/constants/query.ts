@@ -25,3 +25,6 @@ export const SUBSCRIPTIONS = "subscriptions";
 
 export const ACTIVITY = "activity";
 export const ACTIVITIES = "activities";
+
+export const INVOICE = "invoice";
+export const INVOICES = "invoices";

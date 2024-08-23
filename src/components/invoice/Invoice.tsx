@@ -6,20 +6,25 @@ import InvoiceBody from "./InvoiceBody";
 import InvoiceFooter from "./InvoiceFooter";
 import InvoiceHeader from "./InvoiceHeader";
 
-const Invoice: React.FC = () => {
+import { InvoiceDetail } from "@/interfaces/model/invoice.type";
+
+interface Props {
+  invoiceDetailData?: InvoiceDetail | undefined;
+}
+
+const Invoice: React.FC<Props> = ({ invoiceDetailData }) => {
   return (
     <Flex
       vertical
       gap={24}
       style={{
-        minWidth: "563px",
         padding: "20px",
         backgroundColor: "#f9fafc",
         border: "0.5px solid #D7DAE0",
       }}
     >
       <InvoiceHeader />
-      <InvoiceBody />
+      <InvoiceBody invoiceDetailData={invoiceDetailData} />
       <InvoiceFooter />
     </Flex>
   );
