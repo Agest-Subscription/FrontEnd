@@ -61,3 +61,13 @@ export function formatDuration(duration: string): string {
 
   return "";
 }
+
+export function formatAsMoney(amount: number): string {
+  if (!amount) return "";
+  const formattedAmount = amount.toLocaleString("en-US", {
+    minimumFractionDigits: amount % 1 === 0 ? 0 : 2,
+    maximumFractionDigits: 2,
+  });
+
+  return `$${formattedAmount}`;
+}

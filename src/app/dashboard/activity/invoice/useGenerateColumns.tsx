@@ -18,16 +18,16 @@ const useGenerateColumns = () => {
       },
       {
         title: "Feature",
-        dataIndex: "feature",
-        key: "feature",
+        dataIndex: "feature_name",
+        key: "feature_name",
         render: (value) => {
           return <LongText text={capitalize(value)} />;
         },
       },
       {
         title: "Sub ID",
-        dataIndex: "sub_id",
-        key: "sub_id",
+        dataIndex: "subs_id",
+        key: "subs_id",
       },
       {
         title: "Subs Start Date",
@@ -47,8 +47,8 @@ const useGenerateColumns = () => {
       },
       {
         title: "Pricing Plan",
-        dataIndex: "pricing_plan",
-        key: "pricing_plan",
+        dataIndex: "pricing_plan_name",
+        key: "pricing_plan_name",
         render: (value) => {
           return <LongText text={capitalize(value)} />;
         },

@@ -6,7 +6,13 @@ import InvoiceBody from "./InvoiceBody";
 import InvoiceFooter from "./InvoiceFooter";
 import InvoiceHeader from "./InvoiceHeader";
 
-const Invoice: React.FC = () => {
+import { InvoiceDetail } from "@/interfaces/model/invoice.type";
+
+interface Props {
+  invoiceDetailData?: InvoiceDetail | undefined;
+}
+
+const Invoice: React.FC<Props> = ({ invoiceDetailData }) => {
   return (
     <Flex
       vertical
@@ -18,7 +24,7 @@ const Invoice: React.FC = () => {
       }}
     >
       <InvoiceHeader />
-      <InvoiceBody />
+      <InvoiceBody invoiceDetailData={invoiceDetailData} />
       <InvoiceFooter />
     </Flex>
   );

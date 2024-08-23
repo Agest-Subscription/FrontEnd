@@ -1,12 +1,21 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { UseFormReturn } from "react-hook-form";
 import { Spin } from "antd";
 import { debounce } from "lodash";
 
 import { useGetInfiniteUser } from "@/hooks/subscription";
 import { FieldsData } from "@/interfaces/form";
-import { InvoiceFormValues } from "@/interfaces/model/invoice.type";
+import {
+  InvoiceFormValues,
+  NextBillingDate,
+} from "@/interfaces/model/invoice.type";
 
-export const useGenerateFields = () => {
+export const useGenerateFields = (
+  methods: UseFormReturn<InvoiceFormValues, any, undefined>,
+  nextBillingDateList: NextBillingDate[],
+) => {
+  const [, setSelectedUserId] = useState<string | null>(null);
+
   const {
     data: usersPage,
     fetchNextPage: fetchNextUserPage,
@@ -18,17 +27,6 @@ export const useGenerateFields = () => {
     is_active: true,
   });
 
-  // const {
-  //   data: nextBillingDatesPage,
-  //   fetchNextPage: fetchNextNextBillingDatePage,
-  //   isFetchingNextPage: isFetchingNextNextBillingDatePage,
-  //   isInitialLoading: isInitialLoadingNextBillingDates,
-  //   setSearchTerm: setNextBillingDateSearchTerm,
-  // } = useGetInfiniteNextBillingDate({
-  //   page_size: 10,
-  //   is_active: true,
-  // });
-
   const fields = useMemo<FieldsData<InvoiceFormValues>>(() => {
     const mappedEmails =
       usersPage?.pages.flatMap((page) =>
@@ -38,13 +36,11 @@ export const useGenerateFields = () => {
         })),
       ) ?? [];
 
-    // const mappedNextBillingDates =
-    //   nextBillingDatesPage?.pages.flatMap((page) =>
-    //     page.data.data.map((user) => ({
-    //       value: user.id,
-    //       label: user.email,
-    //     })),
-    //   ) ?? [];
+    const mappedNextBillingDates =
+      nextBillingDateList?.map((bill) => ({
+        value: bill.date,
+        label: bill.date,
+      })) ?? [];
 
     return {
       user_id: {
@@ -59,8 +55,9 @@ export const useGenerateFields = () => {
           optionFilterProp: "label",
           style: { height: "40px" },
           onSearch: debounce((value) => setUserSearchTerm(value), 500),
-          onChange: () => {
+          onChange: (value) => {
             setUserSearchTerm("");
+            setSelectedUserId(value);
           },
           onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
             const target = event.target as HTMLDivElement;
@@ -79,47 +76,23 @@ export const useGenerateFields = () => {
           ),
         },
       },
-      next_billing_date: {
+      subs_next_billing_date: {
         label: "Next Billing Date",
         type: "select",
-        // options: mappedNextBillingDates,
+        options: mappedNextBillingDates,
         componentProps: {
-          isRequired: true,
-          showSearch: true,
           allowClear: true,
-          filterOption: true,
-          optionFilterProp: "label",
           style: { height: "40px" },
-          // onSearch: debounce(
-          //   (value) => setNextBillingDateSearchTerm(value),
-          //   500,
-          // ),
-          // onChange: () => {
-          //   setNextBillingDateSearchTerm("");
-          // },
-          // onPopupScroll: (event: React.UIEvent<HTMLDivElement>) => {
-          //   const target = event.target as HTMLDivElement;
-          //   if (
-          //     !isFetchingNextNextBillingDatePage &&
-          //     target.scrollTop + target.offsetHeight === target.scrollHeight
-          //   ) {
-          //     target.scrollTo(0, target.scrollHeight);
-          //     fetchNextNextBillingDatePage();
-          //   }
-          // },
-          // dropdownRender: (menu) => (
-          //   <Spin
-          //     spinning={
-          //       isFetchingNextNextBillingDatePage ||
-          //       isInitialLoadingNextBillingDates
-          //     }
-          //   >
-          //     {menu}
-          //   </Spin>
-          // ),
         },
       },
     };
-  }, []);
+  }, [
+    fetchNextUserPage,
+    isFetchingNextUserPage,
+    isInitialLoadingUsers,
+    nextBillingDateList,
+    setUserSearchTerm,
+    usersPage?.pages,
+  ]);
   return fields;
 };
