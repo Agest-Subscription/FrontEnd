@@ -52,7 +52,7 @@ const Page: React.FC<Props> = () => {
       onSuccess: () => {
         showModal({
           popup_id: "successpopup",
-          popup_text: `${capitalize("This PricingPlan is successfully created!")}`,
+          popup_text: `${capitalize("This Pricing Plan is successfully created!")}`,
           popup_type: "Success",
           onConfirm: () => {},
           onClose: () => setOpenModal(false),
@@ -61,7 +61,7 @@ const Page: React.FC<Props> = () => {
       onError: (err: CustomError) => {
         showModal({
           popup_id: "fail",
-          popup_text: `${getErrorDetail(err) ?? "PricingPlan Creation failed"}`,
+          popup_text: `${getErrorDetail(err) ?? "Pricing Plan Creation failed"}`,
           popup_type: "Fail",
           onConfirm: () => {},
           onClose: () => setOpenModal(false),

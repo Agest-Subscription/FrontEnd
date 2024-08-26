@@ -18,7 +18,11 @@ const useGenerateColumns = () => {
               className="item-name"
               style={{
                 fontWeight: "bold",
-                paddingLeft: record.isFeature ? 14 : 0,
+                paddingLeft: record.isFeature
+                  ? 14
+                  : record.isOverrateFee
+                    ? 40
+                    : 0,
               }}
             >
               {text}
@@ -26,7 +30,13 @@ const useGenerateColumns = () => {
             {record.description && (
               <div
                 className="item-description"
-                style={{ paddingLeft: record.isFeature ? 14 : 0 }}
+                style={{
+                  paddingLeft: record.isFeature
+                    ? 14
+                    : record.isOverrateFee
+                      ? 40
+                      : 0,
+                }}
               >
                 {record.description}
               </div>

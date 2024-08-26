@@ -85,7 +85,7 @@ const InvoiceBody: React.FC<Props> = ({ invoiceDetailData }) => {
               rows.push({
                 key: `${index}-detail-${detailIndex}-fee-${feeIndex}`,
                 item_detail: `Overrate (${fee.start} - ${fee.end})`,
-                isFeature: true,
+                isOverrateFee: true,
                 quantity: fee.quantity,
                 rate: fee.price,
                 amount: fee.quantity * fee.price,
