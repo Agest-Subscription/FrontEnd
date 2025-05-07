@@ -3,7 +3,7 @@ import React from "react";
 
 import PricingPlanList from "./PricingPlanList";
 
-const PricingPlansPage = () => {
+const Page = () => {
   return (
     <div>
       <PricingPlanList />
@@ -11,4 +11,4 @@ const PricingPlansPage = () => {
   );
 };
 
-export default PricingPlansPage;
+export default Page;

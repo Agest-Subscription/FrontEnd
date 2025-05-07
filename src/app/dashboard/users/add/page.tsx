@@ -15,12 +15,10 @@ import { UserFormValues } from "@/interfaces/model/user";
 import { popUpPropType } from "@/interfaces/popup";
 import userFormValuesSchema from "@/schema/user";
 import { getErrorDetail } from "@/utils/error";
-import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize, trimString } from "@/utils/string";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
-  const goToUser = useGoToDashboardTab("users");
   const [openModal, setOpenModal] = useState(false);
   const { mutate: addUser, isLoading: isAdding } = useAddUser();
   const methods = useForm<UserFormValues>({
@@ -48,7 +46,7 @@ const Page: React.FC<Props> = () => {
           popup_text: `${capitalize("This User is successfully created!")}`,
           popup_type: "Success",
           onConfirm: () => {},
-          onClose: () => goToUser(),
+          onClose: () => setOpenModal(false),
         });
       },
       onError: (err: CustomError) => {

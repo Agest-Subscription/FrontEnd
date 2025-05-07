@@ -17,7 +17,9 @@ export type DashboardTab =
   | "overrate-fee"
   | "features"
   | "users"
-  | "landing-page";
+  | "landing-page"
+  | "activity"
+  | "activity/invoice";
 
 export interface FilterBase<T extends Record<string, any>> {
   page?: number;

@@ -19,12 +19,10 @@ import {
 import { popUpPropType } from "@/interfaces/popup";
 import pricingplanFormValuesSchema from "@/schema/pricingPlan";
 import { getErrorDetail } from "@/utils/error";
-import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
-  const goToPricingPlan = useGoToDashboardTab("pricing-plan");
   const [openModal, setOpenModal] = useState(false);
   const { mutate: addPricingPlan, isLoading: isAdding } = useAddPricingPlan();
   const methods = useForm<PricingPlanFormValues>({
@@ -34,7 +32,7 @@ const Page: React.FC<Props> = () => {
   const has_free_trial = methods.watch("has_free_trial");
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "successpopup",
-    popup_text: `${capitalize("Are you sure to create a new PricingPlan?")}`,
+    popup_text: `${capitalize("Are you sure to create a new Pricing Plan?")}`,
     popup_type: "Confirm",
     onConfirm: methods.handleSubmit((data) => onSubmit(data)),
     onClose: () => setOpenModal(false),
@@ -54,16 +52,16 @@ const Page: React.FC<Props> = () => {
       onSuccess: () => {
         showModal({
           popup_id: "successpopup",
-          popup_text: `${capitalize("This PricingPlan is successfully created!")}`,
+          popup_text: `${capitalize("This Pricing Plan is successfully created!")}`,
           popup_type: "Success",
           onConfirm: () => {},
-          onClose: () => goToPricingPlan(),
+          onClose: () => setOpenModal(false),
         });
       },
       onError: (err: CustomError) => {
         showModal({
           popup_id: "fail",
-          popup_text: `${getErrorDetail(err) ?? "PricingPlan Creation failed"}`,
+          popup_text: `${getErrorDetail(err) ?? "Pricing Plan Creation failed"}`,
           popup_type: "Fail",
           onConfirm: () => {},
           onClose: () => setOpenModal(false),

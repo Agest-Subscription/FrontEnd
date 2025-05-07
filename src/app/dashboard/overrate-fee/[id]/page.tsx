@@ -58,11 +58,9 @@ const Page: React.FC<Props> = () => {
 
   useEffect(() => {
     if (OverrateFee) {
-      //  methods.setValue("name", OverrateFee.name);
       methods.setValue("fee_id", OverrateFee.fee_id);
       methods.setValue("threshold", OverrateFee.threshold);
       methods.setValue("price", OverrateFee.price);
-      // methods.setValue("description", OverrateFee.description);
     }
   }, [OverrateFee, methods]);
 
@@ -75,7 +73,6 @@ const Page: React.FC<Props> = () => {
   };
 
   const handleSubmit = (data: OverrateFeeFormValues) => {
-    // const trimmed = trimString(data, ["name"]);
     updateOverrateFee(
       { id, ...data },
       {
@@ -85,7 +82,7 @@ const Page: React.FC<Props> = () => {
             popup_text: capitalize("Overrate Fee is updated successfully!"),
             popup_type: "Success",
             onConfirm: () => {},
-            onClose: () => goToOverrateFee(),
+            onClose: () => setOpenModal(false),
           }),
         onError: (err: CustomError) =>
           showModal({

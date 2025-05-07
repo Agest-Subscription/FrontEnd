@@ -1,16 +1,17 @@
 name: CI/CD Pipeline Release
- 
+
 on:
   push:
     tags:
       - '*'
+
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
- 
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
  
@@ -22,6 +23,7 @@ jobs:
 
       - name: Get Git Tag
         run: |
+
             GIT_TAG=$(git describe --tags --abbrev=0)
             echo "GIT_TAG=$GIT_TAG" >> $GITHUB_ENV
 
@@ -41,4 +43,5 @@ jobs:
           build-args: |
             NEXT_PUBLIC_API_BASE_URL=${{ env.API_BASE_URL }}
             NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+
             NEXTAUTH_URL=${{ env.NEXTAUTH_URL }}

@@ -61,6 +61,7 @@ const AddMultipleItems = () => {
             fontSize: "14px",
             lineHeight: "22px",
             cursor: "pointer",
+            width: "fit-content",
           }}
           onClick={() =>
             append({ period: "", basic: "", pro: "", premium: "" })

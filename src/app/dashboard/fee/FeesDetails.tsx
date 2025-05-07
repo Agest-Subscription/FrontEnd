@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from "react";
 import { useFieldArray, useFormContext, UseFormReturn } from "react-hook-form";
-import { DeleteOutlined } from "@ant-design/icons";
-import { Col, Flex, Row, Typography } from "antd";
+import { DeleteOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import { Col, Flex, Row, Tooltip, Typography } from "antd";
 
 import ButtonV1 from "@/components/button/CustomButton";
 import { useFormWrapperCtx } from "@/components/formV2/FormWrapperV2";
@@ -19,12 +19,16 @@ type DetailsProp = {
 type OverateFeeItemProps = {
   onDelete: () => void;
   index: number;
+  nextThreshold?: number | null;
+  currentThreshold?: number | null;
   showDelete: boolean;
 };
 
 const OverrateFeeItemField: FC<OverateFeeItemProps> = ({
   index,
   onDelete,
+  nextThreshold,
+  currentThreshold,
   showDelete,
 }) => {
   const { FormField } = useFormWrapperCtx<FeeFormValues>();
@@ -39,14 +43,49 @@ const OverrateFeeItemField: FC<OverateFeeItemProps> = ({
             key={index + "price"}
           />
         </Col>
-        <Col span={4}>
+        <Col
+          span={4}
+          style={{ gap: "8px", display: "flex", flexDirection: "column" }}
+        >
+          <div
+            className="form-item-label"
+            style={{
+              lineHeight: "18px",
+              fontWeight: 500,
+              color: "#263e56",
+              visibility: "visible",
+            }}
+          >
+            Threshold
+            <span style={{ color: "red", margin: "0 3px" }}>*</span>
+            <Tooltip
+              title={`The price will be applied when user's activity exceeds
+              threshold ${
+                nextThreshold
+                  ? `from ${currentThreshold}`
+                  : `more than ${currentThreshold}`
+              } 
+              ${nextThreshold ? `to ${nextThreshold - 1}` : ""}`}
+              color="#15ABFF"
+              overlayInnerStyle={{
+                minWidth: "400px",
+                minHeight: "45px",
+                fontSize: "14px",
+                fontWeight: "400",
+                lineHeight: "20px",
+                color: "white",
+                textAlign: "center",
+              }}
+            >
+              <InfoCircleOutlined style={{ color: "#15ABFF" }} />
+            </Tooltip>
+          </div>
           <FormField
             name={"overrate_fees.[].threshold"}
             index={[index]}
             key={index + "threshold"}
           />
         </Col>
-
         {showDelete && (
           <Col
             style={{
@@ -64,6 +103,7 @@ const OverrateFeeItemField: FC<OverateFeeItemProps> = ({
             />
           </Col>
         )}
+        <p></p>
       </Row>
     </>
   );
@@ -124,7 +164,7 @@ export default function FeeDetails({
         gap={24}
         style={{ border: "1px solid #BDC1CA", padding: "16px" }}
       >
-        <Row gutter={16}>
+        <Row gutter={20}>
           <Col span={4}>
             <FormField name="name" />
           </Col>
@@ -150,11 +190,7 @@ export default function FeeDetails({
             </>
           )}
         </Row>
-        <Row gutter={16}>
-          <Col span={8}>
-            <FormField name="description" />
-          </Col>
-        </Row>
+        <FormField name="description" />
 
         <FormField name="is_active" />
         {fee_type === "transaction" && (
@@ -165,18 +201,36 @@ export default function FeeDetails({
                 fontSize: 16,
               }}
             >
-              Overate Fee
+              Overate Fee{" "}
+              <Tooltip
+                title="The transaction will be charged at the set price if the number of 
+  transactions is equal to or greater than the threshold."
+                color="#15ABFF"
+                overlayInnerStyle={{
+                  minWidth: "400px",
+                  minHeight: "45px",
+                  fontSize: "14px",
+                  fontWeight: "400",
+                  lineHeight: "20px",
+                  color: "white",
+                  textAlign: "center",
+                }}
+              >
+                <InfoCircleOutlined style={{ color: "#62CD14" }} />
+              </Tooltip>
             </Typography>
 
             {fields.map((item, index) => (
-              <>
+              <div key={item.id}>
                 <OverrateFeeItemField
-                  key={item.id}
+                  // price={item.price}
+                  currentThreshold={item.threshold ?? null}
+                  nextThreshold={fields[index + 1]?.threshold ?? null}
                   index={index}
                   onDelete={() => handleDelete(index)}
                   showDelete={fields.length > 1}
                 />
-              </>
+              </div>
             ))}
             <Typography
               style={{

@@ -100,8 +100,8 @@ const Page: React.FC<Props> = () => {
           popup_id: "successpopup",
           popup_text: capitalize("Pricing plan is updated successfully!"),
           popup_type: "Success",
-          onConfirm: () => goToPricingPlan(),
-          onClose: () => goToPricingPlan(),
+          onConfirm: () => setOpenModal(false),
+          onClose: () => setOpenModal(false),
         }),
       onError: (err: CustomError) =>
         showModal({

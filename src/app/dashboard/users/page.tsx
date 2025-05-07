@@ -3,8 +3,8 @@ import React from "react";
 
 import UserList from "./UserList";
 
-const PricingPlansPage = () => {
+const Page = () => {
   return <UserList />;
 };
 
-export default PricingPlansPage;
+export default Page;

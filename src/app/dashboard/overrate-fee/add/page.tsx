@@ -15,12 +15,10 @@ import { OverrateFeeFormValues } from "@/interfaces/model/overrateFee.type";
 import { popUpPropType } from "@/interfaces/popup";
 import overrateFeeFormValuesSchema from "@/schema/overrateFee";
 import { getErrorDetail } from "@/utils/error";
-import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize } from "@/utils/string";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
-  const goToOverrateFee = useGoToDashboardTab("overrate-fee");
   const [openModal, setOpenModal] = useState(false);
   const { mutate: addOverrateFee, isLoading: isAdding } = useAddOverrateFee();
   const methods = useForm<OverrateFeeFormValues>({
@@ -47,7 +45,7 @@ const Page: React.FC<Props> = () => {
           popup_text: `${capitalize("This Overrate Fee is successfully created!")}`,
           popup_type: "Success",
           onConfirm: () => {},
-          onClose: () => goToOverrateFee(),
+          onClose: () => setOpenModal(false),
         });
       },
       onError: (err: CustomError) => {

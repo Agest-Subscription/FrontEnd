@@ -79,15 +79,6 @@ const useGenerateColumns = () => {
           return <Checkbox checked={is_active}></Checkbox>;
         },
       },
-      // {
-      //   title: "Overrate Fee",
-      //   dataIndex: "is_overrate",
-      //   key: "is_overrate",
-      //   align: "center",
-      //   render: (is_overrate: boolean) => {
-      //     return <Checkbox checked={is_overrate}></Checkbox>;
-      //   },
-      // },
       {
         title: "Action",
         dataIndex: "action",

@@ -23,7 +23,6 @@ import { capitalize, trimString } from "@/utils/string";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
-  const fields = useGenerateFields();
   const goToFee = useGoToDashboardTab("fee");
   const [openModal, setOpenModal] = useState(false);
   const { mutate: updateFee, isLoading: isUpdating } = useUpdateFee();
@@ -34,6 +33,7 @@ const Page: React.FC<Props> = () => {
     mode: "onBlur",
     resolver: yupResolver(feeFormValuesSchema),
   });
+  const fields = useGenerateFields(methods);
   const [modalProp, setModalProp] = useState<popUpPropType>({
     popup_id: "successpopup",
     popup_text: `${capitalize("Are you sure to edit a Fee?")}`,
@@ -117,7 +117,7 @@ const Page: React.FC<Props> = () => {
             popup_text: `${capitalize("This Fee is successfully updated!")}`,
             popup_type: "Success",
             onConfirm: () => {},
-            onClose: () => goToFee(),
+            onClose: () => setOpenModal(false),
           });
         },
         onError: (err: CustomError) => {

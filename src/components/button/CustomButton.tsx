@@ -9,6 +9,7 @@ type ButtonProps = {
   customSize?: "small" | "normal" | "medium" | "large";
   customType?: "primary" | "danger" | "secondary" | "cancel";
   customDisabled?: boolean;
+  customBackgroundColor?: string;
 } & React.ComponentProps<typeof Button>;
 
 const hoverColor = {
@@ -41,22 +42,25 @@ const getButtonStyle = (
   size: string,
   type: string,
   customDisabled: boolean,
+  customBackgroundColor?: string,
 ): CSSProperties => {
   const buttonStyle: CSSProperties = { ...baseButtonStyle };
 
-  buttonStyle.backgroundColor = customDisabled
-    ? {
-        primary: "#AFD7F5",
-        danger: "#f5afaf",
-        secondary: "#f7c394",
-        cancel: "#FFFFFF",
-      }[type]
-    : {
-        primary: "#2F80ED",
-        danger: "#f33f34",
-        secondary: "#F2994A",
-        cancel: "#FFFFFF",
-      }[type];
+  buttonStyle.backgroundColor =
+    customBackgroundColor ||
+    (customDisabled
+      ? {
+          primary: "#AFD7F5",
+          danger: "#f5afaf",
+          secondary: "#f7c394",
+          cancel: "#FFFFFF",
+        }[type]
+      : {
+          primary: "#2F80ED",
+          danger: "#f33f34",
+          secondary: "#F2994A",
+          cancel: "#FFFFFF",
+        }[type]);
 
   switch (size) {
     case "small":
@@ -94,6 +98,7 @@ const CustomButton: FC<ButtonProps> = ({
   customSize = "normal",
   customType = "primary",
   customDisabled = false,
+  customBackgroundColor,
   style,
   ...props
 }) => {
@@ -101,7 +106,12 @@ const CustomButton: FC<ButtonProps> = ({
     <Button
       type="primary"
       style={{
-        ...getButtonStyle(customSize, customType, customDisabled),
+        ...getButtonStyle(
+          customSize,
+          customType,
+          customDisabled,
+          customBackgroundColor,
+        ),
         ...style,
       }}
       disabled={customDisabled}

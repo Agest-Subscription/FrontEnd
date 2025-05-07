@@ -135,11 +135,7 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
             <FormField name="end_date" />
           </Col>
         </Row>
-        <Row gutter={24}>
-          <Col span={12}>
-            <FormField name="description" />
-          </Col>
-        </Row>
+        <FormField name="description" />
         <Row gutter={24}>
           <Col span={6}>
             <Flex vertical gap={8}>
@@ -177,7 +173,7 @@ const PricingPlanDetails: React.FC<DetailsProp> = ({
         {recurrenceFee && dataSource.length > 0 && (
           <Flex justify="end">
             <span style={{ color: "#9095A1", fontWeight: 700, fontSize: 16 }}>
-              Total Fee:{" "}
+              Recurrence fee:{" "}
               <span style={{ color: "#62CD14" }}>
                 $
                 {formatPrice(

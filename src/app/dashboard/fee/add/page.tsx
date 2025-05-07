@@ -16,12 +16,10 @@ import { FeeFormValues } from "@/interfaces/model/fee.type";
 import { popUpPropType } from "@/interfaces/popup";
 import feeFormValuesSchema from "@/schema/fee";
 import { getErrorDetail } from "@/utils/error";
-import { useGoToDashboardTab } from "@/utils/navigate";
 import { capitalize, trimString } from "@/utils/string";
 
 type Props = {};
 const Page: React.FC<Props> = () => {
-  const goToFee = useGoToDashboardTab("fee");
   const [openModal, setOpenModal] = useState(false);
   const { mutate: addFee, isLoading: isAdding } = useAddFee();
   const methods = useForm<FeeFormValues>({
@@ -57,7 +55,6 @@ const Page: React.FC<Props> = () => {
       return {
         ...data,
         transaction_unit: null,
-        // is_overrate: null,
         recurrence_cycle_count: null,
         recurrence_type: null,
         overrate_fees: null,
@@ -67,11 +64,10 @@ const Page: React.FC<Props> = () => {
       return {
         ...data,
         transaction_unit: null,
-        // is_overrate: null,
         overrate_fees: null,
       };
     }
-    return data; // or handle other fee cases if necessary
+    return data;
   }
 
   function onSubmit(data: FeeFormValues) {
@@ -85,7 +81,7 @@ const Page: React.FC<Props> = () => {
           popup_text: `${capitalize("This Fee is successfully created!")}`,
           popup_type: "Success",
           onConfirm: () => {},
-          onClose: () => goToFee(),
+          onClose: () => setOpenModal(false),
         });
       },
       onError: (error: CustomError) => {
@@ -100,7 +96,7 @@ const Page: React.FC<Props> = () => {
     });
   }
 
-  const fields = useGenerateFields();
+  const fields = useGenerateFields(methods);
 
   const handleSave = async () => {
     const isValid = await methods.trigger();

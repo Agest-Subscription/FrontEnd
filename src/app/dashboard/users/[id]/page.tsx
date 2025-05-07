@@ -70,7 +70,7 @@ const Page: React.FC<Props> = () => {
             popup_text: capitalize("User is updated successfully!"),
             popup_type: "Success",
             onConfirm: () => {},
-            onClose: () => goToUser(),
+            onClose: () => setOpenModal(false),
           }),
         onError: (err: CustomError) =>
           showModal({

@@ -38,44 +38,38 @@ const TableTag = ({ permissions }: Props) => {
         {isLoadMore
           ? permissions.map((permission) => (
               <Tag key={permission.id} bordered={false}>
-                {/* <LongText
-                  text={permission.display_name}
-                  centerText
-                  width={width}
-                /> */}
                 {permission.display_name}
               </Tag>
             ))
-          : permissions.slice(0, 3).map((permission) => (
-              <Tag key={permission.id} bordered={false}>
-                {/* <LongText
-                  text={permission.display_name}
-                  centerText
-                  width={width}
-                /> */}
-                {permission.display_name}
-              </Tag>
-            ))}
-        {permissions.length > 3 ? (
-          !isLoadMore ? (
-            <Button
-              size="small"
-              type="primary"
-              ghost={true}
-              style={{ borderColor: "transparent" }}
-              icon={<EllipsisOutlined />}
-              onClick={loadMoreData}
-            />
-          ) : (
-            <Button
-              size="small"
-              type="primary"
-              ghost={true}
-              style={{ borderColor: "transparent" }}
-              icon={<CaretUpOutlined />}
-              onClick={hiddenData}
-            />
-          )
+          : permissions
+            ? permissions.slice(0, 3).map((permission) => (
+                <Tag key={permission.id} bordered={false}>
+                  {permission.display_name}
+                </Tag>
+              ))
+            : null}
+        {permissions ? (
+          permissions.length > 3 ? (
+            !isLoadMore ? (
+              <Button
+                size="small"
+                type="primary"
+                ghost={true}
+                style={{ borderColor: "transparent" }}
+                icon={<EllipsisOutlined />}
+                onClick={loadMoreData}
+              />
+            ) : (
+              <Button
+                size="small"
+                type="primary"
+                ghost={true}
+                style={{ borderColor: "transparent" }}
+                icon={<CaretUpOutlined />}
+                onClick={hiddenData}
+              />
+            )
+          ) : null
         ) : null}
       </Flex>
     </ConfigProvider>
